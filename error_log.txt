@@ -2,10 +2,32 @@ Traceback (most recent call last):
   File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
     valorant_instance.start()
     ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 455, in start
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 453, in start
     self.gui()
     ~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 755, in gui
-    dpg.add_theme_style(dpg.mvStyleVar_TabPadding, 4, 2)
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: module 'dearpygui.dearpygui' has no attribute 'mvStyleVar_TabPadding'
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1230, in gui
+    self.build_aim_settings_ui()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1645, in build_aim_settings_ui
+    self.add_help_marker(self.tr("help_aim_controller"))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 680, in add_help_marker
+    dpg.same_line()
+    ^^^^^^^^^^^^^
+AttributeError: module 'dearpygui.dearpygui' has no attribute 'same_line'
+[Global Exception] 2026-01-15 19:47:16
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
+    valorant_instance.start()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 453, in start
+    self.gui()
+    ~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1618, in gui
+    dpg.start_dearpygui()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
+    internal_dpg.render_dearpygui_frame()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+KeyboardInterrupt
+

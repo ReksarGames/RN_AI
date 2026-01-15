@@ -81,6 +81,16 @@ class InputMixin:
             return ["mouse_side2", "mouse_x2"]
         return [key]
 
+    def _is_trigger_only_key(self, key):
+        try:
+            return bool(
+                self.config["groups"][self.group]["aim_keys"]
+                .get(key, {})
+                .get("trigger_only", False)
+            )
+        except Exception:
+            return False
+
     def on_click(self, x, y, button, pressed):
         if pressed:
             if button == mouse.Button.left:
@@ -107,6 +117,7 @@ class InputMixin:
                         self.refresh_pressed_key_config(candidate)
                         self.old_pressed_aim_key = candidate
                         self.aim_key_status = True
+                        self.trigger_only_active = self._is_trigger_only_key(candidate)
                         self.reset_dynamic_aim_scope(candidate)
                         break
         else:
@@ -132,6 +143,7 @@ class InputMixin:
                 if candidate in self.aim_key and candidate == self.old_pressed_aim_key:
                     self.old_pressed_aim_key = ""
                     self.aim_key_status = False
+                    self.trigger_only_active = False
                     self.reset_pid()
                     break
 
@@ -152,6 +164,7 @@ class InputMixin:
             self.reset_pid()
             self.old_pressed_aim_key = key
             self.aim_key_status = True
+            self.trigger_only_active = self._is_trigger_only_key(key)
         if key not in self.pressed_key:
             self.pressed_key.append(key)
 
@@ -175,6 +188,7 @@ class InputMixin:
         if key in self.aim_key and key == self.old_pressed_aim_key:
             self.old_pressed_aim_key = ""
             self.aim_key_status = False
+            self.trigger_only_active = False
             self.reset_pid()
             self.reset_target_lock(key)
         if key in self.pressed_key:

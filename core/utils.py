@@ -18,23 +18,6 @@ UPDATE_TIME = "2025-11-04"
 # Global variable for TensorRT availability
 TENSORRT_AVAILABLE = False
 
-# Lazy-loaded kmNet module
-_kmNet = None
-
-
-def get_kmnet():
-    """Lazily import and return kmNet module. Returns None if import fails."""
-    global _kmNet
-    if _kmNet is None:
-        try:
-            import kmNet
-            _kmNet = kmNet
-        except ImportError as e:
-            print(f"kmNet import failed: {e}")
-            return None
-    return _kmNet
-
-
 def check_tensorrt_availability():
     """Safely detect if TensorRT environment is available"""
     try:

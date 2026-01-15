@@ -2,14 +2,6 @@
   "infer_debug": true,
   "print_fps": true,
   "show_motion_speed": true,
-  "km_box_vid": "9031",
-  "km_box_pid": "5586",
-  "km_net_ip": "127.0.0.1",
-  "km_net_port": "32838",
-  "km_net_uuid": "C0563CAB",
-  "dhz_ip": "192.168.8.108",
-  "dhz_port": 32838,
-  "dhz_random": 55,
   "move_method": "makcu",
   "is_curve": false,
   "is_curve_uniform": false,
@@ -47,13 +39,9 @@
   "mask_y": false,
   "aim_mask_y": false,
   "mask_wheel": false,
-  "catbox_ip": "127.0.0.1",
-  "catbox_port": 32838,
-  "catbox_uuid": "00000000",
-  "km_com": "COM4",
   "groups": {
     "DeltaForce": {
-      "infer_model": "E:/Project/China_AI/.weights/SJZ_Kenny_v8_320.onnx",
+      "infer_model": "E:/Project/China_AI/.weights/SJZ_Kenny_v8_320.engine",
       "auto_y": false,
       "long_press_duration": 100,
       "right_down": false,
@@ -151,7 +139,8 @@
           "smooth_y": 1.0,
           "pid_ki_x": 0.0001,
           "pid_ki_y": 0.0001,
-          "auto_y": false
+          "auto_y": false,
+          "trigger_only": false
         },
         "dd": {
           "confidence_threshold": 0.5,
@@ -226,7 +215,8 @@
           ],
           "overshoot_threshold": 3.0,
           "overshoot_x_factor": 0.5,
-          "overshoot_y_factor": 0.3
+          "overshoot_y_factor": 0.3,
+          "trigger_only": false
         },
         "d": {
           "confidence_threshold": 0.5,
@@ -301,11 +291,12 @@
           ],
           "overshoot_threshold": 3.0,
           "overshoot_x_factor": 0.5,
-          "overshoot_y_factor": 0.3
+          "overshoot_y_factor": 0.3,
+          "trigger_only": false
         }
       },
       "is_v8": true,
-      "is_trt": false,
+      "is_trt": true,
       "original_infer_model": "E:/Project/China_AI/.weights/SJZ_Kenny_v8_320.onnx",
       "yolo_format": "v8"
     },
@@ -723,5 +714,5 @@
   },
   "capture_offset_x": 0,
   "capture_offset_y": 0,
-  "gui_font_scale": 1.159999966621399
+  "gui_font_scale": 1.5499999523162842
 }

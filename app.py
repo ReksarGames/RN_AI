@@ -137,9 +137,9 @@ class Aassist(
         self.tracker = None
         self.showed = False
         self.km_listen_switch = False
-        self.dhz_listen_switch = False
         self.pnmh_listen_switch = False
         self.makcu_listen_switch = False
+        self.trigger_only_active = False
         self.move_r = None
         self.move_dll = None
         self.add_key_name = ""
@@ -298,7 +298,6 @@ class Aassist(
         self.trigger_recoil_pressed = False
         self.picked_game = self.config["picked_game"]
         self.games = list(self.config["games"].keys())
-        self.dhz = None
         self.pnmh = None
         self.makcu = None
         self.temp_aim_bot_position = 0.0

@@ -61,6 +61,7 @@ TRANSLATIONS = {
         "label_sunone_near_radius": "Near Radius",
         "label_sunone_curve_exp": "Curve Exponent",
         "label_sunone_snap_boost": "Snap Boost",
+        "label_prediction_preview": "Prediction Preview",
         "label_class_settings": "Class Settings",
         "label_class_priority": "Class Priority",
         "label_class_priority_hint": "Format: 0-1-2-3",
@@ -72,6 +73,24 @@ TRANSLATIONS = {
         "label_class_aim_preview": "Aim Preview",
         "label_class_names_manual": "Class Names (Manual)",
         "label_apply_class_names": "Apply Names",
+        "help_aim_controller": "Select aiming controller. PID is classic; Sunone adds smoothing/kalman/prediction.",
+        "help_sunone_settings": "Sunone smoothing and Kalman options for stable tracking.",
+        "help_prediction": "Predicts target movement. Standard uses velocity; Kalman filters velocity; combined uses both.",
+        "help_trigger": "Auto-fire when target is inside the trigger zone.",
+        "help_class_settings": "Manage model classes: enable/disable targets and priorities.",
+        "help_class_aim_config": "Choose a class and set aim positions. 0 = top of body, 1 = bottom.",
+        "help_small_target_settings": "Improves stability for small/far targets; may cost performance.",
+        "help_mouse_re": "Recoil compensation using mouse_re trajectory files.",
+        "help_capture_source": "Select capture input: Standard (screen), OBS, or Capture Card.",
+        "help_capture_offsets": "Offsets shift the capture region from screen center.",
+        "help_aim_weights": "Weights for target selection: distance, center, and size influence priority.",
+        "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
+        "help_kalman": "Kalman filter smooths noisy target positions for steadier tracking.",
+        "help_prediction_lead": "Lead time (ms) adds forward prediction to aim position.",
+        "help_velocity_smoothing": "Smooths target velocity to reduce jitter in prediction.",
+        "help_driver": "Driver controls how mouse movement is sent (Makcu).",
+        "help_bypass": "Bypass masks physical inputs while the driver is active.",
+        "help_strafe": "Strafe tab stores recoil/weapon profiles and movement offsets.",
         "label_key_bindings": "Key Bindings",
         "label_bind_key": "Bind Key",
         "label_key_preset": "Key Preset",
@@ -137,17 +156,6 @@ TRANSLATIONS = {
         "label_distortion_stddev": "Distortion StdDev",
         "label_distortion_frequency": "Distortion Frequency",
         "label_path_points_total": "Path Points Total",
-        "label_km_box_vid": "KM Box VID",
-        "label_km_box_pid": "KM Box PID",
-        "label_km_net_ip": "KM Net IP",
-        "label_km_net_port": "KM Net Port",
-        "label_km_net_uuid": "KM Net UUID",
-        "label_dhz_ip": "DHZ IP",
-        "label_dhz_port": "DHZ Port",
-        "label_dhz_random": "DHZ RANDOM",
-        "label_catbox_ip": "CatBox IP",
-        "label_catbox_port": "CatBox Port",
-        "label_catbox_uuid": "CatBox UUID",
         "label_com_port": "COM",
         "label_move_method": "Move Method",
         "label_mask_left": "Mask Left",
@@ -207,6 +215,7 @@ TRANSLATIONS = {
         "label_auto_trigger": "Auto Trigger",
         "label_continuous_trigger": "Continuous Trigger",
         "label_trigger_recoil": "Trigger Recoil",
+        "label_trigger_only": "Trigger Only",
         "label_trigger_delay": "Trigger Delay",
         "label_press_duration": "Press Duration",
         "label_trigger_cooldown": "Trigger Cooldown",
@@ -240,226 +249,290 @@ TRANSLATIONS = {
         "label_do_not_click": "Do Not Click!!!",
     },
     "ru": {
-        "tab_system": 'Система',
-        "tab_driver": 'Драйвер',
-        "tab_bypass": 'Обход',
-        "tab_strafe": 'Стрейф',
-        "tab_config": 'Конфиг',
-        "tab_aim": 'Наводка',
-        "tab_classes": 'Классы',
-        "label_ui_language": 'Язык интерфейса',
-        "label_ui_width_scale": 'Ширина интерфейса',
-        "label_ui_width_hint": 'Изменяет ширину окна (после перезапуска)',
-        "label_ui_font_scale": 'Размер шрифта',
-        "label_aim_controller": 'Контроллер наведения',
-        "label_controller_pid": 'PID',
-        "label_controller_sunone": 'Sunone',
-        "label_sunone_settings": 'Настройки Sunone',
-        "label_sunone_smoothing": 'Включить сглаживание',
-        "label_sunone_tracking": 'Сглаживание трекинга',
-        "label_sunone_smoothness": 'Степень сглаживания',
-        "label_sunone_kalman": 'Включить Калман',
-        "label_sunone_kalman_q": 'Kalman Process Noise',
-        "label_sunone_kalman_r": 'Kalman Measurement Noise',
-        "label_sunone_kalman_mul_x": 'Kalman Speed X',
-        "label_sunone_kalman_mul_y": 'Kalman Speed Y',
-        "label_sunone_reset_threshold": 'Reset Threshold',
-        "label_sunone_prediction": 'Предикт',
-        "label_sunone_prediction_mode": 'Prediction Mode',
-        "label_sunone_prediction_interval": 'Prediction Interval',
-        "label_sunone_prediction_lead": 'Kalman Lead (ms)',
-        "label_sunone_prediction_max_lead": 'Kalman Max Lead (ms)',
-        "label_sunone_velocity_smoothing": 'Velocity Smoothing',
-        "label_sunone_velocity_scale": 'Velocity Scale',
-        "label_sunone_prediction_q": 'Prediction Kalman Q',
-        "label_sunone_prediction_r": 'Prediction Kalman R',
-        "label_sunone_future_positions": 'Future Positions',
-        "label_sunone_draw_future": 'Draw Future Positions',
-        "label_sunone_debug": 'Prediction Debug',
-        "label_sunone_debug_pred": 'Show Predicted Target',
-        "label_sunone_debug_step": 'Show Step',
-        "label_sunone_debug_future": 'Show Future Points',
-        "label_sunone_speed": 'Speed Curve',
-        "label_sunone_min_speed": 'Min Speed',
-        "label_sunone_max_speed": 'Max Speed',
-        "label_sunone_snap_radius": 'Snap Radius',
-        "label_sunone_near_radius": 'Near Radius',
-        "label_sunone_curve_exp": 'Curve Exponent',
-        "label_sunone_snap_boost": 'Snap Boost',
-        "label_class_settings": 'Настройки классов',
-        "label_class_priority": 'Приоритет классов',
-        "label_class_priority_hint": 'Format: 0-1-2-3',
-        "label_infer_classes": 'Классы инференса',
-        "label_class_aim_config": 'Class Aim Config',
-        "label_select_class": 'Select Class',
-        "label_class_names_file": 'Файл имен классов',
-        "label_load_class_names": 'Загрузить',
-        "label_key_bindings": 'Бинды',
-        "label_bind_key": 'Bind Key',
-        "label_key_preset": 'Key Preset',
-        "label_key_name": 'Key Name',
-        "label_key_add": 'Add Key',
-        "label_key_delete": 'Delete Key',
-        "label_model_params": 'Параметры модели',
-        "label_group_name": 'Имя группы',
-        "label_add_group": 'Добавить группу',
-        "label_delete_group": 'Удалить группу',
-        "label_infer_model": 'Модель инференса',
-        "label_select_model": 'Выбрать модель',
-        "label_yolo_format": 'Формат YOLO',
-        "label_yolo_auto": 'Авто',
-        "label_yolo_v5": 'YOLOv5/v7',
-        "label_yolo_v8": 'YOLOv8/v10/v11',
-        "label_capture_status": 'Текущий захват',
-        "label_capture_source": 'Источник захвата',
-        "label_capture_obs": 'OBS',
-        "label_capture_card": 'Карта захвата',
-        "label_capture_bettercam": 'BetterCam (рабочий стол)',
-        "label_obs_ip": 'OBS IP',
-        "label_obs_port": 'OBS Port',
-        "label_obs_fps": 'OBS FPS',
-        "label_capture_device": 'Capture Device',
-        "label_capture_fps": 'Capture FPS',
-        "label_capture_resolution": 'Capture Resolution',
-        "label_capture_crop": 'Capture Crop Size',
-        "label_video_codec": 'Video Codec',
-        "label_capture_offset_x": 'Смещение захвата X',
-        "label_capture_offset_y": 'Смещение захвата Y',
-        "label_gui_dpi_scale": 'GUI DPI Scale',
-        "label_auto_detect": 'Auto Detect',
-        "label_infer_window": 'Inference Window',
-        "label_print_fps": 'Print FPS',
-        "label_show_motion_speed": 'Show Motion Speed',
-        "label_show_curve": 'Show Curve',
-        "label_show_infer_time": 'Show Infer Time',
-        "label_screenshot_separation": 'Screenshot Separation (Multi-thread)',
-        "label_small_target_enhancement": 'Enable Small Target Enhancement',
-        "label_small_target_smoothing": 'Enable Small Target Smoothing',
-        "label_adaptive_nms": 'Adaptive NMS',
-        "label_small_target_boost": 'Small Target Boost',
-        "label_small_target_history": 'Smooth History Frames',
-        "label_small_target_threshold": 'Small Target Threshold',
-        "label_medium_target_threshold": 'Medium Target Threshold',
-        "label_turbo_mode": 'Turbo Mode',
-        "label_skip_frame_processing": 'Skip Frame Processing',
-        "label_recoil_debug": 'Recoil Debug',
-        "label_class_priority_debug": 'Class Priority Debug',
-        "label_show_aim_scope": 'Show Aim Scope',
-        "label_aim_weights": 'Aim Weights',
-        "label_distance_weight": 'Distance Weight',
-        "label_center_weight": 'Center Weight',
-        "label_size_weight": 'Size Weight',
-        "label_move_curve": 'Move Curve',
-        "label_compensation_curve": 'Compensation Curve',
-        "label_horizontal_boundary": 'Horizontal Boundary',
-        "label_vertical_boundary": 'Vertical Boundary',
-        "label_control_points": 'Control Points',
-        "label_distortion_mean": 'Distortion Mean',
-        "label_distortion_stddev": 'Distortion StdDev',
-        "label_distortion_frequency": 'Distortion Frequency',
-        "label_path_points_total": 'Path Points Total',
-        "label_km_box_vid": 'KM Box VID',
-        "label_km_box_pid": 'KM Box PID',
-        "label_km_net_ip": 'KM Net IP',
-        "label_km_net_port": 'KM Net Port',
-        "label_km_net_uuid": 'KM Net UUID',
-        "label_dhz_ip": 'DHZ IP',
-        "label_dhz_port": 'DHZ Port',
-        "label_dhz_random": 'DHZ RANDOM',
-        "label_catbox_ip": 'CatBox IP',
-        "label_catbox_port": 'CatBox Port',
-        "label_catbox_uuid": 'CatBox UUID',
-        "label_com_port": 'COM',
-        "label_move_method": 'Move Method',
-        "label_mask_left": 'Mask Left',
-        "label_mask_right": 'Mask Right',
-        "label_mask_middle": 'Mask Middle',
-        "label_mask_side1": 'Mask Side1',
-        "label_mask_side2": 'Mask Side2',
-        "label_mask_x_axis": 'Mask X Axis',
-        "label_mask_y_axis": 'Mask Y Axis',
-        "label_aim_mask_x": 'Aim Mask X',
-        "label_aim_mask_y": 'Aim Mask Y',
-        "label_mask_wheel": 'Mask Wheel',
-        "label_check_right_button": 'Check Right Button',
-        "label_delete_game": 'Delete Game',
-        "label_game_name": 'Game Name',
-        "label_add_game": 'Add Game',
-        "label_delete_gun": 'Delete Gun',
-        "label_gun_name": 'Gun Name',
-        "label_add_gun": 'Add Gun',
-        "label_count": 'Count',
-        "label_axis_x": 'X',
-        "label_axis_y": 'Y',
-        "label_delete_index": 'Delete Index',
-        "label_add_index": 'Add Index',
-        "label_mouse_re_header": 'mouse_re Trajectory Recoil',
-        "label_mouse_re_enable": 'Enable mouse_re Trajectory Recoil',
-        "label_replay_speed": 'Replay Speed',
-        "label_pixel_enhance_ratio": 'Pixel Enhancement Ratio',
-        "label_import_trajectory_file": 'Import Trajectory File',
-        "label_clear_mapping": 'Clear Mapping',
-        "label_trt": 'TRT',
-        "label_long_press_no_lock_y": 'Long Press No Lock Y',
-        "label_long_press_threshold": 'Long Press Threshold',
-        "label_target_switch_delay": 'Target Switch Delay (ms)',
-        "label_target_reference_class": 'Target Reference Class',
-        "label_min_offset": 'Min Offset',
-        "label_aim_scope": 'Aim Scope',
-        "label_dynamic_scope": 'Dynamic Scope',
-        "label_min_scope": 'Min Scope',
-        "label_shrink_duration": 'Shrink Duration',
-        "label_recover_duration": 'Recover Duration',
-        "label_pid_params": 'PID Controller Parameters',
-        "label_pid_x_p": 'X Proportional',
-        "label_pid_x_i": 'X Integral',
-        "label_pid_x_d": 'X Derivative',
-        "label_pid_y_p": 'Y Proportional',
-        "label_pid_y_i": 'Y Integral',
-        "label_pid_y_d": 'Y Derivative',
-        "label_pid_x_limit": 'X Limit',
-        "label_pid_x_smooth": 'X Smooth',
-        "label_smooth_algorithm": 'Smooth Algorithm',
-        "label_pid_y_limit": 'Y Limit',
-        "label_pid_y_smooth": 'Y Smooth',
-        "label_smooth_deadzone": 'Smooth Deadzone',
-        "label_move_deadzone": 'Move Deadzone',
-        "label_trigger_config": 'Trigger Config',
-        "label_auto_trigger": 'Auto Trigger',
-        "label_continuous_trigger": 'Continuous Trigger',
-        "label_trigger_recoil": 'Trigger Recoil',
-        "label_trigger_delay": 'Trigger Delay',
-        "label_press_duration": 'Press Duration',
-        "label_trigger_cooldown": 'Trigger Cooldown',
-        "label_random_delay": 'Random Delay',
-        "label_x_trigger_scope": 'X Trigger Scope',
-        "label_y_trigger_scope": 'Y Trigger Scope',
-        "label_x_trigger_offset": 'X Trigger Offset',
-        "label_y_trigger_offset": 'Y Trigger Offset',
-        "label_confidence_threshold": 'Confidence Threshold',
-        "label_iou": 'IOU',
-        "label_aim_position": 'Aim Position',
-        "label_aim_position2": 'Aim Position2',
-        "label_game": 'Game',
-        "label_gun": 'Gun',
-        "label_index": 'Index',
-        "label_ui_scale_detail": 'Adjust GUI interface scale (Current system detection: {scale:.2f}, effective after restart)',
-        "label_small_target_settings": 'Small Target Enhancement Settings',
-        "label_small_target_note": 'Note: Small target enhancement can improve detection stability for distant or small-sized targets',
-        "label_mouse_re_config": 'mouse_re Recoil Config:',
-        "label_mouse_re_note": 'Note: Supports loading JSON files generated by mouse_re.py, hold left button to replay trajectory for recoil',
-        "label_current_status": 'Current Status:',
-        "label_switch_prefix": 'Switch',
-        "label_switch_on": 'ON',
-        "label_switch_off": 'OFF',
-        "label_mapping_file_prefix": 'Mapping File',
-        "label_trajectory_points_prefix": 'Trajectory Points',
-        "label_none": 'None',
-        "label_start": 'Старт',
-        "label_stop": 'Стоп',
-        "label_save_config": 'Сохранить конфиг',
-        "label_do_not_click": 'Не нажимать!!!',
-    },
+        "tab_system": "Система",
+        "tab_driver": "Драйвер",
+        "tab_bypass": "Обход",
+        "tab_strafe": "Стрейф",
+        "tab_config": "Конфиг",
+        "tab_aim": "Наводка",
+        "tab_classes": "Классы",
+
+        "label_ui_language": "Язык интерфейса",
+        "label_ui_width_scale": "Ширина интерфейса",
+        "label_ui_width_hint": "Изменяет ширину окна (после перезапуска)",
+        "label_ui_font_scale": "Размер шрифта",
+
+        "label_aim_controller": "Контроллер наведения",
+        "label_controller_pid": "PID",
+        "label_controller_sunone": "Sunone",
+
+        "label_sunone_settings": "Настройки Sunone",
+        "label_sunone_smoothing": "Включить сглаживание",
+        "label_sunone_tracking": "Сглаживание трекинга",
+        "label_sunone_smoothness": "Степень сглаживания",
+
+        "label_sunone_kalman": "Включить фильтр Калмана",
+        "label_sunone_kalman_q": "Шум процесса Калмана (Q)",
+        "label_sunone_kalman_r": "Шум измерений Калмана (R)",
+        "label_sunone_kalman_mul_x": "Скорость Калмана по X",
+        "label_sunone_kalman_mul_y": "Скорость Калмана по Y",
+        "label_sunone_reset_threshold": "Порог сброса",
+
+        "label_sunone_prediction": "Предсказание",
+        "label_sunone_prediction_mode": "Режим предсказания",
+        "label_sunone_prediction_interval": "Интервал предсказания",
+        "label_sunone_prediction_lead": "Опережение Калмана (мс)",
+        "label_sunone_prediction_max_lead": "Макс. опережение Калмана (мс)",
+
+        "label_sunone_velocity_smoothing": "Сглаживание скорости",
+        "label_sunone_velocity_scale": "Масштаб скорости",
+        "label_sunone_prediction_q": "Kalman Q для предсказания",
+        "label_sunone_prediction_r": "Kalman R для предсказания",
+
+        "label_sunone_future_positions": "Будущие позиции",
+        "label_sunone_draw_future": "Отрисовывать будущие позиции",
+
+        "label_sunone_debug": "Отладка предсказания",
+        "label_sunone_debug_pred": "Показывать предсказанную цель",
+        "label_sunone_debug_step": "Показывать шаг",
+        "label_sunone_debug_future": "Показывать будущие точки",
+
+        "label_sunone_speed": "Кривая скорости",
+        "label_sunone_min_speed": "Минимальная скорость",
+        "label_sunone_max_speed": "Максимальная скорость",
+        "label_sunone_snap_radius": "Радиус привязки",
+        "label_sunone_near_radius": "Ближний радиус",
+        "label_sunone_curve_exp": "Экспонента кривой",
+        "label_sunone_snap_boost": "Усиление привязки",
+        "label_prediction_preview": "Превью предикта",
+
+        "label_class_settings": "Настройки классов",
+        "label_class_priority": "Приоритет классов",
+        "label_class_priority_hint": "Формат: 0-1-2-3",
+        "label_infer_classes": "Классы инференса",
+        "label_class_aim_config": "Конфигурация наведения класса",
+        "help_aim_controller": "Выбор контроллера наведения. PID — классика; Sunone включает сглаживание/kalman/предикт.",
+        "help_sunone_settings": "Настройки сглаживания и Калмана для стабильного трекинга.",
+        "help_prediction": "Предикт движения цели. Standard — по скорости; Kalman — фильтр скорости; вместе — оба.",
+        "help_trigger": "Авто-выстрел, когда цель в триггер-зоне.",
+        "help_class_settings": "Управление классами модели: кого целить и приоритеты.",
+        "help_class_aim_config": "Выбери класс и позицию наведения. 0 = верх тела, 1 = низ.",
+        "help_small_target_settings": "Улучшает стабильность на мелких/далеких целях, может снизить FPS.",
+        "help_mouse_re": "Компенсация отдачи по траекториям mouse_re.",
+        "help_capture_source": "Источник захвата: Standard (экран), OBS или карта захвата.",
+        "help_capture_offsets": "Смещения двигают область захвата от центра экрана.",
+        "help_aim_weights": "??????? ???????????? ?????? ????: ??????????, ????? ? ?????? ?????? ?? ?????????.",
+        "help_speed_curve": "?????? ???????? ??????, ????????? ?????? ????????? ??????? ?? ????????? ?? ????.",
+        "help_kalman": "?????? ?????????? ?????? ??????? ???? ??? ????? ??????????? ????????.",
+        "help_prediction_lead": "?????????? (??) ????????? ?????????? ? ??????? ?????????.",
+        "help_velocity_smoothing": "?????????? ???????? ????, ???????? ???????? ????????.",
+        "help_driver": "??????? ???????? ?? ???????? ???????? ???? (Makcu).",
+        "help_bypass": "????? (bypass) ????????? ?????????? ???? ?? ????? ?????? ????????.",
+        "help_strafe": "?????? ???????? ??????? ??????/?????? ? ???????? ????????.",
+        "label_select_class": "Выбрать класс",
+
+        "label_class_names_file": "Файл имён классов",
+        "label_load_class_names": "Загрузить",
+
+        "label_key_bindings": "Бинды",
+        "label_bind_key": "Назначить клавишу",
+        "label_key_preset": "Пресет клавиш",
+        "label_key_name": "Название клавиши",
+        "label_key_add": "Добавить клавишу",
+        "label_key_delete": "Удалить клавишу",
+
+        "label_model_params": "Параметры модели",
+        "label_group_name": "Имя группы",
+        "label_add_group": "Добавить группу",
+        "label_delete_group": "Удалить группу",
+
+        "label_infer_model": "Модель инференса",
+        "label_select_model": "Выбрать модель",
+
+        "label_yolo_format": "Формат YOLO",
+        "label_yolo_auto": "Авто",
+        "label_yolo_v5": "YOLOv5 / v7",
+        "label_yolo_v8": "YOLOv8 / v10 / v11",
+
+        "label_capture_status": "Текущий захват",
+        "label_capture_source": "Источник захвата",
+        "label_capture_obs": "OBS",
+        "label_capture_card": "Карта захвата",
+        "label_capture_bettercam": "BetterCam (рабочий стол)",
+
+        "label_obs_ip": "IP OBS",
+        "label_obs_port": "Порт OBS",
+        "label_obs_fps": "FPS OBS",
+
+        "label_capture_device": "Устройство захвата",
+        "label_capture_fps": "FPS захвата",
+        "label_capture_resolution": "Разрешение захвата",
+        "label_capture_crop": "Размер обрезки захвата",
+        "label_video_codec": "Видеокодек",
+
+        "label_capture_offset_x": "Смещение захвата по X",
+        "label_capture_offset_y": "Смещение захвата по Y",
+
+        "label_gui_dpi_scale": "Масштаб DPI интерфейса",
+        "label_auto_detect": "Автоопределение",
+        "label_infer_window": "Окно инференса",
+
+        "label_print_fps": "Показывать FPS",
+        "label_show_motion_speed": "Показывать скорость движения",
+        "label_show_curve": "Показывать кривую",
+        "label_show_infer_time": "Показывать время инференса",
+
+        "label_screenshot_separation": "Разделение скриншотов (многопоточность)",
+
+        "label_small_target_enhancement": "Улучшение малых целей",
+        "label_small_target_smoothing": "Сглаживание малых целей",
+        "label_adaptive_nms": "Адаптивный NMS",
+        "label_small_target_boost": "Усиление малых целей",
+        "label_small_target_history": "История сглаживания (кадры)",
+        "label_small_target_threshold": "Порог малых целей",
+        "label_medium_target_threshold": "Порог средних целей",
+
+        "label_turbo_mode": "Турбо-режим",
+        "label_skip_frame_processing": "Пропуск обработки кадров",
+
+        "label_recoil_debug": "Отладка отдачи",
+        "label_class_priority_debug": "Отладка приоритета классов",
+        "label_show_aim_scope": "Показывать прицел",
+
+        "label_aim_weights": "Весовые коэффициенты наведения",
+        "label_distance_weight": "Вес дистанции",
+        "label_center_weight": "Вес центра",
+        "label_size_weight": "Вес размера",
+
+        "label_move_curve": "Кривая движения",
+        "label_compensation_curve": "Кривая компенсации",
+
+        "label_horizontal_boundary": "Горизонтальная граница",
+        "label_vertical_boundary": "Вертикальная граница",
+
+        "label_control_points": "Контрольные точки",
+
+        "label_distortion_mean": "Среднее искажение",
+        "label_distortion_stddev": "Стандартное отклонение искажения",
+        "label_distortion_frequency": "Частота искажения",
+
+        "label_path_points_total": "Всего точек траектории",
+
+        "label_com_port": "COM-порт",
+        "label_move_method": "Метод движения",
+
+        "label_mask_left": "Маска слева",
+        "label_mask_right": "Маска справа",
+        "label_mask_middle": "Маска по центру",
+        "label_mask_side1": "Боковая маска 1",
+        "label_mask_side2": "Боковая маска 2",
+        "label_mask_x_axis": "Маска по оси X",
+        "label_mask_y_axis": "Маска по оси Y",
+        "label_aim_mask_x": "Маска наведения X",
+        "label_aim_mask_y": "Маска наведения Y",
+        "label_mask_wheel": "Маска колеса",
+
+        "label_check_right_button": "Проверять правую кнопку",
+
+        "label_delete_game": "Удалить игру",
+        "label_game_name": "Название игры",
+        "label_add_game": "Добавить игру",
+
+        "label_delete_gun": "Удалить оружие",
+        "label_gun_name": "Название оружия",
+        "label_add_gun": "Добавить оружие",
+
+        "label_count": "Количество",
+        "label_axis_x": "X",
+        "label_axis_y": "Y",
+
+        "label_delete_index": "Удалить индекс",
+        "label_add_index": "Добавить индекс",
+
+        "label_mouse_re_header": "Траектория отдачи mouse_re",
+        "label_mouse_re_enable": "Включить траекторию отдачи mouse_re",
+        "label_replay_speed": "Скорость воспроизведения",
+        "label_pixel_enhance_ratio": "Коэффициент усиления пикселей",
+        "label_import_trajectory_file": "Импорт файла траектории",
+        "label_clear_mapping": "Очистить привязку",
+
+        "label_trt": "TRT",
+
+        "label_long_press_no_lock_y": "Долгое нажатие без блокировки Y",
+        "label_long_press_threshold": "Порог долгого нажатия",
+
+        "label_target_switch_delay": "Задержка смены цели (мс)",
+        "label_target_reference_class": "Класс-эталон цели",
+
+        "label_min_offset": "Минимальное смещение",
+
+        "label_aim_scope": "Область прицеливания",
+        "label_dynamic_scope": "Динамическая область",
+        "label_min_scope": "Минимальная область",
+        "label_shrink_duration": "Длительность сжатия",
+        "label_recover_duration": "Длительность восстановления",
+
+        "label_pid_params": "Параметры PID-контроллера",
+        "label_pid_x_p": "Пропорциональный X",
+        "label_pid_x_i": "Интегральный X",
+        "label_pid_x_d": "Дифференциальный X",
+        "label_pid_y_p": "Пропорциональный Y",
+        "label_pid_y_i": "Интегральный Y",
+        "label_pid_y_d": "Дифференциальный Y",
+        "label_pid_x_limit": "Лимит X",
+        "label_pid_x_smooth": "Сглаживание X",
+        "label_smooth_algorithm": "Алгоритм сглаживания",
+        "label_pid_y_limit": "Лимит Y",
+        "label_pid_y_smooth": "Сглаживание Y",
+        "label_smooth_deadzone": "Мёртвая зона сглаживания",
+        "label_move_deadzone": "Мёртвая зона движения",
+
+        "label_trigger_config": "Настройки триггера",
+        "label_auto_trigger": "Автотриггер",
+        "label_continuous_trigger": "Непрерывный триггер",
+        "label_trigger_recoil": "Отдача триггера",
+        "label_trigger_only": "Только триггер",
+        "label_trigger_delay": "Задержка триггера",
+        "label_press_duration": "Длительность нажатия",
+        "label_trigger_cooldown": "Перезарядка триггера",
+        "label_random_delay": "Случайная задержка",
+        "label_x_trigger_scope": "Область триггера X",
+        "label_y_trigger_scope": "Область триггера Y",
+        "label_x_trigger_offset": "Смещение триггера X",
+        "label_y_trigger_offset": "Смещение триггера Y",
+
+        "label_confidence_threshold": "Порог уверенности",
+        "label_iou": "IOU",
+
+        "label_aim_position": "Позиция наведения",
+        "label_aim_position2": "Позиция наведения 2",
+
+        "label_game": "Игра",
+        "label_gun": "Оружие",
+        "label_index": "Индекс",
+
+        "label_ui_scale_detail": "Настройка масштаба интерфейса (обнаружено системой: {scale:.2f}, применяется после перезапуска)",
+
+        "label_small_target_settings": "Настройки улучшения малых целей",
+        "label_small_target_note": "Примечание: улучшение малых целей повышает стабильность обнаружения дальних или мелких объектов",
+
+        "label_mouse_re_config": "Конфигурация отдачи mouse_re:",
+        "label_mouse_re_note": "Примечание: поддерживается загрузка JSON-файлов из mouse_re.py, удерживайте левую кнопку для воспроизведения траектории",
+
+        "label_current_status": "Текущий статус:",
+        "label_switch_prefix": "Переключатель",
+        "label_switch_on": "ВКЛ",
+        "label_switch_off": "ВЫКЛ",
+
+        "label_mapping_file_prefix": "Файл привязки",
+        "label_trajectory_points_prefix": "Точки траектории",
+
+        "label_none": "Нет",
+        "label_start": "Старт",
+        "label_stop": "Стоп",
+        "label_save_config": "Сохранить конфиг",
+        "label_do_not_click": "НЕ НАЖИМАТЬ!!!"
+    }
 }
 try:
     if TENSORRT_AVAILABLE:
@@ -621,6 +694,13 @@ class GuiMixin:
             self.capture_status_text,
             f"{self.tr('label_capture_status')}: {details}",
         )
+
+    def add_help_marker(self, text, wrap=None, same_line=True):
+        tip = dpg.add_text("(?)", color=(150, 150, 150))
+        if wrap is None:
+            wrap = int(self.scaled_width_xlarge * 1.3)
+        with dpg.tooltip(tip):
+            dpg.add_text(text, wrap=wrap)
 
     def update_capture_region(self):
         if not hasattr(self, "engine") or self.engine is None:
@@ -918,10 +998,15 @@ class GuiMixin:
                                     callback=self.on_enable_parallel_processing_change,
                                 )
                             dpg.add_separator()
-                            dpg.add_text(
-                                self.tr("label_small_target_settings"),
-                                color=(100, 200, 255),
-                            )
+                            with dpg.group(horizontal=True):
+                                dpg.add_text(
+                                    self.tr("label_small_target_settings"),
+                                    color=(100, 200, 255),
+                                )
+                                self.add_help_marker(
+                                    self.tr("help_small_target_settings"),
+                                    same_line=False,
+                                )
                             with dpg.group(horizontal=True):
                                 dpg.add_checkbox(
                                     label=self.tr("label_small_target_enhancement"),
@@ -1042,6 +1127,10 @@ class GuiMixin:
                                     callback=self.on_capture_source_change,
                                     width=self.scaled_width_large,
                                 )
+                                self.add_help_marker(
+                                    self.tr("help_capture_source"),
+                                    same_line=False,
+                                )
                             self.standard_capture_group = dpg.add_group()
                             with dpg.group(
                                 horizontal=True, parent=self.standard_capture_group
@@ -1057,6 +1146,10 @@ class GuiMixin:
                                     default_value=self.config.get("capture_offset_y", 0),
                                     callback=self.on_capture_offset_y_change,
                                     width=self.scaled_width_normal,
+                                )
+                                self.add_help_marker(
+                                    self.tr("help_capture_offsets"),
+                                    same_line=False,
                                 )
                             self.obs_settings_group = dpg.add_group()
                             with dpg.group(parent=self.obs_settings_group):
@@ -1123,7 +1216,9 @@ class GuiMixin:
                                 wrap=self.scaled_width_xlarge,
                             )
                             self.update_capture_status_text()
-                            dpg.add_text(self.tr("label_aim_weights"))
+                            with dpg.group(horizontal=True):
+                                dpg.add_text(self.tr("label_aim_weights"))
+                                self.add_help_marker(self.tr("help_aim_weights"))
                             with dpg.group(horizontal=True):
                                 dpg.add_input_float(
                                     label=self.tr("label_distance_weight"),
@@ -1156,6 +1251,11 @@ class GuiMixin:
                         with dpg.tab(tag="class_settings", label=self.tr("tab_classes")):
                             self.build_class_settings_ui()
                         with dpg.tab(tag="driver_settings", label=self.tr("tab_driver")):
+                            dpg.add_text(
+                                self.tr("help_driver"),
+                                color=(150, 150, 150),
+                                wrap=self.scaled_width_xlarge,
+                            )
                             with dpg.group(horizontal=True):
                                 dpg.add_checkbox(
                                     label=self.tr("label_move_curve"),
@@ -1212,83 +1312,6 @@ class GuiMixin:
                                     width=self.scaled_width_normal,
                                 )
                             with dpg.group(horizontal=True):
-                                dpg.add_input_text(
-                                    label=self.tr("label_km_box_vid"),
-                                    default_value=self.config["km_box_vid"],
-                                    callback=self.on_km_box_vid_change,
-                                    width=self.scaled_width_small,
-                                )
-                                dpg.add_input_text(
-                                    label=self.tr("label_km_box_pid"),
-                                    default_value=self.config["km_box_pid"],
-                                    callback=self.on_km_box_pid_change,
-                                    width=self.scaled_width_small,
-                                )
-                            with dpg.group(horizontal=True):
-                                dpg.add_input_text(
-                                    label=self.tr("label_km_net_ip"),
-                                    default_value=self.config["km_net_ip"],
-                                    callback=self.on_km_net_ip_change,
-                                    width=self.scaled_width_large,
-                                )
-                                dpg.add_input_text(
-                                    label=self.tr("label_km_net_port"),
-                                    default_value=self.config["km_net_port"],
-                                    callback=self.on_km_net_port_change,
-                                    width=self.scaled_width_small,
-                                )
-                                dpg.add_input_text(
-                                    label=self.tr("label_km_net_uuid"),
-                                    default_value=self.config["km_net_uuid"],
-                                    callback=self.on_km_net_uuid_change,
-                                    width=self.scaled_width_medium,
-                                )
-                            with dpg.group(horizontal=True):
-                                dpg.add_input_text(
-                                    label=self.tr("label_dhz_ip"),
-                                    default_value=self.config["dhz_ip"],
-                                    callback=self.on_dhz_ip_change,
-                                    width=self.scaled_width_large,
-                                )
-                                dpg.add_input_int(
-                                    label=self.tr("label_dhz_port"),
-                                    default_value=self.config["dhz_port"],
-                                    callback=self.on_dhz_port_change,
-                                    width=self.scaled_width_normal,
-                                )
-                                dpg.add_input_int(
-                                    label=self.tr("label_dhz_random"),
-                                    default_value=self.config["dhz_random"],
-                                    callback=self.on_dhz_random_change,
-                                    width=self.scaled_width_normal,
-                                )
-                            with dpg.group(horizontal=True):
-                                dpg.add_input_text(
-                                    label=self.tr("label_catbox_ip"),
-                                    default_value=self.config["catbox_ip"],
-                                    callback=self.on_catbox_ip_change,
-                                    width=self.scaled_width_large,
-                                )
-                                dpg.add_input_int(
-                                    label=self.tr("label_catbox_port"),
-                                    default_value=self.config["catbox_port"],
-                                    callback=self.on_catbox_port_change,
-                                    width=self.scaled_width_normal,
-                                )
-                                dpg.add_input_text(
-                                    label=self.tr("label_catbox_uuid"),
-                                    default_value=self.config["catbox_uuid"],
-                                    callback=self.on_catbox_uuid_change,
-                                    width=self.scaled_width_medium,
-                                )
-                            with dpg.group(horizontal=True):
-                                dpg.add_input_text(
-                                    label=self.tr("label_com_port"),
-                                    default_value=self.config["km_com"],
-                                    callback=self.on_km_com_change,
-                                    width=self.scaled_width_normal,
-                                )
-                            with dpg.group(horizontal=True):
                                 dpg.add_combo(
                                     label=self.tr("label_move_method"),
                                     items=[
@@ -1299,6 +1322,11 @@ class GuiMixin:
                                     width=self.scaled_width_large,
                                 )
                         with dpg.tab(tag="bypass_settings", label=self.tr("tab_bypass")):
+                            dpg.add_text(
+                                self.tr("help_bypass"),
+                                color=(150, 150, 150),
+                                wrap=self.scaled_width_xlarge,
+                            )
                             with dpg.group(horizontal=True):
                                 self.mask_left_checkbox = dpg.add_checkbox(
                                     label=self.tr("label_mask_left"),
@@ -1352,6 +1380,11 @@ class GuiMixin:
                                     callback=self.on_mask_wheel_change,
                                 )
                         with dpg.tab(tag="strafe_settings", label=self.tr("tab_strafe")):
+                            dpg.add_text(
+                                self.tr("help_strafe"),
+                                color=(150, 150, 150),
+                                wrap=self.scaled_width_xlarge,
+                            )
                             self.right_down_checkbox = dpg.add_checkbox(
                                 label=self.tr("label_check_right_button"),
                                 callback=self.on_right_down_change,
@@ -1436,9 +1469,11 @@ class GuiMixin:
                                     width=self.scaled_width_60,
                                 )
                             dpg.add_separator()
-                            with dpg.collapsing_header(
+                            mouse_re_header = dpg.add_collapsing_header(
                                 label=self.tr("label_mouse_re_header"), default_open=True
-                            ):
+                            )
+                            self.add_help_marker(self.tr("help_mouse_re"))
+                            with dpg.group(parent=mouse_re_header):
                                 with dpg.group(horizontal=True):
                                     dpg.add_checkbox(
                                         label=self.tr("label_mouse_re_enable"),
@@ -1642,10 +1677,12 @@ class GuiMixin:
             width=self.scaled_width_large,
             callback=self.on_aim_controller_change,
         )
+        self.add_help_marker(self.tr("help_aim_controller"))
 
         self.sunone_settings_group = dpg.add_collapsing_header(
             label=self.tr("label_sunone_settings"), default_open=True
         )
+        self.add_help_marker(self.tr("help_sunone_settings"))
         with dpg.group(parent=self.sunone_settings_group):
             with dpg.group(horizontal=True):
                 dpg.add_checkbox(
@@ -1676,6 +1713,7 @@ class GuiMixin:
                     default_value=self.config["sunone"]["use_kalman"],
                     callback=self.on_change,
                 )
+                self.add_help_marker(self.tr("help_kalman"))
             self.sunone_kalman_group = dpg.add_group()
             with dpg.group(horizontal=True, parent=self.sunone_kalman_group):
                 dpg.add_drag_float(
@@ -1740,6 +1778,16 @@ class GuiMixin:
             self.sunone_prediction_group = dpg.add_collapsing_header(
                 label=self.tr("label_sunone_prediction"), default_open=True
             )
+            self.add_help_marker(self.tr("help_prediction"))
+            self.sunone_prediction_container = dpg.add_group(
+                parent=self.sunone_prediction_group, horizontal=True
+            )
+            self.sunone_prediction_left = dpg.add_group(
+                parent=self.sunone_prediction_container
+            )
+            self.sunone_prediction_preview_group = dpg.add_group(
+                parent=self.sunone_prediction_container
+            )
             prediction_modes = ["Standard", "Kalman", "Kalman + Standard"]
             mode_idx = int(self.config["sunone"]["prediction"]["mode"])
             mode_idx = max(0, min(mode_idx, len(prediction_modes) - 1))
@@ -1749,10 +1797,10 @@ class GuiMixin:
                 default_value=prediction_modes[mode_idx],
                 width=self.scaled_width_large,
                 callback=self.on_sunone_prediction_mode_change,
-                parent=self.sunone_prediction_group,
+                parent=self.sunone_prediction_left,
             )
             self.sunone_pred_standard_group = dpg.add_group(
-                parent=self.sunone_prediction_group
+                parent=self.sunone_prediction_left
             )
             with dpg.group(horizontal=True, parent=self.sunone_pred_standard_group):
                 dpg.add_input_float(
@@ -1767,7 +1815,7 @@ class GuiMixin:
                     width=self.scaled_width_normal,
                 )
             self.sunone_pred_kalman_group = dpg.add_group(
-                parent=self.sunone_prediction_group
+                parent=self.sunone_prediction_left
             )
             with dpg.group(horizontal=True, parent=self.sunone_pred_kalman_group):
                 dpg.add_input_float(
@@ -1794,6 +1842,7 @@ class GuiMixin:
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
+                self.add_help_marker(self.tr("help_prediction_lead"))
             with dpg.group(horizontal=True, parent=self.sunone_pred_kalman_group):
                 dpg.add_input_float(
                     label=self.tr("label_sunone_velocity_smoothing"),
@@ -1819,6 +1868,7 @@ class GuiMixin:
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
+                self.add_help_marker(self.tr("help_velocity_smoothing"))
             with dpg.group(horizontal=True, parent=self.sunone_pred_kalman_group):
                 dpg.add_drag_float(
                     label=self.tr("label_sunone_prediction_q"),
@@ -1846,7 +1896,7 @@ class GuiMixin:
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
-            with dpg.group(horizontal=True, parent=self.sunone_prediction_group):
+            with dpg.group(horizontal=True, parent=self.sunone_prediction_left):
                 dpg.add_input_int(
                     label=self.tr("label_sunone_future_positions"),
                     tag="sunone_prediction_future_positions",
@@ -1864,11 +1914,19 @@ class GuiMixin:
                     ],
                     callback=self.on_change,
                 )
+            with dpg.group(parent=self.sunone_prediction_preview_group):
+                dpg.add_text(self.tr("label_prediction_preview"))
+                self.prediction_preview_drawlist = dpg.add_drawlist(
+                    width=int(self.scaled_width_large * 1.6),
+                    height=int(self.scaled_height_normal * 1.6),
+                )
+            self.update_prediction_preview()
 
             dpg.add_separator()
             self.sunone_speed_group = dpg.add_collapsing_header(
                 label=self.tr("label_sunone_speed"), default_open=True
             )
+            self.add_help_marker(self.tr("help_speed_curve"))
             with dpg.group(horizontal=True, parent=self.sunone_speed_group):
                 dpg.add_input_float(
                     label=self.tr("label_sunone_min_speed"),
@@ -2162,6 +2220,7 @@ class GuiMixin:
         trigger_setting_tag = dpg.add_collapsing_header(
             label=self.tr("label_trigger_config"), default_open=True
         )
+        self.add_help_marker(self.tr("help_trigger"))
         with dpg.group(parent=trigger_setting_tag):
             with dpg.group(horizontal=True):
                 self.status_input = dpg.add_checkbox(
@@ -2175,6 +2234,14 @@ class GuiMixin:
                 self.trigger_recoil_input = dpg.add_checkbox(
                     label=self.tr("label_trigger_recoil"),
                     callback=self.on_trigger_recoil_change,
+                )
+                self.trigger_only_input = dpg.add_checkbox(
+                    label=self.tr("label_trigger_only"),
+                    tag="trigger_only",
+                    default_value=self.config["groups"][self.group]["aim_keys"][
+                        self.select_key
+                    ].get("trigger_only", False),
+                    callback=self.on_change,
                 )
         with dpg.group(horizontal=True):
             self.start_delay_input = dpg.add_input_int(
@@ -2275,6 +2342,7 @@ class GuiMixin:
         class_group = dpg.add_collapsing_header(
             label=self.tr("label_class_settings"), default_open=True
         )
+        self.add_help_marker(self.tr("help_class_settings"))
         with dpg.group(horizontal=True, parent=class_group):
             self.class_names_file_input = dpg.add_input_text(
                 label=self.tr("label_class_names_file"),
@@ -2321,6 +2389,7 @@ class GuiMixin:
         self.update_target_reference_class_combo()
         with dpg.group(horizontal=True, parent=class_group):
             dpg.add_text(self.tr("label_class_aim_config"))
+            self.add_help_marker(self.tr("help_class_aim_config"), same_line=False)
             self.class_aim_combo = dpg.add_combo(
                 items=[],
                 label=self.tr("label_select_class"),
@@ -2626,54 +2695,6 @@ class GuiMixin:
     def on_target_points_change(self, sender, app_data):
         self.config["target_points"] = app_data
         print(f"changed to: {self.config['target_points']}")
-
-    def on_km_box_vid_change(self, sender, app_data):
-        self.config["km_box_vid"] = app_data
-        print(f"changed to: {self.config['km_box_vid']}")
-
-    def on_km_box_pid_change(self, sender, app_data):
-        self.config["km_box_pid"] = app_data
-        print(f"changed to: {self.config['km_box_pid']}")
-
-    def on_km_net_ip_change(self, sender, app_data):
-        self.config["km_net_ip"] = app_data
-        print(f"changed to: {self.config['km_net_ip']}")
-
-    def on_km_net_port_change(self, sender, app_data):
-        self.config["km_net_port"] = app_data
-        print(f"changed to: {self.config['km_net_port']}")
-
-    def on_km_net_uuid_change(self, sender, app_data):
-        self.config["km_net_uuid"] = app_data
-        print(f"changed to: {self.config['km_net_uuid']}")
-
-    def on_dhz_ip_change(self, sender, app_data):
-        self.config["dhz_ip"] = app_data
-        print(f"changed to: {self.config['dhz_ip']}")
-
-    def on_dhz_port_change(self, sender, app_data):
-        self.config["dhz_port"] = app_data
-        print(f"changed to: {self.config['dhz_port']}")
-
-    def on_dhz_random_change(self, sender, app_data):
-        self.config["dhz_random"] = app_data
-        print(f"changed to: {self.config['dhz_random']}")
-
-    def on_catbox_ip_change(self, sender, app_data):
-        self.config["catbox_ip"] = app_data
-        print(f"changed to: {self.config['catbox_ip']}")
-
-    def on_catbox_port_change(self, sender, app_data):
-        self.config["catbox_port"] = app_data
-        print(f"changed to: {self.config['catbox_port']}")
-
-    def on_catbox_uuid_change(self, sender, app_data):
-        self.config["catbox_uuid"] = app_data
-        print(f"changed to: {self.config['catbox_uuid']}")
-
-    def on_km_com_change(self, sender, app_data):
-        self.config["km_com"] = app_data
-        print(f"changed to: {self.config['km_com']}")
 
     def on_move_method_change(self, sender, app_data):
         self.config["move_method"] = app_data
@@ -3078,6 +3099,119 @@ class GuiMixin:
                 color=(255, 220, 80, 255),
                 thickness=2,
                 parent=self.class_aim_preview_drawlist,
+            )
+        except Exception:
+            return
+
+    def update_prediction_preview(self):
+        if (
+            not hasattr(self, "prediction_preview_drawlist")
+            or self.prediction_preview_drawlist is None
+        ):
+            return
+        try:
+            dpg.delete_item(self.prediction_preview_drawlist, children_only=True)
+            width = int(self.scaled_width_large * 1.6)
+            height = int(self.scaled_height_normal * 1.6)
+            dpg.configure_item(
+                self.prediction_preview_drawlist, width=width, height=height
+            )
+            cx = width * 0.5
+            cy = height * 0.55
+
+            pred_cfg = self.config.get("sunone", {}).get("prediction", {})
+            interval = float(pred_cfg.get("interval", 0.05))
+            lead_ms = float(pred_cfg.get("kalman_lead_ms", 0.0))
+            lead_s = max(0.0, lead_ms / 1000.0)
+            vel_smoothing = float(pred_cfg.get("velocity_smoothing", 0.0))
+            vel_scale = float(pred_cfg.get("velocity_scale", 1.0))
+            mode = int(pred_cfg.get("mode", 0))
+
+            base_vx = width * 0.18
+            base_vy = -height * 0.12
+            smooth_factor = max(0.0, min(1.0, 1.0 - vel_smoothing))
+            kal_vx = base_vx * smooth_factor
+            kal_vy = base_vy * smooth_factor
+            gain = 2.0
+
+            std_px = cx + base_vx * interval * gain
+            std_py = cy + base_vy * interval * gain
+            kal_px = cx + kal_vx * lead_s * gain * vel_scale
+            kal_py = cy + kal_vy * lead_s * gain * vel_scale
+            comb_px = kal_px + base_vx * interval * gain
+            comb_py = kal_py + base_vy * interval * gain
+
+            dpg.draw_rectangle(
+                (2, 2),
+                (width - 2, height - 2),
+                color=(60, 60, 60, 255),
+                parent=self.prediction_preview_drawlist,
+            )
+            dpg.draw_line(
+                (cx, cy), (cx, height - 6), color=(50, 50, 50, 255), parent=self.prediction_preview_drawlist
+            )
+            dpg.draw_line(
+                (6, cy), (width - 6, cy), color=(50, 50, 50, 255), parent=self.prediction_preview_drawlist
+            )
+
+            dpg.draw_circle(
+                (cx, cy),
+                4,
+                color=(220, 220, 220, 255),
+                fill=(220, 220, 220, 255),
+                parent=self.prediction_preview_drawlist,
+            )
+            if mode in (0, 2):
+                dpg.draw_line(
+                    (cx, cy),
+                    (std_px, std_py),
+                    color=(255, 220, 120, 255),
+                    thickness=2,
+                    parent=self.prediction_preview_drawlist,
+                )
+                dpg.draw_circle(
+                    (std_px, std_py),
+                    4,
+                    color=(255, 220, 120, 255),
+                    fill=(255, 220, 120, 255),
+                    parent=self.prediction_preview_drawlist,
+                )
+            if mode in (1, 2):
+                dpg.draw_line(
+                    (cx, cy),
+                    (kal_px, kal_py),
+                    color=(120, 200, 255, 255),
+                    thickness=2,
+                    parent=self.prediction_preview_drawlist,
+                )
+                dpg.draw_circle(
+                    (kal_px, kal_py),
+                    4,
+                    color=(120, 200, 255, 255),
+                    fill=(120, 200, 255, 255),
+                    parent=self.prediction_preview_drawlist,
+                )
+            if mode == 2:
+                dpg.draw_circle(
+                    (comb_px, comb_py),
+                    5,
+                    color=(120, 255, 140, 255),
+                    fill=(120, 255, 140, 255),
+                    parent=self.prediction_preview_drawlist,
+                )
+                dpg.draw_line(
+                    (kal_px, kal_py),
+                    (comb_px, comb_py),
+                    color=(120, 255, 140, 255),
+                    thickness=2,
+                    parent=self.prediction_preview_drawlist,
+                )
+
+            dpg.draw_text(
+                (8, 8),
+                "W=Raw  Y=Standard  B=Kalman  G=Combined",
+                color=(150, 150, 150, 255),
+                parent=self.prediction_preview_drawlist,
             )
         except Exception:
             return
@@ -3632,179 +3766,27 @@ class GuiMixin:
 
     def on_mask_left_change(self, sender, app_data):
         self.config["mask_left"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_left(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_left(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_left(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_left(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_left(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_left(0)
 
     def on_mask_right_change(self, sender, app_data):
         self.config["mask_right"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_right(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_right(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_right(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_right(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_right(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_right(0)
 
     def on_mask_middle_change(self, sender, app_data):
         self.config["mask_middle"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_middle(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_middle(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_middle(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_middle(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_middle(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_middle(0)
 
     def on_mask_side1_change(self, sender, app_data):
         self.config["mask_side1"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_side1(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_side1(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_side1(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_side1(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_side1(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_side1(0)
 
     def on_mask_side2_change(self, sender, app_data):
         self.config["mask_side2"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_side2(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_side2(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_side2(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_side2(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_side2(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_side2(0)
 
     def on_mask_x_change(self, sender, app_data):
         self.config["mask_x"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_x(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_x(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_x(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_x(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_x(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_x(0)
 
     def on_mask_y_change(self, sender, app_data):
         self.config["mask_y"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_y(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_y(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_y(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_y(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_y(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_y(0)
 
     def on_mask_wheel_change(self, sender, app_data):
         self.config["mask_wheel"] = app_data
-        if self.config["move_method"] in ["km_net", "dhz", "catbox"]:
-            if app_data:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_wheel(1)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_wheel(1)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_wheel(1)
-            else:
-                if self.config["move_method"] == "dhz":
-                    self.dhz.mask_wheel(0)
-                else:
-                    if self.config["move_method"] == "km_net":
-                        get_kmnet().mask_wheel(0)
-                    else:
-                        if self.config["move_method"] == "catbox":
-                            catbox.mask_wheel(0)
 
     def on_aim_mask_x_change(self, sender, app_data):
         self.config["aim_mask_x"] = app_data
@@ -3857,6 +3839,13 @@ class GuiMixin:
                 self.config["groups"][self.group]["original_infer_model"] = (
                     current_model
                 )
+                engine_path = os.path.splitext(current_model)[0] + ".engine"
+                if os.path.exists(engine_path):
+                    self.config["groups"][self.group]["infer_model"] = engine_path
+                    dpg.set_value(self.infer_model_input, engine_path)
+                    print(f"TRT engine found, using: {engine_path}")
+                    self.refresh_engine()
+                    return
                 print(
                     "TRT mode enabled, will detect and convert engine file on startup"
                 )
@@ -4126,15 +4115,6 @@ class GuiMixin:
         curve_group.register_item("distortion_frequency", "distortion_frequency", float)
         curve_group.register_item("target_points", "target_points", int)
         move_group = ConfigItemGroup(self.config_handler)
-        move_group.register_item("km_box_vid", "km_box_vid", str)
-        move_group.register_item("km_box_pid", "km_box_pid", str)
-        move_group.register_item("km_net_ip", "km_net_ip", str)
-        move_group.register_item("km_net_port", "km_net_port", int)
-        move_group.register_item("km_net_uuid", "km_net_uuid", str)
-        move_group.register_item("dhz_ip", "dhz_ip", str)
-        move_group.register_item("dhz_port", "dhz_port", int)
-        move_group.register_item("dhz_random", "dhz_random", bool)
-        move_group.register_item("km_com", "km_com", str)
         move_group.register_item("move_method", "move_method", str)
         key_group = ConfigItemGroup(self.config_handler)
         key_group.register_item("group", "group", str, self.update_group_inputs)
@@ -4271,6 +4251,7 @@ class GuiMixin:
             int,
         )
         aim_key_group.register_item("status", "status", bool)
+        aim_key_group.register_item("trigger_only", "trigger_only", bool)
         aim_key_group.register_item("start_delay", "start_delay", float)
         aim_key_group.register_item("long_press_duration", "long_press_duration", int)
         aim_key_group.register_item("press_delay", "press_delay", float)
@@ -4504,6 +4485,7 @@ class GuiMixin:
             dpg.show_item(self.sunone_pred_kalman_group)
         else:
             dpg.hide_item(self.sunone_pred_kalman_group)
+        self.update_prediction_preview()
 
     def on_select_class_names_click(self, sender, app_data):
         try:

@@ -105,6 +105,13 @@ class ModelMixin:
                     "trigger"
                 ].get("recoil", False),
             )
+            if getattr(self, "trigger_only_input", None) is not None:
+                dpg.set_value(
+                    self.trigger_only_input,
+                    self.config["groups"][self.group]["aim_keys"][self.select_key].get(
+                        "trigger_only", False
+                    ),
+                )
             dpg.set_value(
                 self.start_delay_input,
                 self.config["groups"][self.group]["aim_keys"][self.select_key][
