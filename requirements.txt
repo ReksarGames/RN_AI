@@ -1,0 +1,37 @@
+# Core Dependencies
+# Install: pip install -r requirements.txt
+
+# Computer Vision & Image Processing
+opencv-python>=4.5.0
+numpy>=1.19.0
+Pillow>=8.0.0
+bettercam>=0.3.0
+onnxruntime>=1.16.0
+
+# GUI Framework
+dearpygui>=1.6.0
+
+# Input Control
+pynput>=1.7.6
+pyclick==0.0.2
+pydirectinput>=1.0.4
+
+# Windows API
+pywin32>=300
+
+# Network & HTTP
+requests>=2.25.0
+
+# Encryption
+cryptography>=3.4.0
+scipy>=1.5.0
+filterpy>=1.4.2
+
+# Serial Communication
+pyserial>=3.5
+
+# System Monitoring
+psutil>=5.8.0
+
+# Hardware Controllers
+makcu==2.3.1

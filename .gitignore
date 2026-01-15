@@ -1,0 +1,4 @@
+.venv/
+.weights/
+__MACOSX/
+__pycache__/
