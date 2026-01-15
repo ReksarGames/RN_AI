@@ -43,3 +43,19 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
 KeyboardInterrupt
 
+[Global Exception] 2026-01-15 23:18:24
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
+    valorant_instance.start()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 454, in start
+    self.gui()
+    ~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1835, in gui
+    dpg.start_dearpygui()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
+    internal_dpg.render_dearpygui_frame()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+KeyboardInterrupt
+
