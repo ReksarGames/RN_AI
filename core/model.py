@@ -35,6 +35,8 @@ class ModelMixin:
         self.refresh_class_names()
 
     def render_key_combo(self):
+        if self.key_tag is None:
+            return
         if self.key_tag is not None:
             dpg.delete_item(self.key_tag)
         default_value = ""
@@ -228,6 +230,8 @@ class ModelMixin:
                     self.dynamic_scope_recover_ms_input,
                     int(dyn.get("recover_duration_ms", 300)),
                 )
+        if hasattr(self, "update_button_lists"):
+            self.update_button_lists()
 
     def update_group_inputs(self):
         dpg.set_value(
@@ -347,6 +351,8 @@ class ModelMixin:
             self.render_key_combo()
             self.update_class_aim_combo()
             self.update_target_reference_class_combo()
+            if hasattr(self, "update_button_lists"):
+                self.update_button_lists()
 
     def init_class_aim_positions_for_key(self, key_name):
         """Initialize class aim position configuration for specified key"""

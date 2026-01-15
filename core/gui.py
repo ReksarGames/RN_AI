@@ -1,7 +1,9 @@
 ﻿import copy
 import ctypes
 import os
+import math
 import random
+import time
 import string
 import tkinter as tk
 from tkinter import filedialog
@@ -12,6 +14,24 @@ from makcu import MouseButton
 from gui_handlers import ConfigItemGroup
 
 from .utils import TENSORRT_AVAILABLE, UPDATE_TIME, VERSION, create_gradient_image
+
+class DemoKalman1D:
+    def __init__(self, process_noise, measurement_noise):
+        self.x = 0.0
+        self.v = 0.0
+        self.P = 1.0
+        self.Q = float(process_noise)
+        self.R = float(measurement_noise)
+
+    def update(self, z, dt):
+        self.x += self.v * dt
+        self.P += self.Q * dt
+        k = self.P / (self.P + self.R) if (self.P + self.R) != 0 else 0.0
+        self.x += k * (z - self.x)
+        self.P *= (1.0 - k)
+        denom = dt if dt > 1e-8 else 1e-8
+        self.v = (1.0 - k) * self.v + k * ((z - self.x) / denom)
+        return self.x
 
 TRANSLATIONS = {
     "en": {
@@ -54,6 +74,7 @@ TRANSLATIONS = {
         "label_sunone_debug_pred": "Show Predicted Target",
         "label_sunone_debug_step": "Show Step",
         "label_sunone_debug_future": "Show Future Points",
+        "label_long_press_section": "Long Press",
         "label_sunone_speed": "Speed Curve",
         "label_sunone_min_speed": "Min Speed",
         "label_sunone_max_speed": "Max Speed",
@@ -62,6 +83,7 @@ TRANSLATIONS = {
         "label_sunone_curve_exp": "Curve Exponent",
         "label_sunone_snap_boost": "Snap Boost",
         "label_prediction_preview": "Prediction Preview",
+        "label_speed_curve_preview": "Speed Curve Preview",
         "label_class_settings": "Class Settings",
         "label_class_priority": "Class Priority",
         "label_class_priority_hint": "Format: 0-1-2-3",
@@ -83,11 +105,35 @@ TRANSLATIONS = {
         "help_mouse_re": "Recoil compensation using mouse_re trajectory files.",
         "help_capture_source": "Select capture input: Standard (screen), OBS, or Capture Card.",
         "help_capture_offsets": "Offsets shift the capture region from screen center.",
+        "label_buttons": "Buttons",
+        "label_targeting_buttons": "Targeting Buttons",
+        "label_triggerbot_buttons": "Triggerbot Buttons",
+        "label_disable_headshot_buttons": "Disable Headshot Buttons",
+        "label_disable_headshot_class": "Disable Headshot Class ID",
+        "label_add_button": "Add Button",
+        "label_remove_button": "Remove",
+        "label_button_none": "None",
+        "label_disable_headshot_status": "Disable headshot",
+        "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
         "help_aim_weights": "Weights for target selection: distance, center, and size influence priority.",
         "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
         "help_kalman": "Kalman filter smooths noisy target positions for steadier tracking.",
         "help_prediction_lead": "Lead time (ms) adds forward prediction to aim position.",
         "help_velocity_smoothing": "Smooths target velocity to reduce jitter in prediction.",
+        "help_long_press_no_lock_y": "Long press keeps Y axis unlocked while aiming; useful for vertical control.",
+        "help_long_press_threshold": "Duration in ms to treat a press as long press.",
+        "help_trigger_only": "Trigger only: no aim movement, only auto-fire for this key.",
+        "help_trigger_recoil": "Apply recoil compensation when triggerbot fires.",
+        "help_small_target_enhancement": "Boosts detection stability for small targets.",
+        "help_small_target_smoothing": "Smooths small target positions across frames.",
+        "help_small_target_boost": "Extra weight for small targets in selection.",
+        "help_small_target_history": "Number of frames used for small target smoothing.",
+        "help_small_target_threshold": "Size threshold treated as small target.",
+        "help_medium_target_threshold": "Threshold for medium targets in small-target smoothing.",
+        "help_adaptive_nms": "Adaptive NMS adjusts suppression for small targets.",
+        "label_help_sunone": "Sunone Info",
+        "label_help_prediction": "Prediction Info",
+        "label_help_speed_curve": "Speed Curve Info",
         "help_driver": "Driver controls how mouse movement is sent (Makcu).",
         "help_bypass": "Bypass masks physical inputs while the driver is active.",
         "help_strafe": "Strafe tab stores recoil/weapon profiles and movement offsets.",
@@ -193,7 +239,7 @@ TRANSLATIONS = {
         "label_target_reference_class": "Target Reference Class",
         "label_min_offset": "Min Offset",
         "label_aim_scope": "Aim Scope",
-        "label_dynamic_scope": "Dynamic Scope",
+        "label_dynamic_scope": "Smart Target Lock",
         "label_min_scope": "Min Scope",
         "label_shrink_duration": "Shrink Duration",
         "label_recover_duration": "Recover Duration",
@@ -296,6 +342,7 @@ TRANSLATIONS = {
         "label_sunone_debug_pred": "Показывать предсказанную цель",
         "label_sunone_debug_step": "Показывать шаг",
         "label_sunone_debug_future": "Показывать будущие точки",
+        "label_long_press_section": "Долгое нажатие",
 
         "label_sunone_speed": "Кривая скорости",
         "label_sunone_min_speed": "Минимальная скорость",
@@ -305,6 +352,7 @@ TRANSLATIONS = {
         "label_sunone_curve_exp": "Экспонента кривой",
         "label_sunone_snap_boost": "Усиление привязки",
         "label_prediction_preview": "Превью предикта",
+        "label_speed_curve_preview": "Превью кривой скорости",
 
         "label_class_settings": "Настройки классов",
         "label_class_priority": "Приоритет классов",
@@ -321,14 +369,38 @@ TRANSLATIONS = {
         "help_mouse_re": "Компенсация отдачи по траекториям mouse_re.",
         "help_capture_source": "Источник захвата: Standard (экран), OBS или карта захвата.",
         "help_capture_offsets": "Смещения двигают область захвата от центра экрана.",
-        "help_aim_weights": "??????? ???????????? ?????? ????: ??????????, ????? ? ?????? ?????? ?? ?????????.",
-        "help_speed_curve": "?????? ???????? ??????, ????????? ?????? ????????? ??????? ?? ????????? ?? ????.",
-        "help_kalman": "?????? ?????????? ?????? ??????? ???? ??? ????? ??????????? ????????.",
-        "help_prediction_lead": "?????????? (??) ????????? ?????????? ? ??????? ?????????.",
-        "help_velocity_smoothing": "?????????? ???????? ????, ???????? ???????? ????????.",
-        "help_driver": "??????? ???????? ?? ???????? ???????? ???? (Makcu).",
-        "help_bypass": "????? (bypass) ????????? ?????????? ???? ?? ????? ?????? ????????.",
-        "help_strafe": "?????? ???????? ??????? ??????/?????? ? ???????? ????????.",
+        "label_buttons": "Кнопки",
+        "label_targeting_buttons": "Кнопки наведения",
+        "label_triggerbot_buttons": "Кнопки триггербота",
+        "label_disable_headshot_buttons": "Кнопки отключения хедшота",
+        "label_disable_headshot_class": "ID класса для отключения хедшота",
+        "label_add_button": "Добавить",
+        "label_remove_button": "Удалить",
+        "label_button_none": "Нет",
+        "label_disable_headshot_status": "Отключение хедшота",
+        "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
+        "help_aim_weights": "Весовые коэффициенты для выбора цели: дистанция, центр и размер влияют на приоритет.",
+        "help_speed_curve": "Кривая скорости, влияет на плавность движения.",
+        "help_kalman": "Фильтр Калмана для стабильного трекинга.",
+        "help_prediction_lead": "Предикт движения цели (lead).",
+        "help_velocity_smoothing": "Сглаживание скорости, уменьшает резкие движения.",
+        "help_long_press_no_lock_y": "Долгое нажатие разблокирует ось Y при наведении; полезно для вертикального контроля.",
+        "help_long_press_threshold": "Порог длительного нажатия (мс), определяет, когда считать нажатие долгим.",
+        "help_trigger_only": "Триггербот только: активен только при наведении на цель.",
+        "help_trigger_recoil": "Компенсация отдачи при триггерботе.",
+        "help_small_target_enhancement": "Улучшает стабильность на мелких/далеких целях, может снизить FPS.",
+        "help_small_target_smoothing": "Сглаживание движения цели для более плавного трекинга.",
+        "help_small_target_boost": "Дополнительный вес для мелких целей при выборе.",
+        "help_small_target_history": "Количество кадров для сглаживания мелких целей.",
+        "help_small_target_threshold": "Порог мелких целей, определяет, когда считать цель маленькой.",
+        "help_medium_target_threshold": "Порог средних целей, определяет, когда считать цель средней.",
+        "help_adaptive_nms": "Адаптивный NMS для улучшения выбора целей.",
+        "label_help_sunone": "Помощь Sunone",
+        "label_help_prediction": "Помощь предикта",
+        "label_help_speed_curve": "Помощь кривой скорости",
+        "help_driver": "Драйвер для управления мышью (Makcu).",
+        "help_bypass": "Обход маскирует физические вводы при активном драйвере.",
+        "help_strafe": "Вкладка стрейфа хранит профили оружия/отдачи и смещения движения.",
         "label_select_class": "Выбрать класс",
 
         "label_class_names_file": "Файл имён классов",
@@ -467,7 +539,7 @@ TRANSLATIONS = {
         "label_min_offset": "Минимальное смещение",
 
         "label_aim_scope": "Область прицеливания",
-        "label_dynamic_scope": "Динамическая область",
+        "label_dynamic_scope": "Смарт-лок цели",
         "label_min_scope": "Минимальная область",
         "label_shrink_duration": "Длительность сжатия",
         "label_recover_duration": "Длительность восстановления",
@@ -565,7 +637,137 @@ class GuiMixin:
             "mouse_x2",
             "mouse_side1",
             "mouse_side2",
+            "m",
         ]
+
+    def attach_tooltip(self, item, text, wrap=None):
+        if item is None:
+            return
+        if wrap is None:
+            wrap = int(self.scaled_width_xlarge * 1.3)
+        with dpg.tooltip(item):
+            dpg.add_text(text, wrap=wrap)
+
+    def update_button_lists(self):
+        if not hasattr(self, "targeting_button_combo"):
+            return
+        group_cfg = self.config["groups"][self.group]
+        options = self._get_button_options()
+        dpg.configure_item(self.targeting_button_combo, items=options)
+        dpg.configure_item(self.triggerbot_button_combo, items=options)
+        dpg.configure_item(self.disable_headshot_button_combo, items=options)
+        dpg.set_value(
+            self.targeting_button_combo,
+            self._format_button_value(group_cfg.get("targeting_button_key", "")),
+        )
+        dpg.set_value(
+            self.triggerbot_button_combo,
+            self._format_button_value(group_cfg.get("triggerbot_button_key", "")),
+        )
+        dpg.set_value(
+            self.disable_headshot_button_combo,
+            self._format_button_value(group_cfg.get("disable_headshot_button_key", "")),
+        )
+        if hasattr(self, "disable_headshot_class_input"):
+            dpg.set_value(
+                self.disable_headshot_class_input,
+                int(group_cfg.get("disable_headshot_class_id", -1)),
+            )
+        disable_key = group_cfg.get("disable_headshot_button_key", "")
+        group_cfg["disable_headshot_keys"] = [disable_key] if disable_key else []
+        self.update_disable_headshot_status()
+
+    def update_disable_headshot_status(self):
+        if not hasattr(self, "disable_headshot_status_text"):
+            return
+        enabled = bool(self.config["groups"][self.group].get("disable_headshot", False))
+        status = self.tr("label_switch_on") if enabled else self.tr("label_switch_off")
+        dpg.set_value(
+            self.disable_headshot_status_text,
+            f"{self.tr('label_disable_headshot_status')}: {status}",
+        )
+
+    def _ensure_aim_key(self, key_name):
+        if not key_name:
+            return False
+        if key_name not in self.config["groups"][self.group]["aim_keys"]:
+            template_key = self.select_key or next(
+                iter(self.config["groups"][self.group]["aim_keys"].keys()), None
+            )
+            if template_key is None:
+                return False
+            self.config["groups"][self.group]["aim_keys"][key_name] = copy.deepcopy(
+                self.config["groups"][self.group]["aim_keys"][template_key]
+            )
+            self.init_class_aim_positions_for_key(key_name)
+        return True
+
+    def _remove_aim_key(self, key_name):
+        if not key_name:
+            return False
+        if key_name not in self.config["groups"][self.group]["aim_keys"]:
+            return False
+        if len(self.config["groups"][self.group]["aim_keys"]) <= 1:
+            return False
+        del self.config["groups"][self.group]["aim_keys"][key_name]
+        return True
+
+    def _format_button_value(self, key_name):
+        if not key_name:
+            return self.tr("label_button_none")
+        return key_name
+
+    def _get_button_options(self):
+        options = [self.tr("label_button_none")]
+        options.extend([k for k in self.get_key_presets() if k])
+        return options
+
+    def _refresh_aim_keys_after_button_change(self):
+        self.aim_keys_dist = self.config["groups"][self.group]["aim_keys"]
+        self.aim_key = list(self.aim_keys_dist.keys())
+        self.render_key_combo()
+        self.update_button_lists()
+
+    def on_targeting_button_change(self, sender, app_data):
+        key = "" if app_data == self.tr("label_button_none") else app_data
+        group_cfg = self.config["groups"][self.group]
+        prev = group_cfg.get("targeting_button_key", "")
+        group_cfg["targeting_button_key"] = key
+        if key:
+            if not self._ensure_aim_key(key):
+                return
+            group_cfg["aim_keys"][key]["trigger_only"] = False
+        other = group_cfg.get("triggerbot_button_key", "")
+        if prev and prev != key and prev != other:
+            self._remove_aim_key(prev)
+        self._refresh_aim_keys_after_button_change()
+
+    def on_triggerbot_button_change(self, sender, app_data):
+        key = "" if app_data == self.tr("label_button_none") else app_data
+        group_cfg = self.config["groups"][self.group]
+        prev = group_cfg.get("triggerbot_button_key", "")
+        group_cfg["triggerbot_button_key"] = key
+        if key:
+            if not self._ensure_aim_key(key):
+                return
+            group_cfg["aim_keys"][key]["trigger_only"] = True
+        other = group_cfg.get("targeting_button_key", "")
+        if prev and prev != key and prev != other:
+            self._remove_aim_key(prev)
+        self._refresh_aim_keys_after_button_change()
+
+    def on_disable_headshot_button_change(self, sender, app_data):
+        key = "" if app_data == self.tr("label_button_none") else app_data
+        group_cfg = self.config["groups"][self.group]
+        group_cfg["disable_headshot_button_key"] = key
+        group_cfg["disable_headshot_keys"] = [key] if key else []
+        self.update_button_lists()
+
+    def on_disable_headshot_class_change(self, sender, app_data):
+        try:
+            self.config["groups"][self.group]["disable_headshot_class_id"] = int(app_data)
+        except Exception:
+            self.config["groups"][self.group]["disable_headshot_class_id"] = -1
 
     def on_key_preset_change(self, sender, app_data):
         if not app_data:
@@ -885,6 +1087,8 @@ class GuiMixin:
         def switch_tab(sender, app_data, user_data):
             """Switch to corresponding tab"""
             dpg.set_value("tab_bar", user_data)
+            if hasattr(self, "tab_bar_container"):
+                dpg.set_x_scroll(self.tab_bar_container, 0)
 
         with dpg.window(
             label=title,
@@ -902,9 +1106,10 @@ class GuiMixin:
                     width=self.gui_window_width,
                     height=self.gui_window_height - 120,
                 ) as tab_bar_container:
+                    self.tab_bar_container = tab_bar_container
                     dpg.bind_item_theme(tab_bar_container, tab_bar_theme)
                     dpg.bind_theme(skeet_theme)
-                    with dpg.tab_bar(tag="tab_bar"):
+                    with dpg.tab_bar(tag="tab_bar", callback=self.on_tab_change):
                         with dpg.tab(tag="system_settings", label=self.tr("tab_system")):
                             with dpg.group(horizontal=True):
                                 self.dpi_scale_slider = dpg.add_slider_float(
@@ -1016,6 +1221,10 @@ class GuiMixin:
                                     ]["enabled"],
                                     callback=self.on_small_target_enabled_change,
                                 )
+                                self.attach_tooltip(
+                                    "small_target_enabled_checkbox",
+                                    self.tr("help_small_target_enhancement"),
+                                )
                                 dpg.add_checkbox(
                                     label=self.tr("label_small_target_smoothing"),
                                     tag="small_target_smooth_checkbox",
@@ -1024,6 +1233,10 @@ class GuiMixin:
                                     ]["smooth_enabled"],
                                     callback=self.on_small_target_smooth_change,
                                 )
+                                self.attach_tooltip(
+                                    "small_target_smooth_checkbox",
+                                    self.tr("help_small_target_smoothing"),
+                                )
                                 dpg.add_checkbox(
                                     label=self.tr("label_adaptive_nms"),
                                     tag="small_target_nms_checkbox",
@@ -1031,6 +1244,10 @@ class GuiMixin:
                                         "small_target_enhancement"
                                     ]["adaptive_nms"],
                                     callback=self.on_small_target_nms_change,
+                                )
+                                self.attach_tooltip(
+                                    "small_target_nms_checkbox",
+                                    self.tr("help_adaptive_nms"),
                                 )
                             with dpg.group(horizontal=True):
                                 dpg.add_input_float(
@@ -1045,6 +1262,10 @@ class GuiMixin:
                                     callback=self.on_small_target_boost_change,
                                     width=self.scaled_width_normal,
                                 )
+                                self.attach_tooltip(
+                                    "small_target_boost_input",
+                                    self.tr("help_small_target_boost"),
+                                )
                                 dpg.add_input_int(
                                     label=self.tr("label_small_target_history"),
                                     tag="small_target_frames_input",
@@ -1055,6 +1276,10 @@ class GuiMixin:
                                     max_value=10,
                                     callback=self.on_small_target_frames_change,
                                     width=self.scaled_width_medium,
+                                )
+                                self.attach_tooltip(
+                                    "small_target_frames_input",
+                                    self.tr("help_small_target_history"),
                                 )
                             with dpg.group(horizontal=True):
                                 dpg.add_input_float(
@@ -1070,6 +1295,10 @@ class GuiMixin:
                                     callback=self.on_small_target_threshold_change,
                                     width=self.scaled_width_normal,
                                 )
+                                self.attach_tooltip(
+                                    "small_target_threshold_input",
+                                    self.tr("help_small_target_threshold"),
+                                )
                                 dpg.add_input_float(
                                     label=self.tr("label_medium_target_threshold"),
                                     tag="medium_target_threshold_input",
@@ -1082,6 +1311,10 @@ class GuiMixin:
                                     format="%.3f",
                                     callback=self.on_medium_target_threshold_change,
                                     width=self.scaled_width_normal,
+                                )
+                                self.attach_tooltip(
+                                    "medium_target_threshold_input",
+                                    self.tr("help_medium_target_threshold"),
                                 )
                             dpg.add_text(
                                 self.tr("label_small_target_note"),
@@ -1216,36 +1449,6 @@ class GuiMixin:
                                 wrap=self.scaled_width_xlarge,
                             )
                             self.update_capture_status_text()
-                            with dpg.group(horizontal=True):
-                                dpg.add_text(self.tr("label_aim_weights"))
-                                self.add_help_marker(self.tr("help_aim_weights"))
-                            with dpg.group(horizontal=True):
-                                dpg.add_input_float(
-                                    label=self.tr("label_distance_weight"),
-                                    default_value=self.config[
-                                        "distance_scoring_weight"
-                                    ],
-                                    min_value=0.0,
-                                    step=0.05,
-                                    callback=self.on_distance_scoring_weight_change,
-                                    width=self.scaled_width_normal,
-                                )
-                                dpg.add_input_float(
-                                    label=self.tr("label_center_weight"),
-                                    default_value=self.config["center_scoring_weight"],
-                                    min_value=0.0,
-                                    step=0.05,
-                                    callback=self.on_center_scoring_weight_change,
-                                    width=self.scaled_width_normal,
-                                )
-                                dpg.add_input_float(
-                                    label=self.tr("label_size_weight"),
-                                    default_value=self.config["size_scoring_weight"],
-                                    min_value=0.0,
-                                    step=0.05,
-                                    callback=self.on_size_scoring_weight_change,
-                                    width=self.scaled_width_normal,
-                                )
                         with dpg.tab(tag="aim_settings", label=self.tr("tab_aim")):
                             self.build_aim_settings_ui()
                         with dpg.tab(tag="class_settings", label=self.tr("tab_classes")):
@@ -1545,36 +1748,52 @@ class GuiMixin:
                                     tag="mouse_re_points_text",
                                 )
                         with dpg.tab(tag="config_settings", label=self.tr("tab_config")):
-                            key_bind_group = dpg.add_collapsing_header(
-                                label=self.tr("label_key_bindings"), default_open=True
+                            buttons_group = dpg.add_collapsing_header(
+                                label=self.tr("label_buttons"), default_open=True
                             )
-                            with dpg.group(horizontal=True, parent=key_bind_group):
-                                with dpg.group() as self.aim_key_combo_group:
-                                    self.render_key_combo()
-                                dpg.add_button(
-                                    label=self.tr("label_key_delete"),
-                                    callback=self.on_delete_key_click,
-                                    width=self.scaled_width_60,
-                                )
-                            with dpg.group(horizontal=True, parent=key_bind_group):
-                                self.key_preset_combo = dpg.add_combo(
-                                    label=self.tr("label_key_preset"),
-                                    items=self.get_key_presets(),
-                                    default_value="",
-                                    callback=self.on_key_preset_change,
-                                    width=self.scaled_width_normal,
-                                )
-                                self.key_name_input = dpg.add_input_text(
-                                    label=self.tr("label_key_name"),
-                                    tag="aim_key_name_input",
-                                    callback=self.on_key_name_change,
-                                    width=self.scaled_width_normal,
-                                )
-                                dpg.add_button(
-                                    label=self.tr("label_key_add"),
-                                    callback=self.on_add_key_click,
-                                    width=self.scaled_width_60,
-                                )
+                            with dpg.group(parent=buttons_group):
+                                with dpg.group(horizontal=True):
+                                    dpg.add_text(self.tr("label_targeting_buttons"))
+                                    self.targeting_button_combo = dpg.add_combo(
+                                        items=self._get_button_options(),
+                                        default_value=self.tr("label_button_none"),
+                                        width=self.scaled_width_normal,
+                                        callback=self.on_targeting_button_change,
+                                    )
+                                with dpg.group(horizontal=True):
+                                    dpg.add_text(self.tr("label_triggerbot_buttons"))
+                                    self.triggerbot_button_combo = dpg.add_combo(
+                                        items=self._get_button_options(),
+                                        default_value=self.tr("label_button_none"),
+                                        width=self.scaled_width_normal,
+                                        callback=self.on_triggerbot_button_change,
+                                    )
+                                with dpg.group(horizontal=True):
+                                    dpg.add_text(self.tr("label_disable_headshot_buttons"))
+                                    self.disable_headshot_button_combo = dpg.add_combo(
+                                        items=self._get_button_options(),
+                                        default_value=self.tr("label_button_none"),
+                                        width=self.scaled_width_normal,
+                                        callback=self.on_disable_headshot_button_change,
+                                    )
+                                with dpg.group(horizontal=True):
+                                    dpg.add_text(self.tr("label_disable_headshot_class"))
+                                    self.disable_headshot_class_input = dpg.add_input_int(
+                                        default_value=self.config["groups"][self.group].get(
+                                            "disable_headshot_class_id", -1
+                                        ),
+                                        min_value=-1,
+                                        max_value=999,
+                                        callback=self.on_disable_headshot_class_change,
+                                        width=self.scaled_width_normal,
+                                    )
+                                self.disable_headshot_status_text = dpg.add_text("")
+                                self.update_disable_headshot_status()
+
+                            self.aim_key_combo_group = None
+                            self.key_tag = None
+                            self.key_preset_combo = None
+                            self.key_name_input = None
                             model_params_group = dpg.add_collapsing_header(
                                 label=self.tr("label_model_params"), default_open=True
                             )
@@ -1652,6 +1871,10 @@ class GuiMixin:
             self.render_mouse_re_guns_combo()
             self.update_mouse_re_ui_status()
             self.update_controller_visibility()
+            self.start_preview_animation()
+            self.update_button_lists()
+            if hasattr(self, "tab_bar_container"):
+                dpg.set_x_scroll(self.tab_bar_container, 0)
             dpg.start_dearpygui()
         self.running = False
         self.disconnect_device()
@@ -1671,19 +1894,21 @@ class GuiMixin:
             else controller_items[0]
         )
         self.aim_controller_combo = dpg.add_combo(
-            label=self.tr("label_aim_controller"),
+            label=f"{self.tr('label_aim_controller')} (?)",
             items=controller_items,
             default_value=controller_default,
             width=self.scaled_width_large,
             callback=self.on_aim_controller_change,
         )
-        self.add_help_marker(self.tr("help_aim_controller"))
+        self.attach_tooltip(self.aim_controller_combo, self.tr("help_aim_controller"))
 
         self.sunone_settings_group = dpg.add_collapsing_header(
             label=self.tr("label_sunone_settings"), default_open=True
         )
-        self.add_help_marker(self.tr("help_sunone_settings"))
         with dpg.group(parent=self.sunone_settings_group):
+            with dpg.group(horizontal=True):
+                dpg.add_text(self.tr("label_help_sunone"))
+                self.add_help_marker(self.tr("help_sunone_settings"))
             with dpg.group(horizontal=True):
                 dpg.add_checkbox(
                     label=self.tr("label_sunone_smoothing"),
@@ -1716,24 +1941,22 @@ class GuiMixin:
                 self.add_help_marker(self.tr("help_kalman"))
             self.sunone_kalman_group = dpg.add_group()
             with dpg.group(horizontal=True, parent=self.sunone_kalman_group):
-                dpg.add_drag_float(
+                dpg.add_input_float(
                     label=self.tr("label_sunone_kalman_q"),
                     tag="sunone_kalman_process_noise",
                     default_value=self.config["sunone"]["kalman_process_noise"],
                     min_value=0.0001,
                     max_value=10.0,
-                    speed=0.001,
                     format="%.4f",
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
-                dpg.add_drag_float(
+                dpg.add_input_float(
                     label=self.tr("label_sunone_kalman_r"),
                     tag="sunone_kalman_measurement_noise",
                     default_value=self.config["sunone"]["kalman_measurement_noise"],
                     min_value=0.0001,
                     max_value=10.0,
-                    speed=0.001,
                     format="%.4f",
                     callback=self.on_change,
                     width=self.scaled_width_normal,
@@ -1778,7 +2001,9 @@ class GuiMixin:
             self.sunone_prediction_group = dpg.add_collapsing_header(
                 label=self.tr("label_sunone_prediction"), default_open=True
             )
-            self.add_help_marker(self.tr("help_prediction"))
+            with dpg.group(horizontal=True, parent=self.sunone_prediction_group):
+                dpg.add_text(self.tr("label_help_prediction"))
+                self.add_help_marker(self.tr("help_prediction"))
             self.sunone_prediction_container = dpg.add_group(
                 parent=self.sunone_prediction_group, horizontal=True
             )
@@ -1818,7 +2043,7 @@ class GuiMixin:
                 parent=self.sunone_prediction_left
             )
             with dpg.group(horizontal=True, parent=self.sunone_pred_kalman_group):
-                dpg.add_input_float(
+                self.sunone_prediction_lead_input = dpg.add_input_float(
                     label=self.tr("label_sunone_prediction_lead"),
                     tag="sunone_prediction_kalman_lead_ms",
                     default_value=self.config["sunone"]["prediction"]["kalman_lead_ms"],
@@ -1829,7 +2054,7 @@ class GuiMixin:
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
-                dpg.add_input_float(
+                self.sunone_prediction_max_lead_input = dpg.add_input_float(
                     label=self.tr("label_sunone_prediction_max_lead"),
                     tag="sunone_prediction_kalman_max_lead_ms",
                     default_value=self.config["sunone"]["prediction"][
@@ -1843,8 +2068,12 @@ class GuiMixin:
                     width=self.scaled_width_normal,
                 )
                 self.add_help_marker(self.tr("help_prediction_lead"))
+                self.attach_tooltip(
+                    self.sunone_prediction_lead_input,
+                    self.tr("help_prediction_lead"),
+                )
             with dpg.group(horizontal=True, parent=self.sunone_pred_kalman_group):
-                dpg.add_input_float(
+                self.sunone_prediction_velocity_smoothing_input = dpg.add_input_float(
                     label=self.tr("label_sunone_velocity_smoothing"),
                     tag="sunone_prediction_velocity_smoothing",
                     default_value=self.config["sunone"]["prediction"][
@@ -1857,7 +2086,7 @@ class GuiMixin:
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
-                dpg.add_input_float(
+                self.sunone_prediction_velocity_scale_input = dpg.add_input_float(
                     label=self.tr("label_sunone_velocity_scale"),
                     tag="sunone_prediction_velocity_scale",
                     default_value=self.config["sunone"]["prediction"]["velocity_scale"],
@@ -1869,8 +2098,12 @@ class GuiMixin:
                     width=self.scaled_width_normal,
                 )
                 self.add_help_marker(self.tr("help_velocity_smoothing"))
+                self.attach_tooltip(
+                    self.sunone_prediction_velocity_smoothing_input,
+                    self.tr("help_velocity_smoothing"),
+                )
             with dpg.group(horizontal=True, parent=self.sunone_pred_kalman_group):
-                dpg.add_drag_float(
+                dpg.add_input_float(
                     label=self.tr("label_sunone_prediction_q"),
                     tag="sunone_prediction_kalman_process_noise",
                     default_value=self.config["sunone"]["prediction"][
@@ -1878,12 +2111,11 @@ class GuiMixin:
                     ],
                     min_value=0.0001,
                     max_value=10.0,
-                    speed=0.001,
                     format="%.4f",
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
-                dpg.add_drag_float(
+                dpg.add_input_float(
                     label=self.tr("label_sunone_prediction_r"),
                     tag="sunone_prediction_kalman_measurement_noise",
                     default_value=self.config["sunone"]["prediction"][
@@ -1891,7 +2123,6 @@ class GuiMixin:
                     ],
                     min_value=0.0001,
                     max_value=10.0,
-                    speed=0.001,
                     format="%.4f",
                     callback=self.on_change,
                     width=self.scaled_width_normal,
@@ -1926,7 +2157,9 @@ class GuiMixin:
             self.sunone_speed_group = dpg.add_collapsing_header(
                 label=self.tr("label_sunone_speed"), default_open=True
             )
-            self.add_help_marker(self.tr("help_speed_curve"))
+            with dpg.group(horizontal=True, parent=self.sunone_speed_group):
+                dpg.add_text(self.tr("label_help_speed_curve"))
+                self.add_help_marker(self.tr("help_speed_curve"))
             with dpg.group(horizontal=True, parent=self.sunone_speed_group):
                 dpg.add_input_float(
                     label=self.tr("label_sunone_min_speed"),
@@ -1996,6 +2229,13 @@ class GuiMixin:
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
+            with dpg.group(parent=self.sunone_speed_group):
+                dpg.add_text(self.tr("label_speed_curve_preview"))
+                self.speed_curve_preview_drawlist = dpg.add_drawlist(
+                    width=int(self.scaled_width_large * 1.4),
+                    height=int(self.scaled_height_normal * 1.4),
+                )
+            self.update_speed_curve_preview()
 
             dpg.add_separator()
             self.sunone_debug_group = dpg.add_collapsing_header(
@@ -2022,10 +2262,14 @@ class GuiMixin:
                 )
 
         dpg.add_separator()
+        dpg.add_text(self.tr("label_long_press_section"))
         with dpg.group(horizontal=True):
             self.auto_y_checkbox = dpg.add_checkbox(
                 label=self.tr("label_long_press_no_lock_y"),
                 callback=self.on_auto_y_change,
+            )
+            self.attach_tooltip(
+                self.auto_y_checkbox, self.tr("help_long_press_no_lock_y")
             )
             self.long_press_duration_input = dpg.add_input_int(
                 label=self.tr("label_long_press_threshold"),
@@ -2034,6 +2278,10 @@ class GuiMixin:
                 ],
                 callback=self.on_long_press_duration_change,
                 width=self.scaled_width_normal,
+            )
+            self.attach_tooltip(
+                self.long_press_duration_input,
+                self.tr("help_long_press_threshold"),
             )
         with dpg.group(horizontal=True):
             self.target_switch_delay_input = dpg.add_input_int(
@@ -2069,6 +2317,9 @@ class GuiMixin:
                 label=self.tr("label_dynamic_scope"),
                 callback=self.on_dynamic_scope_enabled_change,
             )
+            self.attach_tooltip(
+                self.dynamic_scope_enabled_input, self.tr("help_smart_target")
+            )
             self.dynamic_scope_min_scope_input = dpg.add_input_int(
                 label=self.tr("label_min_scope"),
                 min_value=0,
@@ -2088,6 +2339,35 @@ class GuiMixin:
                 min_value=0,
                 max_value=5000,
                 callback=self.on_dynamic_scope_recover_ms_change,
+                width=self.scaled_width_normal,
+            )
+        dpg.add_separator()
+        with dpg.group(horizontal=True):
+            dpg.add_text(self.tr("label_aim_weights"))
+            self.add_help_marker(self.tr("help_aim_weights"))
+        with dpg.group(horizontal=True):
+            dpg.add_input_float(
+                label=self.tr("label_distance_weight"),
+                default_value=self.config["distance_scoring_weight"],
+                min_value=0.0,
+                step=0.05,
+                callback=self.on_distance_scoring_weight_change,
+                width=self.scaled_width_normal,
+            )
+            dpg.add_input_float(
+                label=self.tr("label_center_weight"),
+                default_value=self.config["center_scoring_weight"],
+                min_value=0.0,
+                step=0.05,
+                callback=self.on_center_scoring_weight_change,
+                width=self.scaled_width_normal,
+            )
+            dpg.add_input_float(
+                label=self.tr("label_size_weight"),
+                default_value=self.config["size_scoring_weight"],
+                min_value=0.0,
+                step=0.05,
+                callback=self.on_size_scoring_weight_change,
                 width=self.scaled_width_normal,
             )
         self.pid_params_group = dpg.add_collapsing_header(
@@ -2218,9 +2498,9 @@ class GuiMixin:
                 width=self.scaled_width_normal,
             )
         trigger_setting_tag = dpg.add_collapsing_header(
-            label=self.tr("label_trigger_config"), default_open=True
+            label=f"{self.tr('label_trigger_config')} (?)", default_open=True
         )
-        self.add_help_marker(self.tr("help_trigger"))
+        self.attach_tooltip(trigger_setting_tag, self.tr("help_trigger"))
         with dpg.group(parent=trigger_setting_tag):
             with dpg.group(horizontal=True):
                 self.status_input = dpg.add_checkbox(
@@ -2235,13 +2515,19 @@ class GuiMixin:
                     label=self.tr("label_trigger_recoil"),
                     callback=self.on_trigger_recoil_change,
                 )
+                self.attach_tooltip(
+                    self.trigger_recoil_input, self.tr("help_trigger_recoil")
+                )
                 self.trigger_only_input = dpg.add_checkbox(
                     label=self.tr("label_trigger_only"),
                     tag="trigger_only",
                     default_value=self.config["groups"][self.group]["aim_keys"][
                         self.select_key
                     ].get("trigger_only", False),
-                    callback=self.on_change,
+                    callback=self.on_trigger_only_change,
+                )
+                self.attach_tooltip(
+                    self.trigger_only_input, self.tr("help_trigger_only")
                 )
         with dpg.group(horizontal=True):
             self.start_delay_input = dpg.add_input_int(
@@ -2340,9 +2626,9 @@ class GuiMixin:
 
     def build_class_settings_ui(self):
         class_group = dpg.add_collapsing_header(
-            label=self.tr("label_class_settings"), default_open=True
+            label=f"{self.tr('label_class_settings')} (?)", default_open=True
         )
-        self.add_help_marker(self.tr("help_class_settings"))
+        self.attach_tooltip(class_group, self.tr("help_class_settings"))
         with dpg.group(horizontal=True, parent=class_group):
             self.class_names_file_input = dpg.add_input_text(
                 label=self.tr("label_class_names_file"),
@@ -2388,8 +2674,8 @@ class GuiMixin:
         self.create_checkboxes(class_ary)
         self.update_target_reference_class_combo()
         with dpg.group(horizontal=True, parent=class_group):
-            dpg.add_text(self.tr("label_class_aim_config"))
-            self.add_help_marker(self.tr("help_class_aim_config"), same_line=False)
+            class_aim_label = dpg.add_text(f"{self.tr('label_class_aim_config')} (?)")
+            self.attach_tooltip(class_aim_label, self.tr("help_class_aim_config"))
             self.class_aim_combo = dpg.add_combo(
                 items=[],
                 label=self.tr("label_select_class"),
@@ -2716,6 +3002,7 @@ class GuiMixin:
         self.aim_key = list(self.aim_keys_dist.keys())
         self.render_key_combo()
         self.update_group_inputs()
+        self.update_button_lists()
         self.update_auto_flashbang_ui_state()
         print(f"changed to: {self.config['group']}")
 
@@ -3126,20 +3413,78 @@ class GuiMixin:
             vel_smoothing = float(pred_cfg.get("velocity_smoothing", 0.0))
             vel_scale = float(pred_cfg.get("velocity_scale", 1.0))
             mode = int(pred_cfg.get("mode", 0))
+            q = float(pred_cfg.get("kalman_process_noise", 0.01))
+            r = float(pred_cfg.get("kalman_measurement_noise", 0.1))
 
-            base_vx = width * 0.18
-            base_vy = -height * 0.12
-            smooth_factor = max(0.0, min(1.0, 1.0 - vel_smoothing))
-            kal_vx = base_vx * smooth_factor
-            kal_vy = base_vy * smooth_factor
-            gain = 2.0
+            state = getattr(self, "_pred_demo_state", None)
+            if state is None:
+                state = {
+                    "angle": 0.0,
+                    "last_t": time.perf_counter(),
+                    "prev_raw_x": cx,
+                    "prev_raw_y": cy,
+                    "kf_x": DemoKalman1D(q, r),
+                    "kf_y": DemoKalman1D(q, r),
+                    "last_q": q,
+                    "last_r": r,
+                    "sm_vx": 0.0,
+                    "sm_vy": 0.0,
+                    "sm_init": False,
+                }
+                self._pred_demo_state = state
 
-            std_px = cx + base_vx * interval * gain
-            std_py = cy + base_vy * interval * gain
-            kal_px = cx + kal_vx * lead_s * gain * vel_scale
-            kal_py = cy + kal_vy * lead_s * gain * vel_scale
-            comb_px = kal_px + base_vx * interval * gain
-            comb_py = kal_py + base_vy * interval * gain
+            now = time.perf_counter()
+            dt = now - state["last_t"]
+            state["last_t"] = now
+            dt = max(1e-4, min(dt, 0.1))
+
+            if state["last_q"] != q or state["last_r"] != r:
+                state["kf_x"] = DemoKalman1D(q, r)
+                state["kf_y"] = DemoKalman1D(q, r)
+                state["last_q"] = q
+                state["last_r"] = r
+                state["sm_init"] = False
+
+            state["angle"] += dt * 1.2
+            if state["angle"] > math.tau:
+                state["angle"] -= math.tau
+
+            radius = width * 0.35
+            raw_x = cx + math.cos(state["angle"]) * radius
+            raw_y = cy + math.sin(state["angle"] * 1.3) * (radius * 0.7)
+
+            raw_vx = (raw_x - state["prev_raw_x"]) / dt
+            raw_vy = (raw_y - state["prev_raw_y"]) / dt
+            state["prev_raw_x"] = raw_x
+            state["prev_raw_y"] = raw_y
+
+            kal_x = state["kf_x"].update(raw_x, dt)
+            kal_y = state["kf_y"].update(raw_y, dt)
+
+            alpha = max(0.0, min(1.0, vel_smoothing))
+            if not state["sm_init"]:
+                state["sm_vx"] = state["kf_x"].v
+                state["sm_vy"] = state["kf_y"].v
+                state["sm_init"] = True
+            else:
+                state["sm_vx"] += (state["kf_x"].v - state["sm_vx"]) * alpha
+                state["sm_vy"] += (state["kf_y"].v - state["sm_vy"]) * alpha
+
+            scale = max(0.0, vel_scale)
+            std_px = raw_x + raw_vx * interval
+            std_py = raw_y + raw_vy * interval
+            kal_px = kal_x + state["sm_vx"] * scale * lead_s
+            kal_py = kal_y + state["sm_vy"] * scale * lead_s
+
+            if mode == 0:
+                final_x = std_px
+                final_y = std_py
+            elif mode == 1:
+                final_x = kal_px
+                final_y = kal_py
+            else:
+                final_x = kal_px + raw_vx * interval
+                final_y = kal_py + raw_vy * interval
 
             dpg.draw_rectangle(
                 (2, 2),
@@ -3154,67 +3499,169 @@ class GuiMixin:
                 (6, cy), (width - 6, cy), color=(50, 50, 50, 255), parent=self.prediction_preview_drawlist
             )
 
-            dpg.draw_circle(
-                (cx, cy),
-                4,
-                color=(220, 220, 220, 255),
-                fill=(220, 220, 220, 255),
+            dpg.draw_line(
+                (raw_x, raw_y),
+                (final_x, final_y),
+                color=(100, 255, 100, 200),
+                thickness=2,
                 parent=self.prediction_preview_drawlist,
             )
-            if mode in (0, 2):
-                dpg.draw_line(
-                    (cx, cy),
-                    (std_px, std_py),
-                    color=(255, 220, 120, 255),
-                    thickness=2,
-                    parent=self.prediction_preview_drawlist,
-                )
+            dpg.draw_circle(
+                (raw_x, raw_y),
+                4,
+                color=(255, 255, 255, 220),
+                fill=(255, 255, 255, 220),
+                parent=self.prediction_preview_drawlist,
+            )
+            dpg.draw_circle(
+                (final_x, final_y),
+                4,
+                color=(100, 255, 100, 220),
+                fill=(100, 255, 100, 220),
+                parent=self.prediction_preview_drawlist,
+            )
+
+            steps = max(1, min(int(pred_cfg.get("future_positions", 6)), 12))
+            preview_vx = raw_vx if mode == 0 else state["sm_vx"] * scale
+            preview_vy = raw_vy if mode == 0 else state["sm_vy"] * scale
+            fps = max(1.0, float(self.config.get("obs_fps", 60)))
+            frame_time = 1.0 / fps
+            for i in range(1, steps + 1):
+                t = frame_time * i
+                pt_x = final_x + preview_vx * t
+                pt_y = final_y + preview_vy * t
+                alpha_pt = int(200 - i * (140.0 / steps))
                 dpg.draw_circle(
-                    (std_px, std_py),
-                    4,
-                    color=(255, 220, 120, 255),
-                    fill=(255, 220, 120, 255),
-                    parent=self.prediction_preview_drawlist,
-                )
-            if mode in (1, 2):
-                dpg.draw_line(
-                    (cx, cy),
-                    (kal_px, kal_py),
-                    color=(120, 200, 255, 255),
-                    thickness=2,
-                    parent=self.prediction_preview_drawlist,
-                )
-                dpg.draw_circle(
-                    (kal_px, kal_py),
-                    4,
-                    color=(120, 200, 255, 255),
-                    fill=(120, 200, 255, 255),
-                    parent=self.prediction_preview_drawlist,
-                )
-            if mode == 2:
-                dpg.draw_circle(
-                    (comb_px, comb_py),
-                    5,
-                    color=(120, 255, 140, 255),
-                    fill=(120, 255, 140, 255),
-                    parent=self.prediction_preview_drawlist,
-                )
-                dpg.draw_line(
-                    (kal_px, kal_py),
-                    (comb_px, comb_py),
-                    color=(120, 255, 140, 255),
-                    thickness=2,
+                    (pt_x, pt_y),
+                    2.5,
+                    color=(80, 180, 255, alpha_pt),
+                    fill=(80, 180, 255, alpha_pt),
                     parent=self.prediction_preview_drawlist,
                 )
 
             dpg.draw_text(
                 (8, 8),
-                "W=Raw  Y=Standard  B=Kalman  G=Combined",
+                "W=Raw  G=Prediction",
                 color=(150, 150, 150, 255),
                 parent=self.prediction_preview_drawlist,
             )
         except Exception:
             return
+
+    def update_speed_curve_preview(self):
+        if (
+            not hasattr(self, "speed_curve_preview_drawlist")
+            or self.speed_curve_preview_drawlist is None
+        ):
+            return
+        try:
+            dpg.delete_item(self.speed_curve_preview_drawlist, children_only=True)
+            width = int(self.scaled_width_large * 1.4)
+            height = int(self.scaled_height_normal * 1.4)
+            dpg.configure_item(
+                self.speed_curve_preview_drawlist, width=width, height=height
+            )
+            cx = width * 0.5
+            cy = height * 0.55
+            dpg.draw_rectangle(
+                (2, 2),
+                (width - 2, height - 2),
+                color=(60, 60, 60, 255),
+                parent=self.speed_curve_preview_drawlist,
+            )
+
+            speed_cfg = self.config.get("sunone", {}).get("speed", {})
+            min_speed = float(speed_cfg.get("min_multiplier", 0.5))
+            max_speed = float(speed_cfg.get("max_multiplier", 0.7))
+            snap_radius = float(speed_cfg.get("snap_radius", 3.2))
+            near_radius = float(speed_cfg.get("near_radius", 40.0))
+            curve_exp = max(1.0, float(speed_cfg.get("speed_curve_exponent", 10.0)))
+            snap_boost = max(0.1, float(speed_cfg.get("snap_boost_factor", 4.0)))
+
+            scale = 4.0
+            near_px = max(10.0, min(near_radius * scale, width * 0.45))
+            snap_px = max(6.0, min(snap_radius * scale, near_px - 4.0))
+
+            dpg.draw_circle(
+                (cx, cy),
+                near_px,
+                color=(80, 120, 255, 180),
+                thickness=2,
+                parent=self.speed_curve_preview_drawlist,
+            )
+            dpg.draw_circle(
+                (cx, cy),
+                snap_px,
+                color=(255, 100, 100, 180),
+                thickness=2,
+                parent=self.speed_curve_preview_drawlist,
+            )
+
+            state = getattr(self, "_speed_curve_demo", None)
+            if state is None:
+                state = {
+                    "dist_px": near_px,
+                    "vel_px": 0.0,
+                    "last_t": time.perf_counter(),
+                }
+                self._speed_curve_demo = state
+
+            now = time.perf_counter()
+            dt = now - state["last_t"]
+            state["last_t"] = now
+            dt = max(1e-4, min(dt, 0.1))
+
+            dist_units = state["dist_px"] / scale
+            if dist_units < snap_radius:
+                speed_mult = min_speed * snap_boost
+            elif dist_units < near_radius:
+                t = dist_units / max(near_radius, 1e-6)
+                crv = 1.0 - math.pow(1.0 - t, curve_exp)
+                speed_mult = min_speed + (max_speed - min_speed) * crv
+            else:
+                norm = max(0.0, min(1.0, dist_units / max(near_radius, 1e-6)))
+                speed_mult = min_speed + (max_speed - min_speed) * norm
+
+            base_px_s = 60.0
+            state["vel_px"] = base_px_s * speed_mult
+            state["dist_px"] -= state["vel_px"] * dt
+            if state["dist_px"] <= 0.0:
+                state["dist_px"] = near_px
+
+            dot_x = cx - state["dist_px"]
+            dot_y = cy
+            dpg.draw_circle(
+                (dot_x, dot_y),
+                4,
+                color=(255, 255, 80, 255),
+                fill=(255, 255, 80, 255),
+                parent=self.speed_curve_preview_drawlist,
+            )
+        except Exception:
+            return
+
+    def _schedule_preview_tick(self):
+        if not getattr(self, "_preview_anim_active", False):
+            return
+        try:
+            frame = dpg.get_frame_count() + 1
+            dpg.set_frame_callback(frame, self._preview_tick)
+        except Exception:
+            return
+
+    def _preview_tick(self, sender, app_data, user_data):
+        if not getattr(self, "_preview_anim_active", False):
+            return
+        self._prediction_preview_time = time.perf_counter()
+        self.update_prediction_preview()
+        self.update_speed_curve_preview()
+        self._schedule_preview_tick()
+
+    def start_preview_animation(self):
+        if getattr(self, "_preview_anim_active", False):
+            return
+        self._preview_anim_active = True
+        self._schedule_preview_tick()
 
     def update_class_aim_combo(self):
         """Update class combo options"""
@@ -4543,6 +4990,14 @@ class GuiMixin:
             app_data: New configuration value
         """
         self.config_handler.handle_change(sender, app_data)
+
+    def on_trigger_only_change(self, sender, app_data):
+        self.on_change(sender, app_data)
+        self.update_button_lists()
+
+    def on_tab_change(self, sender, app_data):
+        if hasattr(self, "tab_bar_container"):
+            dpg.set_x_scroll(self.tab_bar_container, 0)
 
     def on_controller_type_change(self, sender, app_data):
         """Controller type switch"""

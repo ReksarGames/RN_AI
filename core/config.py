@@ -165,6 +165,33 @@ class ConfigMixin:
                 "curve_knots": 3,
             }
         for group_key, group_val in config.get("groups", {}).items():
+            if "disable_headshot" not in group_val:
+                group_val["disable_headshot"] = False
+            if "disable_headshot_keys" not in group_val:
+                group_val["disable_headshot_keys"] = ["m"]
+            if "disable_headshot_class_id" not in group_val:
+                group_val["disable_headshot_class_id"] = -1
+            if "targeting_button_key" not in group_val:
+                default_target = ""
+                for key_name, key_cfg in group_val.get("aim_keys", {}).items():
+                    if not key_cfg.get("trigger_only", False):
+                        default_target = key_name
+                        break
+                if not default_target and group_val.get("aim_keys"):
+                    default_target = next(iter(group_val["aim_keys"].keys()))
+                group_val["targeting_button_key"] = default_target
+            if "triggerbot_button_key" not in group_val:
+                default_trigger = ""
+                for key_name, key_cfg in group_val.get("aim_keys", {}).items():
+                    if key_cfg.get("trigger_only", False):
+                        default_trigger = key_name
+                        break
+                group_val["triggerbot_button_key"] = default_trigger
+            if "disable_headshot_button_key" not in group_val:
+                keys = group_val.get("disable_headshot_keys", [])
+                group_val["disable_headshot_button_key"] = keys[0] if keys else "m"
+            disable_key = group_val.get("disable_headshot_button_key", "")
+            group_val["disable_headshot_keys"] = [disable_key] if disable_key else []
             if "is_trt" not in group_val:
                 group_val["is_trt"] = False
             if "yolo_format" not in group_val:
@@ -276,6 +303,8 @@ class ConfigMixin:
                     key_config["overshoot_y_factor"] = 0.3
                 if "trigger_only" not in key_config:
                     key_config["trigger_only"] = False
+                if "disable_headshot_removed" not in key_config:
+                    key_config["disable_headshot_removed"] = False
                 for i in range(class_num):
                     class_str = str(i)
                     if class_str not in key_config["class_aim_positions"]:
@@ -380,18 +409,29 @@ class ConfigMixin:
 
     def get_aim_position_for_class(self, class_id):
         """Get aim position based on class ID"""
+        disable_headshot = False
+        try:
+            disable_headshot = bool(
+                self.config["groups"][self.group].get("disable_headshot", False)
+            )
+        except Exception:
+            disable_headshot = False
+
+        def pick_position(a, b):
+            if disable_headshot:
+                return max(a, b)
+            return random.uniform(a, b)
+
         if "class_aim_positions" not in self.pressed_key_config:
-            return random.uniform(
+            return pick_position(
                 self.pressed_key_config.get("aim_bot_position", 0.5),
                 self.pressed_key_config.get("aim_bot_position2", 0.5),
             )
         class_str = str(class_id)
         if class_str in self.pressed_key_config["class_aim_positions"]:
             config = self.pressed_key_config["class_aim_positions"][class_str]
-            return random.uniform(
-                config["aim_bot_position"], config["aim_bot_position2"]
-            )
-        return random.uniform(
+            return pick_position(config["aim_bot_position"], config["aim_bot_position2"])
+        return pick_position(
             self.pressed_key_config.get("aim_bot_position", 0.5),
             self.pressed_key_config.get("aim_bot_position2", 0.5),
         )
