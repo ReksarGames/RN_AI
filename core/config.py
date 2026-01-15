@@ -210,10 +210,6 @@ class ConfigMixin:
                             original_path
                         ):
                             group_val["infer_model"] = original_path
-                            group_val["is_trt"] = False
-                            print(
-                                f"Automatically switched back to ONNX mode: {original_path}"
-                            )
             else:
                 original_path = group_val.get(
                     "original_infer_model", group_val["infer_model"]
@@ -278,6 +274,8 @@ class ConfigMixin:
                     key_config["overshoot_x_factor"] = 0.5
                 if "overshoot_y_factor" not in key_config:
                     key_config["overshoot_y_factor"] = 0.3
+                if "trigger_only" not in key_config:
+                    key_config["trigger_only"] = False
                 for i in range(class_num):
                     class_str = str(i)
                     if class_str not in key_config["class_aim_positions"]:

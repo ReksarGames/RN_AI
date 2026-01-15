@@ -239,7 +239,9 @@ class AimingMixin:
                 if nearest is not None:
                     result_center_x = nearest["pos"][0] - self.screen_center_x
                     result_center_y = nearest["pos"][1] - self.screen_center_y
-                    if self.aim_key_status:
+                    if self.aim_key_status and not getattr(
+                        self, "trigger_only_active", False
+                    ):
                         controller = self.pressed_key_config.get(
                             "aim_controller",
                             self.config.get("aim_controller", "pid"),
@@ -603,7 +605,9 @@ class AimingMixin:
                                 print("Auto flashbang feature only supports ZTX models")
                                 self._dopa_warning_shown = True
             if len(boxes) > 0:
-                if self.aim_key_status:
+                if self.aim_key_status and not getattr(
+                    self, "trigger_only_active", False
+                ):
                     try:
                         self.que_aim.put_nowait((boxes, class_ids))
                     except queue.Full:
