@@ -5,17 +5,30 @@ echo    ZTXAI - Build Script
 echo ========================================
 echo.
 
+set SCRIPT_DIR=%~dp0
+pushd "%SCRIPT_DIR%"
+set VENV_DIR=.venv
+set PYTHON_EXE=%VENV_DIR%\Scripts\python.exe
+
+if not exist "%PYTHON_EXE%" (
+    echo ERROR: .venv not found. Run install.bat first.
+    popd
+    pause
+    exit /b 1
+)
+
 echo [1/2] Installing dependencies...
-pip install -r requirements.txt
+"%PYTHON_EXE%" -m pip install -r requirements.txt
 if errorlevel 1 (
     echo ERROR: Failed to install dependencies
+    popd
     pause
     exit /b 1
 )
 
 echo.
 echo [2/2] Building executable with PyInstaller...
-pyinstaller --onedir --noconsole --name main ^
+"%PYTHON_EXE%" -m PyInstaller --onedir --noconsole --name main ^
     --add-data "*.ttf;." ^
     --add-data "*.ttc;." ^
     --add-data "config.json;." ^
@@ -52,6 +65,7 @@ pyinstaller --onedir --noconsole --name main ^
 
 if errorlevel 1 (
     echo ERROR: Build failed
+    popd
     pause
     exit /b 1
 )
@@ -61,4 +75,5 @@ echo ========================================
 echo    Build Complete!
 echo    Output: output\main\main.exe
 echo ========================================
+popd
 pause

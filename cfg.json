@@ -41,12 +41,114 @@
   "mask_wheel": false,
   "groups": {
     "DeltaForce": {
-      "infer_model": "E:/Project/China_AI/.weights/SJZ_Kenny_v8_320.engine",
+      "infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/China_AI/.weights/SJZ_Kenny_v8_320.engine",
       "auto_y": false,
       "long_press_duration": 100,
       "right_down": false,
       "aim_keys": {
         "mouse_right": {
+          "confidence_threshold": 0.5,
+          "iou_t": 0.8,
+          "aim_bot_position": 0.14,
+          "aim_bot_scope": 160,
+          "smoothing_factor": 0.5,
+          "base_step": 0.17,
+          "distance_weight": 5.0,
+          "fov_angle": 103,
+          "history_size": 20,
+          "output_scale_x": 1.0,
+          "output_scale_y": 1.0,
+          "deadzone": 2.0,
+          "uniform_threshold": 1.3,
+          "compensation_factor": 1.8,
+          "trigger": {
+            "status": false,
+            "start_delay": 150,
+            "press_delay": 1,
+            "end_delay": 200,
+            "random_delay": 20,
+            "x_trigger_scope": 0.6699998378753662,
+            "y_trigger_scope": 0.47999998927116394,
+            "x_trigger_offset": 0.14999999105930328,
+            "y_trigger_offset": 0.11999999731779099,
+            "continuous": false,
+            "recoil": false
+          },
+          "classes": [
+            0
+          ],
+          "min_position_offset": 1,
+          "min_velocity_threshold": 10,
+          "max_velocity_threshold": 100,
+          "class_aim_positions": {
+            "0": {
+              "aim_bot_position": 0.3,
+              "aim_bot_position2": 0.3,
+              "confidence_threshold": 0.7,
+              "iou_t": 0.8
+            },
+            "1": {
+              "aim_bot_position": 0.0,
+              "aim_bot_position2": 0.0,
+              "confidence_threshold": 0.5,
+              "iou_t": 1.0
+            },
+            "2": {
+              "aim_bot_position": 0.0,
+              "aim_bot_position2": 0.0,
+              "confidence_threshold": 0.5,
+              "iou_t": 1.0
+            },
+            "3": {
+              "aim_bot_position": 0.0,
+              "aim_bot_position2": 0.0,
+              "confidence_threshold": 0.5,
+              "iou_t": 1.0
+            },
+            "4": {
+              "aim_bot_position": 0.0,
+              "aim_bot_position2": 0.0,
+              "confidence_threshold": 0.5,
+              "iou_t": 1.0
+            },
+            "7": {
+              "aim_bot_position": 0.06,
+              "aim_bot_position2": 0.08,
+              "confidence_threshold": 0.5,
+              "iou_t": 1.0
+            }
+          },
+          "class_priority_order": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "overshoot_threshold": 3.0,
+          "overshoot_x_factor": 0.5,
+          "overshoot_y_factor": 0.3,
+          "move_deadzone": 0.5,
+          "pid_kp_y": 0.04,
+          "pid_kp_x": 0.04,
+          "dynamic_scope": {
+            "enabled": false
+          },
+          "pid_kd_y": 0.0015,
+          "pid_kd_x": 0.0015,
+          "smooth_algorithm": 5.0,
+          "smooth_deadzone": 7.0,
+          "pid_integral_limit_x": 0.1,
+          "pid_integral_limit_y": 0.1,
+          "smooth_x": 1.0,
+          "smooth_y": 1.0,
+          "pid_ki_x": 0.0001,
+          "pid_ki_y": 0.0001,
+          "auto_y": false,
+          "trigger_only": false,
+          "disable_headshot_removed": false
+        },
+        "mouse_side2": {
           "confidence_threshold": 0.5,
           "iou_t": 0.8,
           "aim_bot_position": 0.14,
@@ -140,165 +242,22 @@
           "pid_ki_x": 0.0001,
           "pid_ki_y": 0.0001,
           "auto_y": false,
-          "trigger_only": false
-        },
-        "dd": {
-          "confidence_threshold": 0.5,
-          "iou_t": 0.8,
-          "aim_bot_position": 0.14,
-          "aim_bot_scope": 122,
-          "smoothing_factor": 0.5,
-          "base_step": 0.17,
-          "distance_weight": 5.0,
-          "fov_angle": 103,
-          "history_size": 20,
-          "output_scale_x": 1.0,
-          "output_scale_y": 1.0,
-          "deadzone": 2.0,
-          "uniform_threshold": 1.3,
-          "compensation_factor": 1.8,
-          "trigger": {
-            "status": false,
-            "start_delay": 150,
-            "press_delay": 1,
-            "end_delay": 200,
-            "random_delay": 20,
-            "x_trigger_scope": 0.4,
-            "y_trigger_scope": 0.9,
-            "x_trigger_offset": 0.0,
-            "y_trigger_offset": 0.0
-          },
-          "classes": [
-            0
-          ],
-          "min_position_offset": 3,
-          "min_velocity_threshold": 10,
-          "max_velocity_threshold": 100,
-          "class_aim_positions": {
-            "0": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.1,
-              "iou_t": 1.0
-            },
-            "1": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            },
-            "2": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            },
-            "3": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            },
-            "4": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            }
-          },
-          "class_priority_order": [
-            0,
-            1,
-            2,
-            3,
-            4
-          ],
-          "overshoot_threshold": 3.0,
-          "overshoot_x_factor": 0.5,
-          "overshoot_y_factor": 0.3,
-          "trigger_only": false
-        },
-        "d": {
-          "confidence_threshold": 0.5,
-          "iou_t": 0.8,
-          "aim_bot_position": 0.14,
-          "aim_bot_scope": 122,
-          "smoothing_factor": 0.5,
-          "base_step": 0.17,
-          "distance_weight": 5.0,
-          "fov_angle": 103,
-          "history_size": 20,
-          "output_scale_x": 1.0,
-          "output_scale_y": 1.0,
-          "deadzone": 2.0,
-          "uniform_threshold": 1.3,
-          "compensation_factor": 1.8,
-          "trigger": {
-            "status": false,
-            "start_delay": 150,
-            "press_delay": 1,
-            "end_delay": 200,
-            "random_delay": 20,
-            "x_trigger_scope": 0.4,
-            "y_trigger_scope": 0.9,
-            "x_trigger_offset": 0.0,
-            "y_trigger_offset": 0.0
-          },
-          "classes": [
-            0
-          ],
-          "min_position_offset": 3,
-          "min_velocity_threshold": 10,
-          "max_velocity_threshold": 100,
-          "class_aim_positions": {
-            "0": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.1,
-              "iou_t": 1.0
-            },
-            "1": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            },
-            "2": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            },
-            "3": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            },
-            "4": {
-              "aim_bot_position": 0.0,
-              "aim_bot_position2": 0.0,
-              "confidence_threshold": 0.5,
-              "iou_t": 1.0
-            }
-          },
-          "class_priority_order": [
-            0,
-            1,
-            2,
-            3,
-            4
-          ],
-          "overshoot_threshold": 3.0,
-          "overshoot_x_factor": 0.5,
-          "overshoot_y_factor": 0.3,
-          "trigger_only": false
+          "trigger_only": true,
+          "disable_headshot_removed": false
         }
       },
       "is_v8": true,
       "is_trt": true,
-      "original_infer_model": "E:/Project/China_AI/.weights/SJZ_Kenny_v8_320.onnx",
-      "yolo_format": "v8"
+      "original_infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/China_AI/.weights/SJZ_Kenny_v8_320.onnx",
+      "yolo_format": "v8",
+      "disable_headshot": false,
+      "disable_headshot_keys": [
+        "m"
+      ],
+      "disable_headshot_class_id": 7,
+      "targeting_button_key": "mouse_right",
+      "triggerbot_button_key": "mouse_side2",
+      "disable_headshot_button_key": "m"
     },
     "BS": {
       "infer_model": "./weights/Blood Strike [V1] by BihiBihi.onnx",
@@ -557,7 +516,15 @@
       "is_v8": true,
       "is_trt": false,
       "original_infer_model": "./weights/Blood Strike [V1] by BihiBihi.onnx",
-      "yolo_format": "v8"
+      "yolo_format": "v8",
+      "disable_headshot": false,
+      "disable_headshot_keys": [
+        "m"
+      ],
+      "disable_headshot_class_id": -1,
+      "targeting_button_key": "mouse_right",
+      "triggerbot_button_key": "",
+      "disable_headshot_button_key": "m"
     }
   },
   "games": {
@@ -674,7 +641,19 @@
   "aim_controller": "sunone",
   "ui_language": "ru",
   "gui_width_scale": 1.149999976158142,
-  "class_names": [],
+  "class_names": [
+    "player",
+    "bot",
+    "weapon",
+    "outline",
+    "dead_body",
+    "hideout_target_human",
+    "hideout_target_balls",
+    "head",
+    "smoke",
+    "fire",
+    "third_person"
+  ],
   "class_names_file": "",
   "sunone": {
     "use_smoothing": true,

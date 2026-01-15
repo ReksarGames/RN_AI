@@ -2,3 +2,6 @@
 .weights/
 __MACOSX/
 __pycache__/
+todo
+error_log.txt
+class_names.txt
