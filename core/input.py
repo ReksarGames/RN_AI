@@ -91,6 +91,53 @@ class InputMixin:
         except Exception:
             return False
 
+    def _is_disable_headshot_key(self, key):
+        try:
+            group_cfg = self.config["groups"][self.group]
+            keys = []
+            primary = group_cfg.get("disable_headshot_button_key", "")
+            if primary:
+                keys.append(primary)
+            for extra in group_cfg.get("disable_headshot_keys", []):
+                if extra and extra not in keys:
+                    keys.append(extra)
+            return key in keys
+        except Exception:
+            return False
+
+    def _toggle_disable_headshot(self):
+        try:
+            group_cfg = self.config["groups"][self.group]
+            group_cfg["disable_headshot"] = not bool(group_cfg.get("disable_headshot", False))
+            class_id = int(group_cfg.get("disable_headshot_class_id", -1))
+            key_name = group_cfg.get("targeting_button_key", "")
+            if not key_name:
+                key_name = self.old_pressed_aim_key or ""
+            if class_id >= 0 and key_name in group_cfg.get("aim_keys", {}):
+                key_cfg = group_cfg["aim_keys"][key_name]
+                classes = key_cfg.get("classes", [])
+                if group_cfg["disable_headshot"]:
+                    if class_id in classes:
+                        classes.remove(class_id)
+                        key_cfg["disable_headshot_removed"] = True
+                else:
+                    if key_cfg.get("disable_headshot_removed", False):
+                        if class_id not in classes:
+                            classes.append(class_id)
+                        key_cfg["disable_headshot_removed"] = False
+                key_cfg["classes"] = classes
+                if key_name in self.aim_key:
+                    self.aim_key = list(dict.fromkeys(self.aim_key))
+                if hasattr(self, "update_checkboxes_state"):
+                    try:
+                        self.update_checkboxes_state(classes)
+                    except Exception:
+                        pass
+            if hasattr(self, "update_disable_headshot_status"):
+                self.update_disable_headshot_status()
+        except Exception:
+            return
+
     def on_click(self, x, y, button, pressed):
         if pressed:
             if button == mouse.Button.left:
@@ -111,6 +158,10 @@ class InputMixin:
                         else:
                             if button == mouse.Button.x2:
                                 key = "mouse_x2"
+            for candidate in self._get_mouse_key_variants(key):
+                if self._is_disable_headshot_key(candidate):
+                    self._toggle_disable_headshot()
+                    break
             if self.old_pressed_aim_key == "":
                 for candidate in self._get_mouse_key_variants(key):
                     if candidate in self.aim_key:
@@ -155,6 +206,8 @@ class InputMixin:
 
     def on_press(self, key):
         key = key2str(key)
+        if self._is_disable_headshot_key(key):
+            self._toggle_disable_headshot()
         if (
             key in self.aim_key
             and key not in self.pressed_key
@@ -407,13 +460,15 @@ class InputMixin:
                             elif button == MouseButton.RIGHT:
                                 if not self.right_pressed:
                                     self.right_pressed = True
-
+                            if self._is_disable_headshot_key(key):
+                                self._toggle_disable_headshot()
                             if not self.aim_key_status and self.old_pressed_aim_key == "":
                                 for candidate in self._get_mouse_key_variants(key):
                                     if candidate in self.aim_key:
                                         self.refresh_pressed_key_config(candidate)
                                         self.old_pressed_aim_key = candidate
                                         self.aim_key_status = True
+                                        self.trigger_only_active = self._is_trigger_only_key(candidate)
                                         self.reset_dynamic_aim_scope(candidate)
                                         break
                         else:
@@ -431,6 +486,7 @@ class InputMixin:
                                 ):
                                     self.old_pressed_aim_key = ""
                                     self.aim_key_status = False
+                                    self.trigger_only_active = False
                                     self.reset_pid()
                                     break
 
