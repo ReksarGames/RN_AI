@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
+    valorant_instance.start()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 455, in start
+    self.gui()
+    ~~~~~~~~^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 755, in gui
+    dpg.add_theme_style(dpg.mvStyleVar_TabPadding, 4, 2)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'dearpygui.dearpygui' has no attribute 'mvStyleVar_TabPadding'
