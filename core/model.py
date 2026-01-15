@@ -798,6 +798,11 @@ class ModelMixin:
     def get_current_class_num(self):
         try:
             if self.engine is None:
+                class_name_count = 0
+                if hasattr(self, "class_names") and self.class_names:
+                    class_name_count = len(self.class_names)
+                if class_name_count:
+                    return class_name_count
                 return 5
             yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
             if self.config["groups"][self.group]["infer_model"].endswith(".engine"):

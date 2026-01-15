@@ -1,29 +1,41 @@
+Exception: Error: [1000] Message: 	width keyword does not exist.
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
     valorant_instance.start()
     ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 453, in start
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 454, in start
     self.gui()
     ~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1230, in gui
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1429, in gui
     self.build_aim_settings_ui()
     ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1645, in build_aim_settings_ui
-    self.add_help_marker(self.tr("help_aim_controller"))
-    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 680, in add_help_marker
-    dpg.same_line()
-    ^^^^^^^^^^^^^
-AttributeError: module 'dearpygui.dearpygui' has no attribute 'same_line'
-[Global Exception] 2026-01-15 19:47:16
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1882, in build_aim_settings_ui
+    self.sunone_settings_group = dpg.add_collapsing_header(
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        label=self.tr("label_sunone_settings"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        default_open=True,
+        ^^^^^^^^^^^^^^^^^^
+        width=self.scaled_width_xlarge,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 3433, in add_collapsing_header
+    return internal_dpg.add_collapsing_header(label=label, user_data=user_data, use_internal_label=use_internal_label, tag=tag, indent=indent, parent=parent, before=before, payload_type=payload_type, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, delay_search=delay_search, tracked=tracked, track_offset=track_offset, closable=closable, default_open=default_open, open_on_double_click=open_on_double_click, open_on_arrow=open_on_arrow, leaf=leaf, bullet=bullet, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SystemError: <built-in function add_collapsing_header> returned a result with an exception set
+[Global Exception] 2026-01-15 22:23:10
 Traceback (most recent call last):
   File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
     valorant_instance.start()
     ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 453, in start
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 454, in start
     self.gui()
     ~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1618, in gui
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1878, in gui
     dpg.start_dearpygui()
     ~~~~~~~~~~~~~~~~~~~^^
   File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui

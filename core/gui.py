@@ -95,12 +95,15 @@ TRANSLATIONS = {
         "label_class_aim_preview": "Aim Preview",
         "label_class_names_manual": "Class Names (Manual)",
         "label_apply_class_names": "Apply Names",
+        "label_class_names_list": "All Classes",
         "help_aim_controller": "Select aiming controller. PID is classic; Sunone adds smoothing/kalman/prediction.",
         "help_sunone_settings": "Sunone smoothing and Kalman options for stable tracking.",
         "help_prediction": "Predicts target movement. Standard uses velocity; Kalman filters velocity; combined uses both.",
         "help_trigger": "Auto-fire when target is inside the trigger zone.",
         "help_class_settings": "Manage model classes: enable/disable targets and priorities.",
         "help_class_aim_config": "Choose a class and set aim positions. 0 = top of body, 1 = bottom.",
+        "help_aim_position": "Aim position inside the box: 0.0 top, 1.0 bottom.",
+        "help_aim_position2": "Second aim point for two-stage aim/smoothing.",
         "help_small_target_settings": "Improves stability for small/far targets; may cost performance.",
         "help_mouse_re": "Recoil compensation using mouse_re trajectory files.",
         "help_capture_source": "Select capture input: Standard (screen), OBS, or Capture Card.",
@@ -300,250 +303,212 @@ TRANSLATIONS = {
         "tab_bypass": "Обход",
         "tab_strafe": "Стрейф",
         "tab_config": "Конфиг",
-        "tab_aim": "Наводка",
+        "tab_aim": "Прицел",
         "tab_classes": "Классы",
-
         "label_ui_language": "Язык интерфейса",
-        "label_ui_width_scale": "Ширина интерфейса",
-        "label_ui_width_hint": "Изменяет ширину окна (после перезапуска)",
-        "label_ui_font_scale": "Размер шрифта",
-
-        "label_aim_controller": "Контроллер наведения",
+        "label_ui_width_scale": "Масштаб ширины интерфейса",
+        "label_ui_width_hint": "Настройка ширины интерфейса (вступит в силу после перезапуска)",
+        "label_ui_font_scale": "Масштаб шрифта",
+        "label_aim_controller": "Контроллер прицеливания",
         "label_controller_pid": "PID",
         "label_controller_sunone": "Sunone",
-
         "label_sunone_settings": "Настройки Sunone",
         "label_sunone_smoothing": "Включить сглаживание",
-        "label_sunone_tracking": "Сглаживание трекинга",
-        "label_sunone_smoothness": "Степень сглаживания",
-
-        "label_sunone_kalman": "Включить фильтр Калмана",
-        "label_sunone_kalman_q": "Шум процесса Калмана (Q)",
-        "label_sunone_kalman_r": "Шум измерений Калмана (R)",
-        "label_sunone_kalman_mul_x": "Скорость Калмана по X",
-        "label_sunone_kalman_mul_y": "Скорость Калмана по Y",
+        "label_sunone_tracking": "Плавность трекинга",
+        "label_sunone_smoothness": "Сглаживание",
+        "label_sunone_kalman": "Включить Калман",
+        "label_sunone_kalman_q": "Шум процесса Калмана",
+        "label_sunone_kalman_r": "Шум измерения Калмана",
+        "label_sunone_kalman_mul_x": "Скорость Калмана X",
+        "label_sunone_kalman_mul_y": "Скорость Калмана Y",
         "label_sunone_reset_threshold": "Порог сброса",
-
         "label_sunone_prediction": "Предсказание",
         "label_sunone_prediction_mode": "Режим предсказания",
         "label_sunone_prediction_interval": "Интервал предсказания",
         "label_sunone_prediction_lead": "Опережение Калмана (мс)",
         "label_sunone_prediction_max_lead": "Макс. опережение Калмана (мс)",
-
         "label_sunone_velocity_smoothing": "Сглаживание скорости",
         "label_sunone_velocity_scale": "Масштаб скорости",
-        "label_sunone_prediction_q": "Kalman Q для предсказания",
-        "label_sunone_prediction_r": "Kalman R для предсказания",
-
+        "label_sunone_prediction_q": "Калман Q предсказания",
+        "label_sunone_prediction_r": "Калман R предсказания",
         "label_sunone_future_positions": "Будущие позиции",
-        "label_sunone_draw_future": "Отрисовывать будущие позиции",
-
+        "label_sunone_draw_future": "Рисовать будущие позиции",
         "label_sunone_debug": "Отладка предсказания",
         "label_sunone_debug_pred": "Показывать предсказанную цель",
         "label_sunone_debug_step": "Показывать шаг",
         "label_sunone_debug_future": "Показывать будущие точки",
         "label_long_press_section": "Долгое нажатие",
-
         "label_sunone_speed": "Кривая скорости",
-        "label_sunone_min_speed": "Минимальная скорость",
-        "label_sunone_max_speed": "Максимальная скорость",
-        "label_sunone_snap_radius": "Радиус привязки",
+        "label_sunone_min_speed": "Мин. скорость",
+        "label_sunone_max_speed": "Макс. скорость",
+        "label_sunone_snap_radius": "Радиус прилипания",
         "label_sunone_near_radius": "Ближний радиус",
         "label_sunone_curve_exp": "Экспонента кривой",
-        "label_sunone_snap_boost": "Усиление привязки",
-        "label_prediction_preview": "Превью предикта",
-        "label_speed_curve_preview": "Превью кривой скорости",
-
+        "label_sunone_snap_boost": "Усиление прилипания",
+        "label_prediction_preview": "Предпросмотр предсказания",
+        "label_speed_curve_preview": "Предпросмотр кривой скорости",
         "label_class_settings": "Настройки классов",
         "label_class_priority": "Приоритет классов",
         "label_class_priority_hint": "Формат: 0-1-2-3",
         "label_infer_classes": "Классы инференса",
-        "label_class_aim_config": "Конфигурация наведения класса",
-        "help_aim_controller": "Выбор контроллера наведения. PID — классика; Sunone включает сглаживание/kalman/предикт.",
-        "help_sunone_settings": "Настройки сглаживания и Калмана для стабильного трекинга.",
-        "help_prediction": "Предикт движения цели. Standard — по скорости; Kalman — фильтр скорости; вместе — оба.",
-        "help_trigger": "Авто-выстрел, когда цель в триггер-зоне.",
-        "help_class_settings": "Управление классами модели: кого целить и приоритеты.",
-        "help_class_aim_config": "Выбери класс и позицию наведения. 0 = верх тела, 1 = низ.",
-        "help_small_target_settings": "Улучшает стабильность на мелких/далеких целях, может снизить FPS.",
-        "help_mouse_re": "Компенсация отдачи по траекториям mouse_re.",
-        "help_capture_source": "Источник захвата: Standard (экран), OBS или карта захвата.",
-        "help_capture_offsets": "Смещения двигают область захвата от центра экрана.",
+        "label_class_aim_config": "Конфигурация прицела класса",
+        "label_select_class": "Выбрать класс",
+        "label_class_names_file": "Файл имён классов",
+        "label_load_class_names": "Загрузить имена",
+        "label_class_aim_preview": "Предпросмотр прицела",
+        "label_class_names_manual": "Имена классов (вручную)",
+        "label_apply_class_names": "Применить имена",
+        "label_class_names_list": "Все классы",
+        "help_aim_controller": "Выбор контроллера прицеливания. PID — классический; Sunone добавляет сглаживание, Калман и предсказание.",
+        "help_sunone_settings": "Сглаживание и Калман в Sunone для стабильного трекинга.",
+        "help_prediction": "Предсказывает движение цели. Standard использует скорость; Kalman фильтрует скорость; combined использует оба метода.",
+        "help_trigger": "Авто-выстрел, когда цель внутри триггер-зоны.",
+        "help_class_settings": "Управление классами модели: включение/отключение целей и приоритетов.",
+        "help_class_aim_config": "Выбор класса и настройка точки прицеливания. 0 = верх тела, 1 = низ.",
+        "help_aim_position": "Позиция прицела внутри бокса: 0.0 — верх, 1.0 — низ.",
+        "help_aim_position2": "Вторая точка прицеливания для двухэтапного прицеливания/сглаживания.",
+        "help_small_target_settings": "Улучшает стабильность для маленьких/дальних целей; может снизить производительность.",
+        "help_mouse_re": "Компенсация отдачи с использованием файлов траекторий mouse_re.",
+        "help_capture_source": "Выбор источника захвата: Standard (экран), OBS или карта захвата.",
+        "help_capture_offsets": "Смещения сдвигают область захвата от центра экрана.",
         "label_buttons": "Кнопки",
-        "label_targeting_buttons": "Кнопки наведения",
+        "label_targeting_buttons": "Кнопки прицеливания",
         "label_triggerbot_buttons": "Кнопки триггербота",
         "label_disable_headshot_buttons": "Кнопки отключения хедшота",
-        "label_disable_headshot_class": "ID класса для отключения хедшота",
-        "label_add_button": "Добавить",
+        "label_disable_headshot_class": "ID класса без хедшота",
+        "label_add_button": "Добавить кнопку",
         "label_remove_button": "Удалить",
         "label_button_none": "Нет",
-        "label_disable_headshot_status": "Отключение хедшота",
+        "label_disable_headshot_status": "Отключить хедшот",
         "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
-        "help_aim_weights": "Весовые коэффициенты для выбора цели: дистанция, центр и размер влияют на приоритет.",
-        "help_speed_curve": "Кривая скорости, влияет на плавность движения.",
-        "help_kalman": "Фильтр Калмана для стабильного трекинга.",
-        "help_prediction_lead": "Предикт движения цели (lead).",
-        "help_velocity_smoothing": "Сглаживание скорости, уменьшает резкие движения.",
-        "help_long_press_no_lock_y": "Долгое нажатие разблокирует ось Y при наведении; полезно для вертикального контроля.",
-        "help_long_press_threshold": "Порог длительного нажатия (мс), определяет, когда считать нажатие долгим.",
-        "help_trigger_only": "Триггербот только: активен только при наведении на цель.",
-        "help_trigger_recoil": "Компенсация отдачи при триггерботе.",
-        "help_small_target_enhancement": "Улучшает стабильность на мелких/далеких целях, может снизить FPS.",
-        "help_small_target_smoothing": "Сглаживание движения цели для более плавного трекинга.",
-        "help_small_target_boost": "Дополнительный вес для мелких целей при выборе.",
-        "help_small_target_history": "Количество кадров для сглаживания мелких целей.",
-        "help_small_target_threshold": "Порог мелких целей, определяет, когда считать цель маленькой.",
-        "help_medium_target_threshold": "Порог средних целей, определяет, когда считать цель средней.",
-        "help_adaptive_nms": "Адаптивный NMS для улучшения выбора целей.",
-        "label_help_sunone": "Помощь Sunone",
-        "label_help_prediction": "Помощь предикта",
-        "label_help_speed_curve": "Помощь кривой скорости",
-        "help_driver": "Драйвер для управления мышью (Makcu).",
-        "help_bypass": "Обход маскирует физические вводы при активном драйвере.",
-        "help_strafe": "Вкладка стрейфа хранит профили оружия/отдачи и смещения движения.",
-        "label_select_class": "Выбрать класс",
-
-        "label_class_names_file": "Файл имён классов",
-        "label_load_class_names": "Загрузить",
-
-        "label_key_bindings": "Бинды",
+        "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет.",
+        "help_speed_curve": "Кривая скорости определяет скорость движения прицела в зависимости от расстояния до цели.",
+        "help_kalman": "Фильтр Калмана сглаживает шумные позиции цели для более стабильного трекинга.",
+        "help_prediction_lead": "Время упреждения (мс) добавляет опережение к позиции прицела.",
+        "help_velocity_smoothing": "Сглаживает скорость цели для уменьшения дрожания при предсказании.",
+        "help_long_press_no_lock_y": "Долгое нажатие оставляет ось Y разблокированной; полезно для вертикального контроля.",
+        "help_long_press_threshold": "Длительность (мс), после которой нажатие считается долгим.",
+        "help_trigger_only": "Только триггер: без движения прицела, только авто-выстрел для этой клавиши.",
+        "help_trigger_recoil": "Применять компенсацию отдачи при срабатывании триггербота.",
+        "help_small_target_enhancement": "Усиливает стабильность детекции маленьких целей.",
+        "help_small_target_smoothing": "Сглаживает позиции маленьких целей между кадрами.",
+        "help_small_target_boost": "Дополнительный вес для маленьких целей при выборе.",
+        "help_small_target_history": "Количество кадров для сглаживания маленьких целей.",
+        "help_small_target_threshold": "Порог размера, считающийся маленькой целью.",
+        "help_medium_target_threshold": "Порог для средних целей в сглаживании маленьких целей.",
+        "help_adaptive_nms": "Адаптивный NMS настраивает подавление для маленьких целей.",
+        "label_help_sunone": "Информация о Sunone",
+        "label_help_prediction": "Информация о предсказании",
+        "label_help_speed_curve": "Информация о кривой скорости",
+        "help_driver": "Драйвер управляет отправкой движений мыши (Makcu).",
+        "help_bypass": "Обход маскирует физический ввод при активном драйвере.",
+        "help_strafe": "Вкладка стрейфа хранит профили отдачи/оружия и смещения движения.",
+        "label_key_bindings": "Назначение клавиш",
         "label_bind_key": "Назначить клавишу",
         "label_key_preset": "Пресет клавиш",
         "label_key_name": "Название клавиши",
         "label_key_add": "Добавить клавишу",
         "label_key_delete": "Удалить клавишу",
-
-        "label_model_params": "Параметры модели",
+        "label_model_params": "Настройки модели",
         "label_group_name": "Имя группы",
         "label_add_group": "Добавить группу",
         "label_delete_group": "Удалить группу",
-
         "label_infer_model": "Модель инференса",
         "label_select_model": "Выбрать модель",
-
         "label_yolo_format": "Формат YOLO",
         "label_yolo_auto": "Авто",
-        "label_yolo_v5": "YOLOv5 / v7",
-        "label_yolo_v8": "YOLOv8 / v10 / v11",
-
+        "label_yolo_v5": "YOLOv5/v7",
+        "label_yolo_v8": "YOLOv8/v10/v11",
         "label_capture_status": "Текущий захват",
         "label_capture_source": "Источник захвата",
+        "label_capture_standard": "Стандартный",
         "label_capture_obs": "OBS",
         "label_capture_card": "Карта захвата",
-        "label_capture_bettercam": "BetterCam (рабочий стол)",
-
+        "label_capture_bettercam": "BetterCam (Рабочий стол)",
         "label_obs_ip": "IP OBS",
         "label_obs_port": "Порт OBS",
         "label_obs_fps": "FPS OBS",
-
         "label_capture_device": "Устройство захвата",
         "label_capture_fps": "FPS захвата",
         "label_capture_resolution": "Разрешение захвата",
         "label_capture_crop": "Размер обрезки захвата",
         "label_video_codec": "Видеокодек",
-
-        "label_capture_offset_x": "Смещение захвата по X",
-        "label_capture_offset_y": "Смещение захвата по Y",
-
+        "label_capture_offset_x": "Смещение захвата X",
+        "label_capture_offset_y": "Смещение захвата Y",
         "label_gui_dpi_scale": "Масштаб DPI интерфейса",
         "label_auto_detect": "Автоопределение",
         "label_infer_window": "Окно инференса",
-
         "label_print_fps": "Показывать FPS",
         "label_show_motion_speed": "Показывать скорость движения",
         "label_show_curve": "Показывать кривую",
         "label_show_infer_time": "Показывать время инференса",
-
-        "label_screenshot_separation": "Разделение скриншотов (многопоточность)",
-
-        "label_small_target_enhancement": "Улучшение малых целей",
-        "label_small_target_smoothing": "Сглаживание малых целей",
+        "label_screenshot_separation": "Разделение скриншотов (многопоточно)",
+        "label_small_target_enhancement": "Включить улучшение маленьких целей",
+        "label_small_target_smoothing": "Включить сглаживание маленьких целей",
         "label_adaptive_nms": "Адаптивный NMS",
-        "label_small_target_boost": "Усиление малых целей",
-        "label_small_target_history": "История сглаживания (кадры)",
-        "label_small_target_threshold": "Порог малых целей",
-        "label_medium_target_threshold": "Порог средних целей",
-
+        "label_small_target_boost": "Усиление маленьких целей",
+        "label_small_target_history": "Кадры истории сглаживания",
+        "label_small_target_threshold": "Порог маленькой цели",
+        "label_medium_target_threshold": "Порог средней цели",
         "label_turbo_mode": "Турбо-режим",
         "label_skip_frame_processing": "Пропуск обработки кадров",
-
         "label_recoil_debug": "Отладка отдачи",
         "label_class_priority_debug": "Отладка приоритета классов",
-        "label_show_aim_scope": "Показывать прицел",
-
-        "label_aim_weights": "Весовые коэффициенты наведения",
+        "label_show_aim_scope": "Показывать область прицеливания",
+        "label_aim_weights": "Веса прицеливания",
         "label_distance_weight": "Вес дистанции",
         "label_center_weight": "Вес центра",
         "label_size_weight": "Вес размера",
-
         "label_move_curve": "Кривая движения",
         "label_compensation_curve": "Кривая компенсации",
-
         "label_horizontal_boundary": "Горизонтальная граница",
         "label_vertical_boundary": "Вертикальная граница",
-
         "label_control_points": "Контрольные точки",
-
         "label_distortion_mean": "Среднее искажение",
-        "label_distortion_stddev": "Стандартное отклонение искажения",
+        "label_distortion_stddev": "Станд. отклонение искажения",
         "label_distortion_frequency": "Частота искажения",
-
         "label_path_points_total": "Всего точек траектории",
-
         "label_com_port": "COM-порт",
         "label_move_method": "Метод движения",
-
-        "label_mask_left": "Маска слева",
-        "label_mask_right": "Маска справа",
-        "label_mask_middle": "Маска по центру",
-        "label_mask_side1": "Боковая маска 1",
-        "label_mask_side2": "Боковая маска 2",
-        "label_mask_x_axis": "Маска по оси X",
-        "label_mask_y_axis": "Маска по оси Y",
-        "label_aim_mask_x": "Маска наведения X",
-        "label_aim_mask_y": "Маска наведения Y",
+        "label_mask_left": "Маска левой кнопки",
+        "label_mask_right": "Маска правой кнопки",
+        "label_mask_middle": "Маска средней кнопки",
+        "label_mask_side1": "Маска боковой 1",
+        "label_mask_side2": "Маска боковой 2",
+        "label_mask_x_axis": "Маска оси X",
+        "label_mask_y_axis": "Маска оси Y",
+        "label_aim_mask_x": "Маска прицела X",
+        "label_aim_mask_y": "Маска прицела Y",
         "label_mask_wheel": "Маска колеса",
-
         "label_check_right_button": "Проверять правую кнопку",
-
         "label_delete_game": "Удалить игру",
         "label_game_name": "Название игры",
         "label_add_game": "Добавить игру",
-
         "label_delete_gun": "Удалить оружие",
         "label_gun_name": "Название оружия",
         "label_add_gun": "Добавить оружие",
-
         "label_count": "Количество",
         "label_axis_x": "X",
         "label_axis_y": "Y",
-
         "label_delete_index": "Удалить индекс",
         "label_add_index": "Добавить индекс",
-
         "label_mouse_re_header": "Траектория отдачи mouse_re",
-        "label_mouse_re_enable": "Включить траекторию отдачи mouse_re",
+        "label_mouse_re_enable": "Включить траекторную отдачу mouse_re",
         "label_replay_speed": "Скорость воспроизведения",
         "label_pixel_enhance_ratio": "Коэффициент усиления пикселей",
         "label_import_trajectory_file": "Импорт файла траектории",
-        "label_clear_mapping": "Очистить привязку",
-
+        "label_clear_mapping": "Очистить сопоставление",
         "label_trt": "TRT",
-
         "label_long_press_no_lock_y": "Долгое нажатие без блокировки Y",
         "label_long_press_threshold": "Порог долгого нажатия",
-
         "label_target_switch_delay": "Задержка смены цели (мс)",
-        "label_target_reference_class": "Класс-эталон цели",
-
-        "label_min_offset": "Минимальное смещение",
-
+        "label_target_reference_class": "Референсный класс цели",
+        "label_min_offset": "Мин. смещение",
         "label_aim_scope": "Область прицеливания",
-        "label_dynamic_scope": "Смарт-лок цели",
-        "label_min_scope": "Минимальная область",
+        "label_dynamic_scope": "Умная фиксация цели",
+        "label_min_scope": "Мин. область",
         "label_shrink_duration": "Длительность сжатия",
         "label_recover_duration": "Длительность восстановления",
-
         "label_pid_params": "Параметры PID-контроллера",
         "label_pid_x_p": "Пропорциональный X",
         "label_pid_x_i": "Интегральный X",
@@ -551,54 +516,44 @@ TRANSLATIONS = {
         "label_pid_y_p": "Пропорциональный Y",
         "label_pid_y_i": "Интегральный Y",
         "label_pid_y_d": "Дифференциальный Y",
-        "label_pid_x_limit": "Лимит X",
+        "label_pid_x_limit": "Ограничение X",
         "label_pid_x_smooth": "Сглаживание X",
         "label_smooth_algorithm": "Алгоритм сглаживания",
-        "label_pid_y_limit": "Лимит Y",
+        "label_pid_y_limit": "Ограничение Y",
         "label_pid_y_smooth": "Сглаживание Y",
         "label_smooth_deadzone": "Мёртвая зона сглаживания",
         "label_move_deadzone": "Мёртвая зона движения",
-
         "label_trigger_config": "Настройки триггера",
-        "label_auto_trigger": "Автотриггер",
+        "label_auto_trigger": "Авто-триггер",
         "label_continuous_trigger": "Непрерывный триггер",
         "label_trigger_recoil": "Отдача триггера",
         "label_trigger_only": "Только триггер",
         "label_trigger_delay": "Задержка триггера",
         "label_press_duration": "Длительность нажатия",
-        "label_trigger_cooldown": "Перезарядка триггера",
+        "label_trigger_cooldown": "Кулдаун триггера",
         "label_random_delay": "Случайная задержка",
         "label_x_trigger_scope": "Область триггера X",
         "label_y_trigger_scope": "Область триггера Y",
         "label_x_trigger_offset": "Смещение триггера X",
         "label_y_trigger_offset": "Смещение триггера Y",
-
         "label_confidence_threshold": "Порог уверенности",
         "label_iou": "IOU",
-
-        "label_aim_position": "Позиция наведения",
-        "label_aim_position2": "Позиция наведения 2",
-
+        "label_aim_position": "Позиция прицела",
+        "label_aim_position2": "Позиция прицела 2",
         "label_game": "Игра",
         "label_gun": "Оружие",
         "label_index": "Индекс",
-
-        "label_ui_scale_detail": "Настройка масштаба интерфейса (обнаружено системой: {scale:.2f}, применяется после перезапуска)",
-
-        "label_small_target_settings": "Настройки улучшения малых целей",
-        "label_small_target_note": "Примечание: улучшение малых целей повышает стабильность обнаружения дальних или мелких объектов",
-
+        "label_ui_scale_detail": "Настройка масштаба интерфейса (текущее определение системы: {scale:.2f}, вступит в силу после перезапуска)",
+        "label_small_target_settings": "Настройки улучшения маленьких целей",
+        "label_small_target_note": "Примечание: улучшение маленьких целей может повысить стабильность детекции для дальних или малых целей",
         "label_mouse_re_config": "Конфигурация отдачи mouse_re:",
-        "label_mouse_re_note": "Примечание: поддерживается загрузка JSON-файлов из mouse_re.py, удерживайте левую кнопку для воспроизведения траектории",
-
+        "label_mouse_re_note": "Примечание: поддерживается загрузка JSON-файлов, сгенерированных mouse_re.py; удерживайте левую кнопку для воспроизведения траектории отдачи",
         "label_current_status": "Текущий статус:",
         "label_switch_prefix": "Переключатель",
         "label_switch_on": "ВКЛ",
         "label_switch_off": "ВЫКЛ",
-
-        "label_mapping_file_prefix": "Файл привязки",
+        "label_mapping_file_prefix": "Файл сопоставления",
         "label_trajectory_points_prefix": "Точки траектории",
-
         "label_none": "Нет",
         "label_start": "Старт",
         "label_stop": "Стоп",
@@ -606,6 +561,8 @@ TRANSLATIONS = {
         "label_do_not_click": "НЕ НАЖИМАТЬ!!!"
     }
 }
+
+
 try:
     if TENSORRT_AVAILABLE:
         from inference_engine import ensure_engine_from_memory
@@ -2628,7 +2585,6 @@ class GuiMixin:
         class_group = dpg.add_collapsing_header(
             label=f"{self.tr('label_class_settings')} (?)", default_open=True
         )
-        self.attach_tooltip(class_group, self.tr("help_class_settings"))
         with dpg.group(horizontal=True, parent=class_group):
             self.class_names_file_input = dpg.add_input_text(
                 label=self.tr("label_class_names_file"),
@@ -2642,18 +2598,19 @@ class GuiMixin:
                 width=self.scaled_width_normal,
             )
         with dpg.group(horizontal=True, parent=class_group):
-            self.class_names_manual_input = dpg.add_input_text(
-                label=self.tr("label_class_names_manual"),
-                default_value="\n".join(self.config.get("class_names", []) or []),
-                multiline=True,
-                height=int(self.scaled_height_normal * 1.2),
-                width=int(self.scaled_width_xlarge * 1.05),
-            )
-            dpg.add_button(
-                label=self.tr("label_apply_class_names"),
-                callback=self.on_apply_class_names_click,
-                width=self.scaled_width_normal,
-            )
+            with dpg.group():
+                self.class_names_manual_input = dpg.add_input_text(
+                    label=self.tr("label_class_names_manual"),
+                    default_value="\n".join(self.config.get("class_names", []) or []),
+                    multiline=True,
+                    height=int(self.scaled_height_normal * 1.2),
+                    width=int(self.scaled_width_large * 1.05),
+                )
+                dpg.add_button(
+                    label=self.tr("label_apply_class_names"),
+                    callback=self.on_apply_class_names_click,
+                    width=self.scaled_width_normal,
+                )
         with dpg.group(horizontal=True, parent=class_group):
             self.class_priority_input = dpg.add_input_text(
                 label=self.tr("label_class_priority"),
@@ -2711,6 +2668,9 @@ class GuiMixin:
                     callback=self.on_aim_bot_position_change,
                     width=self.scaled_width_normal,
                 )
+                self.attach_tooltip(
+                    self.aim_bot_position_input, self.tr("help_aim_position")
+                )
                 self.aim_bot_position2_input = dpg.add_input_float(
                     label=self.tr("label_aim_position2"),
                     min_value=0.0,
@@ -2718,6 +2678,9 @@ class GuiMixin:
                     step=0.01,
                     callback=self.on_aim_bot_position2_change,
                     width=self.scaled_width_normal,
+                )
+                self.attach_tooltip(
+                    self.aim_bot_position2_input, self.tr("help_aim_position2")
                 )
             with dpg.group():
                 dpg.add_text(self.tr("label_class_aim_preview"))
