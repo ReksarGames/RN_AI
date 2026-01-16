@@ -33,6 +33,7 @@ echo [2/2] Building executable with PyInstaller...
     --add-data "*.ttc;." ^
     --add-data "config.json;." ^
     --add-data "core;core" ^
+    --add-data "src;src" ^
     --add-data "makcu;makcu" ^
     --hidden-import=dearpygui ^
     --hidden-import=dearpygui.dearpygui ^
