@@ -1,6 +1,6 @@
 import onnxruntime as rt
-from infer_function import *
-from function import *
+from src.infer_function import *
+from src.function import *
 import threading
 import warnings
 import time

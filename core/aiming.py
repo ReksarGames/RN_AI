@@ -7,7 +7,7 @@ from threading import Thread
 from makcu import MouseButton
 from pyclick import HumanCurve
 
-from infer_function import nms, nms_v8, read_img
+from src.infer_function import nms, nms_v8, read_img
 
 
 class AimingMixin:

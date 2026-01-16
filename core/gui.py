@@ -11,7 +11,7 @@ from tkinter import filedialog
 import dearpygui.dearpygui as dpg
 from makcu import MouseButton
 
-from gui_handlers import ConfigItemGroup
+from src.gui_handlers import ConfigItemGroup
 
 from .utils import TENSORRT_AVAILABLE, UPDATE_TIME, VERSION, create_gradient_image
 
@@ -565,7 +565,7 @@ TRANSLATIONS = {
 
 try:
     if TENSORRT_AVAILABLE:
-        from inference_engine import ensure_engine_from_memory
+        from src.inference_engine import ensure_engine_from_memory
     else:
         ensure_engine_from_memory = None
 except ImportError:
@@ -2709,7 +2709,7 @@ class GuiMixin:
                     )
                     if current_model.endswith(".onnx"):
                         print("Converting TRT engine from ONNX file...")
-                        from inference_engine import auto_convert_engine
+                        from src.inference_engine import auto_convert_engine
 
                         if auto_convert_engine(current_model):
                             print(f"TRT engine conversion successful: {engine_path}")

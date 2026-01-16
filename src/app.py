@@ -22,11 +22,11 @@ from core.model import ModelMixin
 from core.recoil import RecoilMixin
 from core.sunone_controller import SunoneAimController
 from core.utils import TENSORRT_AVAILABLE
-from function import *
-from gui_handlers import ConfigChangeHandler
-from infer_class import *
-from pid import DualAxisPID
-from profiler import FrameProfiler
+from src.function import *
+from src.gui_handlers import ConfigChangeHandler
+from src.infer_class import *
+from src.pid import DualAxisPID
+from src.profiler import FrameProfiler
 
 TensorRTInferenceEngine = None
 ensure_engine_from_memory = None
@@ -38,7 +38,10 @@ if TENSORRT_AVAILABLE:
             os.environ["PATH"] = dll_path + os.pathsep + os.environ["PATH"]
             if hasattr(os, "add_dll_directory"):
                 os.add_dll_directory(dll_path)
-        from inference_engine import TensorRTInferenceEngine, ensure_engine_from_memory
+        from src.inference_engine import (
+            TensorRTInferenceEngine,
+            ensure_engine_from_memory,
+        )
 
         print("TensorRT inference engine module loaded successfully")
     except Exception as e:
@@ -50,7 +53,7 @@ if TENSORRT_AVAILABLE:
 if not TENSORRT_AVAILABLE:
     print("Skipping TensorRT module import, using pure ONNX mode")
 
-from screenshot_manager import ScreenshotManager
+from src.screenshot_manager import ScreenshotManager
 
 try:
     from web.server import start_web_server
