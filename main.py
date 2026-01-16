@@ -82,7 +82,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 
 # === Application entry point ===
-from app import Aassist
+from src.app import Aassist
 
 
 def global_exception_hook(exctype, value, tb):

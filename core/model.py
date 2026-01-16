@@ -7,12 +7,12 @@ from threading import Thread
 import dearpygui.dearpygui as dpg
 from makcu import create_controller
 
-from infer_class import OnnxRuntimeDmlEngine
+from src.infer_class import OnnxRuntimeDmlEngine
 
 from .utils import TENSORRT_AVAILABLE
 
 try:
-    from inference_engine import TensorRTInferenceEngine
+    from src.inference_engine import TensorRTInferenceEngine
 except Exception:
     TensorRTInferenceEngine = None
 

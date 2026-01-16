@@ -134,7 +134,7 @@ def auto_convert_engine(onnx_path):
     if not TENSORRT_AVAILABLE:
         print("TensorRT environment not available, cannot convert to TRT engine")
         return False
-    from inference_engine import auto_convert_engine as original_auto_convert_engine
+    from src.inference_engine import auto_convert_engine as original_auto_convert_engine
 
     return original_auto_convert_engine(onnx_path)
 

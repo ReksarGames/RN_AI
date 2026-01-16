@@ -567,7 +567,7 @@ class ScreenshotManager:
         Returns:
             bool: 初始化是否成功
         """
-        from obs import OBSVideoStream
+        from src.obs import OBSVideoStream
         if self.obs is not None:
             self.obs.close()
             del self.obs
@@ -581,7 +581,7 @@ class ScreenshotManager:
         Returns:
             bool: 初始化是否成功
         """
-        from cjk_get import VideoCaptureDevice
+        from src.cjk_get import VideoCaptureDevice
         if self.config['is_cjk']:
             fourcc_format = self.config.get('cjk_fourcc_format', None)
             self.cjk_device = VideoCaptureDevice(device_id=self.config['cjk_device_id'], fps=self.config['cjk_fps'],
@@ -758,7 +758,7 @@ class ScreenshotManager:
                         with open('error_log.txt', 'a', encoding='utf-8') as f:
                             f.write(f'[OpenCV窗口创建失败] {str(e)}\n')
                         continue
-                from infer_function import draw_boxes, draw_boxes_v8
+                from src.infer_function import draw_boxes, draw_boxes_v8
                 if is_v8:
                     screenshot = draw_boxes_v8(screenshot, boxes, scores, classes)
                 else:
@@ -840,7 +840,7 @@ class ScreenshotManager:
                 cv2.setWindowProperty('screenshot', cv2.WND_PROP_TOPMOST, 1)
                 if self.engine is not None:
                     cv2.resizeWindow('screenshot', self.engine.get_input_shape()[3], self.engine.get_input_shape()[2])
-                from infer_function import draw_boxes, draw_boxes_v8
+                from src.infer_function import draw_boxes, draw_boxes_v8
                 if is_v8:
                     screenshot = draw_boxes_v8(screenshot, boxes, scores, classes)
                 else:
