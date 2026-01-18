@@ -7,7 +7,7 @@ set PYTHON_EXE=%VENV_DIR%\Scripts\python.exe
 
 if not exist "%VENV_DIR%\Scripts\python.exe" (
     echo Creating virtual environment...
-    python -m venv "%VENV_DIR%"
+    py -3.12 -m venv "%VENV_DIR%"
     if errorlevel 1 (
         echo ERROR: Failed to create virtual environment.
         popd
