@@ -35,3 +35,6 @@ psutil>=5.8.0
 
 # Hardware Controllers
 makcu==2.3.1
+
+tensorrt
+onnxruntime

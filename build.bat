@@ -29,12 +29,11 @@ if errorlevel 1 (
 echo.
 echo [2/2] Building executable with PyInstaller...
 "%PYTHON_EXE%" -m PyInstaller --onedir --noconsole --name main ^
-    --add-data "*.ttf;." ^
-    --add-data "*.ttc;." ^
-    --add-data "config.json;." ^
-    --add-data "core;core" ^
-    --add-data "src;src" ^
-    --add-data "makcu;makcu" ^
+    --add-data "%SCRIPT_DIR%*.ttf;." ^
+    --add-data "%SCRIPT_DIR%*.ttc;." ^
+    --add-data "%SCRIPT_DIR%cfg.json;." ^
+    --add-data "%SCRIPT_DIR%core;core" ^
+    --add-data "%SCRIPT_DIR%src;src" ^
     --hidden-import=dearpygui ^
     --hidden-import=dearpygui.dearpygui ^
     --hidden-import=cv2 ^
