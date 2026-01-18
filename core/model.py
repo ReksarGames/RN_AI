@@ -265,18 +265,18 @@ class ModelMixin:
         self.checkboxes.clear()
 
     def on_checkbox_change(self, sender, app_data):
-        try:
-            class_id = int(dpg.get_item_user_data(sender))
-        except Exception:
-            class_id = int(dpg.get_item_label(sender))
+        class_id = int(dpg.get_item_user_data(sender))  # <-- ВАЖНО: берем user_data
+
         if app_data:
-            self.selected_items.append(class_id)
+            if class_id not in self.selected_items:
+                self.selected_items.append(class_id)
         else:
-            self.selected_items.remove(class_id)
-        self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = (
-            self.selected_items
-        )
+            if class_id in self.selected_items:
+                self.selected_items.remove(class_id)
+
+        self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
         print(f"Current selection: {self.selected_items}")
+
         if hasattr(self, "old_pressed_aim_key") and self.old_pressed_aim_key:
             self.refresh_pressed_key_config(self.old_pressed_aim_key)
             print(
