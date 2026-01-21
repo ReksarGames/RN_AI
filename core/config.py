@@ -218,6 +218,8 @@ class ConfigMixin:
                 group_val["use_sunone_processing"] = False
             if "sunone_model_variant" not in group_val:
                 group_val["sunone_model_variant"] = "yolo11"
+            if "yolo_version" not in group_val:
+                group_val["yolo_version"] = group_val.get("sunone_model_variant", "yolo11")
             if "infer_model" not in group_val:
                 continue
             current_model = group_val["infer_model"]
@@ -354,12 +356,13 @@ class ConfigMixin:
             "group": "Default",
             "groups": {
                 "Default": {
-                    "infer_model": "",
-                    "original_infer_model": "",
-                    "is_trt": False,
-                    "yolo_format": "auto",
-                    "sunone_model_variant": "yolo11",
-                    "use_sunone_processing": False,
+                "infer_model": "",
+                "original_infer_model": "",
+                "is_trt": False,
+                "yolo_format": "auto",
+                "sunone_model_variant": "yolo11",
+                "yolo_version": "yolo11",
+                "use_sunone_processing": False,
                     "right_down": False,
                     "aim_keys": {"mouse_side2": default_key},
                     "disable_headshot": False,

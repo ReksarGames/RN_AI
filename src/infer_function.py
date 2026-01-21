@@ -411,7 +411,8 @@ def nms_v8(pred, conf_thres, iou_thres, adaptive_nms=True):
         return inter_area / union_area
 
     pred = np.squeeze(pred)
-    pred = np.transpose(pred, (1, 0))
+    if pred.ndim == 2 and pred.shape[0] < pred.shape[1]:
+        pred = np.transpose(pred, (1, 0))
     pred_class = pred[:, 4:]
     pred_conf = np.max(pred_class, axis=-1)
     pred = np.insert(pred, 4, pred_conf, axis=-1)
