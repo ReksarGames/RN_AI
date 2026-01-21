@@ -7,7 +7,7 @@ from threading import Thread
 from makcu import MouseButton
 from pyclick import HumanCurve
 
-from src.infer_function import nms, nms_v8, read_img
+from src.infer_function import nms, nms_v8, read_img, sunone_postprocess
 
 
 class AimingMixin:
@@ -446,6 +446,7 @@ class AimingMixin:
             t1 = time.perf_counter()
 
             # Use GPU preprocessing for TensorRT engine, CPU fallback for ONNX Runtime
+            img_input = None
             if hasattr(self.engine, 'infer_with_preprocess'):
                 # GPU preprocessing path (TensorRT) - preprocessing included in inference
                 outputs = self.engine.infer_with_preprocess(
@@ -510,26 +511,55 @@ class AimingMixin:
                     min(class_iou_thresholds.values()) if class_iou_thresholds else 1.0
                 )
             t3 = time.perf_counter()
-            nms_algo = yolo_format
-            if nms_algo == "auto":
-                if pred.ndim == 3 and pred.shape[1] != pred.shape[2]:
-                    nms_algo = "v8" if pred.shape[1] < pred.shape[2] else "v5"
-                else:
-                    nms_algo = "v8" if is_v8_like else "v5"
-            if nms_algo == "v8":
-                adaptive_nms_enabled = (
-                    self.config["small_target_enhancement"]["enabled"]
-                    and self.config["small_target_enhancement"]["adaptive_nms"]
-                )
-                boxes, scores, classes = nms_v8(
-                    pred, confidence_threshold, iou_t, adaptive_nms_enabled
+            group_config = self.config["groups"][self.group]
+            use_sunone_processing = group_config.get("use_sunone_processing", False)
+            if use_sunone_processing:
+                sunone_variant = group_config.get("sunone_model_variant", "yolo11")
+                boxes, scores, classes = sunone_postprocess(
+                    pred,
+                    confidence_threshold,
+                    iou_t,
+                    1.0,
+                    self.engine.get_class_num(),
+                    self.config["small_target_enhancement"]["adaptive_nms"],
+                    self.config.get("sunone_max_detections", 0),
+                    variant=sunone_variant,
                 )
                 is_v8_like = True
+                nms_algo = "v8"
             else:
-                boxes, scores, classes = nms(
-                    pred, confidence_threshold, iou_t, class_num
-                )
-                is_v8_like = False
+                nms_algo = yolo_format
+                if nms_algo == "auto":
+                    if pred.ndim == 3 and pred.shape[1] != pred.shape[2]:
+                        nms_algo = "v8" if pred.shape[1] < pred.shape[2] else "v5"
+                    else:
+                        nms_algo = "v8" if is_v8_like else "v5"
+                engine_nms_handled = False
+                if (
+                    img_input is not None
+                    and hasattr(self.engine, "infer_with_nms")
+                ):
+                    try:
+                        boxes, scores, classes = self.engine.infer_with_nms(
+                            img_input, confidence_threshold, iou_t, nms_algo
+                        )
+                        engine_nms_handled = True
+                    except Exception as e:
+                        print(f"[NMS] Engine NMS failed: {e}, falling back to manual NMS")
+                if not engine_nms_handled and nms_algo == "v8":
+                    adaptive_nms_enabled = (
+                        self.config["small_target_enhancement"]["enabled"]
+                        and self.config["small_target_enhancement"]["adaptive_nms"]
+                    )
+                    boxes, scores, classes = nms_v8(
+                        pred, confidence_threshold, iou_t, adaptive_nms_enabled
+                    )
+                    is_v8_like = True
+                else:
+                    boxes, scores, classes = nms(
+                        pred, confidence_threshold, iou_t, class_num
+                    )
+                    is_v8_like = False
             post_ms = (time.perf_counter() - t3) * 1000
             total_ms = cap_ms + pre_ms + current_infer_time_ms + post_ms
 
@@ -544,7 +574,7 @@ class AimingMixin:
             class_ids = []
             if len(boxes) > 0:
                 if nms_algo == "v8":
-                    all_class_ids = classes.astype(int)
+                    all_class_ids = np.array(classes).astype(int)
                 else:
                     all_class_ids = np.argmax(classes, axis=1).astype(int)
                 if selected_classes_set:

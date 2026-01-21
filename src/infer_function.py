@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from typing import List, NamedTuple, Tuple
 
 try:
     import numba as nb
@@ -37,6 +38,223 @@ if NUMBA_AVAILABLE:
                 dst[i, j, 1] = src[src_i, src_j, 1] * 0.00392156862745098
                 dst[i, j, 2] = src[src_i, src_j, 0] * 0.00392156862745098
         return dst
+
+
+class Detection(NamedTuple):
+    box: Tuple[int, int, int, int]
+    confidence: float
+    class_id: int
+
+
+def rect_area(box: Tuple[int, int, int, int]) -> int:
+    x1, y1, x2, y2 = box
+    return max(0, x2 - x1 + 1) * max(0, y2 - y1 + 1)
+
+
+def sunone_nms(
+    detections: List[Detection],
+    nms_threshold: float,
+    adaptive_nms: bool,
+    max_detections: int = 0,
+) -> List[Detection]:
+    if not detections:
+        return []
+    detections = sorted(detections, key=lambda d: d.confidence, reverse=True)
+    if max_detections > 0 and len(detections) > max_detections:
+        detections = detections[:max_detections]
+    areas = [rect_area(det.box) for det in detections]
+    small_area_threshold = 0.0
+    if adaptive_nms and areas:
+        area_sorted = sorted(areas)
+        median_idx = len(area_sorted) // 2
+        small_area_threshold = area_sorted[median_idx] * 0.5
+    suppressed = [False] * len(detections)
+    result: List[Detection] = []
+    for i, det_i in enumerate(detections):
+        if suppressed[i]:
+            continue
+        result.append(det_i)
+        xi1, yi1, xi2, yi2 = det_i.box
+        area_i = areas[i]
+        adaptive_threshold = (
+            min(nms_threshold * 1.5, 0.8)
+            if adaptive_nms and area_i > 0.0 and area_i < small_area_threshold
+            else nms_threshold
+        )
+        for j in range(i + 1, len(detections)):
+            if suppressed[j]:
+                continue
+            xj1, yj1, xj2, yj2 = detections[j].box
+            inter_w = max(0, min(xi2, xj2) - max(xi1, xj1))
+            inter_h = max(0, min(yi2, yj2) - max(yi1, yj1))
+            if inter_w <= 0 or inter_h <= 0:
+                continue
+            inter_area = inter_w * inter_h
+            union_area = area_i + areas[j] - inter_area
+            if union_area <= 0:
+                continue
+            if inter_area / union_area > adaptive_threshold:
+                suppressed[j] = True
+    return result
+
+
+SUNONE_VARIANT_ALIASES = {
+    "yolo8": "yolo11",
+    "yolo9": "yolo11",
+    "yolo10": "yolo10",
+    "yolo11": "yolo11",
+    "yolo12": "yolo11",
+    "auto": "yolo11",
+}
+
+
+def normalize_sunone_variant(variant: str) -> str:
+    if not variant:
+        return "yolo11"
+    normalized = str(variant).strip().lower()
+    return SUNONE_VARIANT_ALIASES.get(normalized, "yolo11")
+
+
+def _prepare_sunone_matrix(output: np.ndarray, features: int) -> np.ndarray:
+    arr = np.asarray(output, dtype=np.float32)
+    if arr.size == 0:
+        return np.empty((0, features), dtype=np.float32)
+    if arr.ndim == 1:
+        if arr.size % features == 0:
+            return arr.reshape(-1, features)
+        if features % arr.size == 0:
+            return arr.reshape(features, -1)
+        return arr.reshape(-1, features)
+    if arr.ndim == 2:
+        if arr.shape[1] == features:
+            return arr
+        if arr.shape[0] == features:
+            return arr.transpose()
+        total = arr.size
+        if total % features == 0:
+            return arr.reshape(-1, features)
+    try:
+        return arr.reshape(-1, features)
+    except ValueError:
+        flat = arr.flatten()
+        if flat.size % features == 0:
+            return flat.reshape(-1, features)
+        return np.resize(flat, (max(1, flat.size // features), features))
+
+
+def _build_box(cx, cy, ow, oh, img_scale):
+    half_ow = 0.5 * ow
+    half_oh = 0.5 * oh
+    x1 = int((cx - half_ow) * img_scale)
+    y1 = int((cy - half_oh) * img_scale)
+    x2 = int((cx + half_ow) * img_scale)
+    y2 = int((cy + half_oh) * img_scale)
+    return (x1, y1, x2, y2)
+
+
+def sunone_decode_yolo10(
+    output: np.ndarray,
+    img_scale: float,
+    conf_threshold: float,
+) -> List[Detection]:
+    detections: List[Detection] = []
+    matrix = _prepare_sunone_matrix(output, 6)
+    if matrix.size == 0:
+        return detections
+    for det in matrix:
+        if det.size < 6:
+            continue
+        confidence = float(det[4])
+        if confidence <= conf_threshold:
+            continue
+        class_id = int(det[5])
+        cx = float(det[0])
+        cy = float(det[1])
+        dx = float(det[2])
+        dy = float(det[3])
+        x1 = int(cx * img_scale)
+        y1 = int(cy * img_scale)
+        x2 = int(dx * img_scale)
+        y2 = int(dy * img_scale)
+        detections.append(Detection((x1, y1, x2, y2), confidence, class_id))
+    return detections
+
+
+def sunone_decode_yolo11(
+    output: np.ndarray,
+    num_classes: int,
+    img_scale: float,
+    conf_threshold: float,
+) -> List[Detection]:
+    detections: List[Detection] = []
+    if num_classes <= 0:
+        return detections
+    matrix = _prepare_sunone_matrix(output, 4 + num_classes)
+    if matrix.size == 0:
+        return detections
+    rows = matrix.shape[1]
+    for row in matrix:
+        classes_scores = row[4 : 4 + num_classes]
+        if classes_scores.size == 0:
+            continue
+        class_id = int(np.argmax(classes_scores))
+        score = float(classes_scores[class_id])
+        if score <= conf_threshold:
+            continue
+        cx = float(row[0])
+        cy = float(row[1])
+        ow = float(row[2])
+        oh = float(row[3])
+        box = _build_box(cx, cy, ow, oh, img_scale)
+        detections.append(Detection(box, score, class_id))
+    return detections
+
+
+def sunone_postprocess(
+    pred: np.ndarray,
+    conf_threshold: float,
+    iou_threshold: float,
+    img_scale: float,
+    num_classes: int,
+    adaptive_nms: bool,
+    max_detections: int = 0,
+    variant: str = "yolo11",
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    shape = pred.shape
+    detections: List[Detection] = []
+    variant = normalize_sunone_variant(variant)
+    if variant == "yolo10":
+        detections = sunone_decode_yolo10(pred, img_scale, conf_threshold)
+    else:
+        detections = sunone_decode_yolo11(
+            pred, num_classes, img_scale, conf_threshold
+        )
+    filtered = sunone_nms(detections, iou_threshold, adaptive_nms, max_detections)
+    if not filtered:
+        return (
+            np.empty((0, 4), dtype=np.float32),
+            np.empty((0,), dtype=np.float32),
+            np.empty((0,), dtype=np.int32),
+        )
+    boxes_xyxy = np.array([det.box for det in filtered], dtype=np.float32)
+    x1, y1, x2, y2 = (
+        boxes_xyxy[:, 0],
+        boxes_xyxy[:, 1],
+        boxes_xyxy[:, 2],
+        boxes_xyxy[:, 3],
+    )
+    centers = np.vstack(
+        (
+            (x1 + x2) / 2.0,
+            (y1 + y2) / 2.0,
+            np.maximum(0.0, x2 - x1),
+            np.maximum(0.0, y2 - y1),
+        )
+    ).T
+    boxes = centers
+    scores = np.array([det.confidence for det in filtered], dtype=np.float32)
+    classes = np.array([det.class_id for det in filtered], dtype=np.int32)
+    return boxes, scores, classes
 
 
 def draw_boxes(image, boxes, scores, classes):

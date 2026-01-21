@@ -153,9 +153,19 @@ TRANSLATIONS = {
         "label_infer_model": "Inference Model",
         "label_select_model": "Select Model",
         "label_yolo_format": "YOLO Format",
+        "label_sunone_variant": "Sunone Variant",
+        "label_sunone_variant_yolo8": "YOLOv8",
+        "label_sunone_variant_yolo9": "YOLOv9",
+        "label_sunone_variant_yolo10": "YOLOv10",
+        "label_sunone_variant_yolo11": "YOLOv11",
+        "label_sunone_variant_yolo12": "YOLOv12",
+        "label_use_sunone_processing": "Use Sunone Processing",
+        "help_sunone_variant": "Select the specific YOLO variant the Sunone postprocess should expect.",
+        "label_yolo_auto": "Auto",
         "label_yolo_auto": "Auto",
         "label_yolo_v5": "YOLOv5/v7",
         "label_yolo_v8": "YOLOv8/v10/v11",
+        "help_use_sunone_processing": "Switch detection/NMS to the Sunone processing pipeline.",
         "label_capture_status": "Current Capture",
         "label_capture_source": "Capture Source",
         "label_capture_standard": "Standard",
@@ -562,6 +572,14 @@ TRANSLATIONS = {
     }
 }
 
+SUNONE_VARIANT_KEYS = [
+    ("yolo8", "label_sunone_variant_yolo8"),
+    ("yolo9", "label_sunone_variant_yolo9"),
+    ("yolo10", "label_sunone_variant_yolo10"),
+    ("yolo11", "label_sunone_variant_yolo11"),
+    ("yolo12", "label_sunone_variant_yolo12"),
+]
+
 
 try:
     if TENSORRT_AVAILABLE:
@@ -735,13 +753,6 @@ class GuiMixin:
         except Exception:
             return
 
-    def get_yolo_format_items(self):
-        return [
-            self.tr("label_yolo_auto"),
-            self.tr("label_yolo_v5"),
-            self.tr("label_yolo_v8"),
-        ]
-
     def get_capture_source_items(self):
         return [
             self.tr("label_capture_standard"),
@@ -793,30 +804,39 @@ class GuiMixin:
             else:
                 dpg.show_item(self.standard_capture_group)
 
-    def get_yolo_format_label(self, value):
-        if value == "v5":
-            return self.tr("label_yolo_v5")
-        if value == "v8":
-            return self.tr("label_yolo_v8")
-        return self.tr("label_yolo_auto")
+    def get_sunone_variant_items(self):
+        return [self.tr(key) for _, key in SUNONE_VARIANT_KEYS]
 
-    def parse_yolo_format_label(self, label):
-        if label in (self.tr("label_yolo_v5"), "YOLOv5/v7"):
-            return "v5"
-        if label in (self.tr("label_yolo_v8"), "YOLOv8/v10/v11"):
-            return "v8"
-        return "auto"
+    def get_sunone_variant_label(self, variant):
+        key = dict(SUNONE_VARIANT_KEYS).get(variant, "label_sunone_variant_yolo11")
+        return self.tr(key)
 
-    def on_yolo_format_change(self, sender, app_data):
-        value = self.parse_yolo_format_label(app_data)
-        self.config["groups"][self.group]["yolo_format"] = value
-        self.config["groups"][self.group]["is_v8"] = value == "v8"
-        class_num = self.get_current_class_num()
-        class_ary = list(range(class_num))
-        self.create_checkboxes(class_ary)
-        self.update_class_aim_combo()
-        self.update_target_reference_class_combo()
-        print(f"YOLO format changed to: {value}")
+    def parse_sunone_variant_label(self, label):
+        if not label:
+            return "yolo11"
+        for variant, key in SUNONE_VARIANT_KEYS:
+            if label == self.tr(key):
+                return variant
+        return "yolo11"
+
+    def on_sunone_variant_change(self, sender, app_data):
+        variant = self.parse_sunone_variant_label(app_data)
+        self.config["groups"][self.group]["sunone_model_variant"] = variant
+        print(f"Sunone variant set to: {variant}")
+
+    def sync_sunone_variant_ui(self):
+        if not hasattr(self, "sunone_variant_combo"):
+            return
+        variant = self.config["groups"][self.group].get("sunone_model_variant", "yolo11")
+        dpg.set_value(self.sunone_variant_combo, self.get_sunone_variant_label(variant))
+
+    def on_use_sunone_processing_change(self, sender, app_data):
+        flag = bool(app_data)
+        self.config["groups"][self.group]["use_sunone_processing"] = flag
+        self.update_group_inputs()
+        self.sync_sunone_variant_ui()
+        state = "enabled" if flag else "disabled"
+        print(f"Sunone processing {state}")
 
     def update_capture_status_text(self):
         if not hasattr(self, "capture_status_text") or self.capture_status_text is None:
@@ -1774,18 +1794,31 @@ class GuiMixin:
                                 )
                             with dpg.group(horizontal=True, parent=model_params_group):
                                 self.is_trt_checkbox = dpg.add_checkbox(
-                                    label=self.tr("label_trt"), callback=self.on_is_trt_change
+                                    label=self.tr("label_trt"),
+                                    callback=self.on_is_trt_change,
                                 )
-                                self.yolo_format_combo = dpg.add_combo(
-                                    label=self.tr("label_yolo_format"),
-                                    items=self.get_yolo_format_items(),
-                                    default_value=self.get_yolo_format_label(
+                                self.use_sunone_processing_checkbox = dpg.add_checkbox(
+                                    label=self.tr("label_use_sunone_processing"),
+                                    tag="use_sunone_processing_checkbox",
+                                    default_value=self.config["groups"][self.group].get(
+                                        "use_sunone_processing", False
+                                    ),
+                                    callback=self.on_use_sunone_processing_change,
+                                )
+                                self.sunone_variant_combo = dpg.add_combo(
+                                    label=self.tr("label_sunone_variant"),
+                                    items=self.get_sunone_variant_items(),
+                                    default_value=self.get_sunone_variant_label(
                                         self.config["groups"][self.group].get(
-                                            "yolo_format", "auto"
+                                            "sunone_model_variant", "yolo11"
                                         )
                                     ),
-                                    callback=self.on_yolo_format_change,
+                                    callback=self.on_sunone_variant_change,
                                     width=self.scaled_width_normal,
+                                )
+                                self.attach_tooltip(
+                                    self.sunone_variant_combo,
+                                    self.tr("help_sunone_variant"),
                                 )
                             with dpg.group(horizontal=True, parent=model_params_group):
                                 self.infer_model_input = dpg.add_input_text(
@@ -1802,6 +1835,7 @@ class GuiMixin:
                                     width=100,
                                 )
                             self.update_group_inputs()
+                            self.sync_sunone_variant_ui()
                     with dpg.group(horizontal=True):
                         self.start_button_tag = dpg.add_button(
                             label=self.tr("label_start"),
@@ -2298,6 +2332,17 @@ class GuiMixin:
                 callback=self.on_dynamic_scope_recover_ms_change,
                 width=self.scaled_width_normal,
             )
+        with dpg.group(horizontal=True):
+            self.move_deadzone_input = dpg.add_input_float(
+                label=self.tr("label_move_deadzone"),
+                default_value=1.0,
+                min_value=0.0,
+                max_value=10.0,
+                step=0.0001,
+                format="%.4f",
+                callback=self.on_move_deadzone_change,
+                width=self.scaled_width_normal,
+            )
         dpg.add_separator()
         with dpg.group(horizontal=True):
             dpg.add_text(self.tr("label_aim_weights"))
@@ -2441,17 +2486,6 @@ class GuiMixin:
                 step=0.0001,
                 format="%.4f",
                 callback=self.on_smooth_deadzone_change,
-                width=self.scaled_width_normal,
-            )
-        with dpg.group(horizontal=True, parent=self.pid_params_group):
-            self.move_deadzone_input = dpg.add_input_float(
-                label=self.tr("label_move_deadzone"),
-                default_value=1.0,
-                min_value=0.0,
-                max_value=10.0,
-                step=0.0001,
-                format="%.4f",
-                callback=self.on_move_deadzone_change,
                 width=self.scaled_width_normal,
             )
         trigger_setting_tag = dpg.add_collapsing_header(
@@ -2965,6 +2999,7 @@ class GuiMixin:
         self.aim_key = list(self.aim_keys_dist.keys())
         self.render_key_combo()
         self.update_group_inputs()
+        self.sync_sunone_variant_ui()
         self.update_button_lists()
         self.update_auto_flashbang_ui_state()
         print(f"changed to: {self.config['group']}")
@@ -4294,18 +4329,7 @@ class GuiMixin:
                     self.config["groups"][self.group]["infer_model"] = onnx_path
                     self.refresh_engine()
                     dpg.set_value(self.infer_model_input, onnx_path)
-                    if hasattr(self, "yolo_format_combo"):
-                        dpg.set_value(
-                            self.yolo_format_combo,
-                            self.get_yolo_format_label(
-                                self.config["groups"][self.group].get(
-                                    "yolo_format", "auto"
-                                )
-                            ),
-                        )
-                    print(
-                        "Switched back to ONNX Runtime inference, updated YOLO format selection"
-                    )
+                    print("Switched back to ONNX Runtime inference")
                 else:
                     print(
                         "Original ONNX model path not found, please check configuration."

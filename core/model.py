@@ -241,6 +241,11 @@ class ModelMixin:
         if hasattr(self, "yolo_format_combo") and self.yolo_format_combo is not None:
             yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
             dpg.set_value(self.yolo_format_combo, self.get_yolo_format_label(yolo_format))
+        if hasattr(self, "use_sunone_processing_checkbox"):
+            dpg.set_value(
+                self.use_sunone_processing_checkbox,
+                self.config["groups"][self.group].get("use_sunone_processing", False),
+            )
         dpg.set_value(
             self.right_down_checkbox, self.config["groups"][self.group]["right_down"]
         )
@@ -571,8 +576,9 @@ class ModelMixin:
                 self.engine = OnnxRuntimeDmlEngine(model_path, True, is_trt=False)
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
-        region_w = self.engine.get_input_shape()[3]
-        region_h = self.engine.get_input_shape()[2]
+        region_shape = self.engine.get_input_shape()
+        region_w = int(region_shape[3])
+        region_h = int(region_shape[2])
         left = int((self.screen_width - region_w) // 2 + offset_x)
         top = int((self.screen_height - region_h) // 2 + offset_y)
         left = max(0, min(left, self.screen_width - region_w))

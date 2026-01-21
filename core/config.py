@@ -47,7 +47,10 @@ class ConfigMixin:
                 except Exception as e:
                     print(f"Failed to load cfg.json: {e}")
             if config is None:
-                raise RuntimeError("Config not loaded, please check cfg.json file")
+                print("cfg.json not found or invalid, generating default configuration.")
+                config = self._create_default_config()
+                self.config = config
+                self.save_config_callback()
         if config.get("move_method") != "makcu":
             print("Only makcu move method is supported, forcing move_method to 'makcu'")
             config["move_method"] = "makcu"
@@ -79,6 +82,17 @@ class ConfigMixin:
             config["gui_width_scale"] = 1.0
         if "gui_font_scale" not in config:
             config["gui_font_scale"] = 1.0
+        if "small_target_enhancement" not in config:
+            config["small_target_enhancement"] = {
+                "enabled": True,
+                "boost_factor": 0.1,
+                "threshold": 0.02,
+                "medium_threshold": 0.05,
+                "medium_boost": 1.5,
+                "smooth_enabled": True,
+                "smooth_frames": 2,
+                "adaptive_nms": True,
+            }
         if "class_names" not in config:
             config["class_names"] = []
         if "class_names_file" not in config:
@@ -151,6 +165,8 @@ class ConfigMixin:
             debug["show_step"] = False
         if "show_future" not in debug:
             debug["show_future"] = False
+        if "sunone_max_detections" not in config:
+            config["sunone_max_detections"] = 0
         if "auto_flashbang" not in config:
             config["auto_flashbang"] = {
                 "enabled": False,
@@ -198,6 +214,10 @@ class ConfigMixin:
                 group_val["yolo_format"] = (
                     "v8" if group_val.get("is_v8", False) else "auto"
                 )
+            if "use_sunone_processing" not in group_val:
+                group_val["use_sunone_processing"] = False
+            if "sunone_model_variant" not in group_val:
+                group_val["sunone_model_variant"] = "yolo11"
             if "infer_model" not in group_val:
                 continue
             current_model = group_val["infer_model"]
@@ -253,6 +273,123 @@ class ConfigMixin:
             aim_keys_dist = {}
             aim_keys = []
         return (config, aim_keys_dist, aim_keys, group)
+
+    def _create_default_config(self):
+        default_trigger = {
+            "status": False,
+            "start_delay": 150,
+            "press_delay": 1,
+            "end_delay": 200,
+            "random_delay": 20,
+            "x_trigger_scope": 0.5,
+            "y_trigger_scope": 0.5,
+            "x_trigger_offset": 0.0,
+            "y_trigger_offset": 0.0,
+            "continuous": False,
+            "recoil": False,
+        }
+        default_key = {
+            "confidence_threshold": 0.5,
+            "iou_t": 0.8,
+            "aim_bot_position": 0.5,
+            "aim_bot_position2": 0.5,
+            "aim_bot_scope": 160,
+            "smoothing_factor": 0.5,
+            "base_step": 0.17,
+            "distance_weight": 1.0,
+            "fov_angle": 90,
+            "history_size": 12,
+            "output_scale_x": 1.0,
+            "output_scale_y": 1.0,
+            "deadzone": 2.0,
+            "uniform_threshold": 1.0,
+            "compensation_factor": 1.0,
+            "trigger": default_trigger,
+            "classes": [0],
+            "class_priority_order": [0],
+            "class_aim_positions": {
+                "0": {
+                    "aim_bot_position": 0.5,
+                    "aim_bot_position2": 0.5,
+                    "confidence_threshold": 0.5,
+                    "iou_t": 1.0,
+                }
+            },
+            "overshoot_threshold": 3.0,
+            "overshoot_x_factor": 0.5,
+            "overshoot_y_factor": 0.3,
+            "move_deadzone": 1.0,
+            "pid_kp_x": 0.4,
+            "pid_kp_y": 0.4,
+            "pid_ki_x": 0.001,
+            "pid_ki_y": 0.001,
+            "pid_kd_x": 0.05,
+            "pid_kd_y": 0.05,
+            "smooth_x": 0,
+            "smooth_y": 0,
+            "smooth_deadzone": 0.0,
+            "smooth_algorithm": 1.0,
+            "target_switch_delay": 0,
+            "dynamic_scope": {"enabled": False},
+            "trigger_only": False,
+            "disable_headshot_removed": False,
+        }
+        return {
+            "group": "Default",
+            "groups": {
+                "Default": {
+                    "infer_model": "",
+                    "original_infer_model": "",
+                    "is_trt": False,
+                    "yolo_format": "auto",
+                    "sunone_model_variant": "yolo11",
+                    "use_sunone_processing": False,
+                    "right_down": False,
+                    "aim_keys": {"mouse_side2": default_key},
+                    "disable_headshot": False,
+                    "disable_headshot_keys": ["m"],
+                    "disable_headshot_class_id": -1,
+                    "targeting_button_key": "mouse_side2",
+                    "triggerbot_button_key": "",
+                    "disable_headshot_button_key": "m",
+                }
+            },
+            "class_names": [
+                "player",
+                "bot",
+                "weapon",
+                "outline",
+                "dead_body",
+                "hideout_target_human",
+                "hideout_target_balls",
+                "head",
+                "smoke",
+                "fire",
+                "third_person",
+            ],
+            "class_names_file": "",
+            "infer_debug": False,
+            "print_fps": False,
+            "show_motion_speed": False,
+            "move_method": "makcu",
+            "screen_width": 1920,
+            "screen_height": 1080,
+            "capture_offset_x": 0,
+            "capture_offset_y": 0,
+            "ui_language": "en",
+            "gui_width_scale": 1.0,
+            "gui_font_scale": 1.0,
+            "small_target_enhancement": {
+                "enabled": True,
+                "boost_factor": 0.1,
+                "threshold": 0.02,
+                "medium_threshold": 0.05,
+                "medium_boost": 1.5,
+                "smooth_enabled": True,
+                "smooth_frames": 2,
+                "adaptive_nms": True,
+            },
+        }
 
     def init_all_keys_class_aim_positions(self, group, config):
         """Initialize class aim position configuration for all keys"""
