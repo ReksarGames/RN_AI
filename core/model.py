@@ -253,6 +253,20 @@ class ModelMixin:
 
     def create_checkboxes(self, options):
         self.remove_checkboxes()
+        if not self.selected_items and hasattr(self, "select_key"):
+            key_cfg = (
+                self.config.get("groups", {})
+                .get(self.group, {})
+                .get("aim_keys", {})
+                .get(self.select_key, {})
+            )
+            current_classes = key_cfg.get("classes", [])
+            if current_classes:
+                self.selected_items = current_classes
+            else:
+                self.selected_items = list(options)
+                if isinstance(key_cfg, dict):
+                    key_cfg["classes"] = self.selected_items
         for option in options:
             checkbox_tag = dpg.add_checkbox(
                 label=self.format_class_label(option),
@@ -289,6 +303,15 @@ class ModelMixin:
             )
 
     def update_checkboxes_state(self, new_selection):
+        if not new_selection and self.checkboxes:
+            all_items = [int(dpg.get_item_user_data(cb)) for cb in self.checkboxes]
+            new_selection = all_items
+            try:
+                self.config["groups"][self.group]["aim_keys"][self.select_key][
+                    "classes"
+                ] = new_selection
+            except Exception:
+                pass
         for checkbox in self.checkboxes:
             option = int(dpg.get_item_user_data(checkbox))
             should_be_selected = option in new_selection

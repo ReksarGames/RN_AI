@@ -51,6 +51,14 @@ class ConfigMixin:
                 config = self._create_default_config()
                 self.config = config
                 self.save_config_callback()
+        if "groups" not in config or not isinstance(config.get("groups"), dict):
+            default_cfg = self._create_default_config()
+            config["groups"] = default_cfg.get("groups", {})
+        if not config["groups"]:
+            default_cfg = self._create_default_config()
+            config["groups"] = default_cfg.get("groups", {})
+        if "group" not in config or config["group"] not in config["groups"]:
+            config["group"] = next(iter(config["groups"]), "Default")
         if config.get("move_method") != "makcu":
             print("Only makcu move method is supported, forcing move_method to 'makcu'")
             config["move_method"] = "makcu"
@@ -82,6 +90,94 @@ class ConfigMixin:
             config["gui_width_scale"] = 1.0
         if "gui_font_scale" not in config:
             config["gui_font_scale"] = 1.0
+        if "gui_dpi_scale" not in config:
+            config["gui_dpi_scale"] = 0.0
+        if "show_motion_speed" not in config:
+            config["show_motion_speed"] = False
+        if "show_infer_time" not in config:
+            config["show_infer_time"] = False
+        if "show_fov" not in config:
+            config["show_fov"] = False
+        if "is_curve" not in config:
+            config["is_curve"] = False
+        if "is_curve_uniform" not in config:
+            config["is_curve_uniform"] = False
+        if "is_show_curve" not in config:
+            config["is_show_curve"] = False
+        if "is_show_down" not in config:
+            config["is_show_down"] = False
+        if "down_switch_key" not in config:
+            config["down_switch_key"] = "caps_lock"
+        if "screen_width" not in config:
+            config["screen_width"] = 1920
+        if "screen_height" not in config:
+            config["screen_height"] = 1080
+        if "game_sensitivity" not in config:
+            config["game_sensitivity"] = 1.0
+        if "mouse_dpi" not in config:
+            config["mouse_dpi"] = 800
+        if "distance_scoring_weight" not in config:
+            config["distance_scoring_weight"] = 1.0
+        if "center_scoring_weight" not in config:
+            config["center_scoring_weight"] = 1.0
+        if "size_scoring_weight" not in config:
+            config["size_scoring_weight"] = 1.0
+        if "offset_boundary_x" not in config:
+            config["offset_boundary_x"] = 0
+        if "offset_boundary_y" not in config:
+            config["offset_boundary_y"] = 0
+        if "knots_count" not in config:
+            config["knots_count"] = 2
+        if "distortion_mean" not in config:
+            config["distortion_mean"] = 0.0
+        if "distortion_st_dev" not in config:
+            config["distortion_st_dev"] = 0.0
+        if "distortion_frequency" not in config:
+            config["distortion_frequency"] = 0.0
+        if "target_points" not in config:
+            config["target_points"] = 6
+        if "mask_left" not in config:
+            config["mask_left"] = False
+        if "mask_right" not in config:
+            config["mask_right"] = False
+        if "mask_middle" not in config:
+            config["mask_middle"] = False
+        if "mask_side1" not in config:
+            config["mask_side1"] = False
+        if "mask_side2" not in config:
+            config["mask_side2"] = False
+        if "mask_x" not in config:
+            config["mask_x"] = False
+        if "mask_y" not in config:
+            config["mask_y"] = False
+        if "mask_wheel" not in config:
+            config["mask_wheel"] = False
+        if "aim_mask_x" not in config:
+            config["aim_mask_x"] = False
+        if "aim_mask_y" not in config:
+            config["aim_mask_y"] = False
+        if "is_show_priority_debug" not in config:
+            config["is_show_priority_debug"] = False
+        if "is_obs" not in config:
+            config["is_obs"] = False
+        if "obs_ip" not in config:
+            config["obs_ip"] = "0.0.0.0"
+        if "obs_port" not in config:
+            config["obs_port"] = 4455
+        if "obs_fps" not in config:
+            config["obs_fps"] = 240
+        if "is_cjk" not in config:
+            config["is_cjk"] = False
+        if "cjk_device_id" not in config:
+            config["cjk_device_id"] = 0
+        if "cjk_fps" not in config:
+            config["cjk_fps"] = 60
+        if "cjk_resolution" not in config:
+            config["cjk_resolution"] = "1920x1080"
+        if "cjk_crop_size" not in config:
+            config["cjk_crop_size"] = "1920x1080"
+        if "cjk_fourcc_format" not in config:
+            config["cjk_fourcc_format"] = ""
         if "small_target_enhancement" not in config:
             config["small_target_enhancement"] = {
                 "enabled": True,
@@ -93,6 +189,24 @@ class ConfigMixin:
                 "smooth_frames": 2,
                 "adaptive_nms": True,
             }
+        else:
+            ste = config["small_target_enhancement"]
+            if "enabled" not in ste:
+                ste["enabled"] = True
+            if "boost_factor" not in ste:
+                ste["boost_factor"] = 0.1
+            if "threshold" not in ste:
+                ste["threshold"] = 0.02
+            if "medium_threshold" not in ste:
+                ste["medium_threshold"] = 0.05
+            if "medium_boost" not in ste:
+                ste["medium_boost"] = 1.5
+            if "smooth_enabled" not in ste:
+                ste["smooth_enabled"] = True
+            if "smooth_frames" not in ste:
+                ste["smooth_frames"] = 2
+            if "adaptive_nms" not in ste:
+                ste["adaptive_nms"] = True
         if "class_names" not in config:
             config["class_names"] = []
         if "class_names_file" not in config:
@@ -180,7 +294,66 @@ class ConfigMixin:
                 "curve_speed": 8.0,
                 "curve_knots": 3,
             }
+        else:
+            afb = config["auto_flashbang"]
+            if "enabled" not in afb:
+                afb["enabled"] = False
+            if "delay_ms" not in afb:
+                afb["delay_ms"] = 150
+            if "turn_angle" not in afb:
+                afb["turn_angle"] = 90
+            if "sensitivity_multiplier" not in afb:
+                afb["sensitivity_multiplier"] = 2.5
+            if "return_delay" not in afb:
+                afb["return_delay"] = 80
+            if "min_confidence" not in afb:
+                afb["min_confidence"] = 0.3
+            if "min_size" not in afb:
+                afb["min_size"] = 5
+            if "use_curve" not in afb:
+                afb["use_curve"] = True
+            if "curve_speed" not in afb:
+                afb["curve_speed"] = 8.0
+            if "curve_knots" not in afb:
+                afb["curve_knots"] = 3
+        if "recoil" not in config:
+            config["recoil"] = {
+                "use_mouse_re_trajectory": False,
+                "replay_speed": 1.0,
+                "pixel_enhancement_ratio": 1.0,
+                "mapping": {},
+            }
+        else:
+            recoil = config["recoil"]
+            if "use_mouse_re_trajectory" not in recoil:
+                recoil["use_mouse_re_trajectory"] = False
+            if "replay_speed" not in recoil:
+                recoil["replay_speed"] = 1.0
+            if "pixel_enhancement_ratio" not in recoil:
+                recoil["pixel_enhancement_ratio"] = 1.0
+            if "mapping" not in recoil or not isinstance(recoil.get("mapping"), dict):
+                recoil["mapping"] = {}
+        if "games" not in config or not isinstance(config.get("games"), dict):
+            config["games"] = {
+                "Default": {
+                    "Default": [
+                        {"number": 1, "offset": [0.0, 0.0]},
+                    ]
+                }
+            }
+        if "picked_game" not in config or config["picked_game"] not in config["games"]:
+            config["picked_game"] = next(iter(config["games"]), "Default")
         for group_key, group_val in config.get("groups", {}).items():
+            if "aim_keys" not in group_val or not isinstance(
+                group_val.get("aim_keys"), dict
+            ):
+                group_val["aim_keys"] = {}
+            if "right_down" not in group_val:
+                group_val["right_down"] = False
+            if "long_press_duration" not in group_val:
+                group_val["long_press_duration"] = 350
+            if "is_v8" not in group_val:
+                group_val["is_v8"] = False
             if "disable_headshot" not in group_val:
                 group_val["disable_headshot"] = False
             if "disable_headshot_keys" not in group_val:
@@ -311,6 +484,7 @@ class ConfigMixin:
             "aim_bot_position": 0.5,
             "aim_bot_position2": 0.5,
             "aim_bot_scope": 160,
+            "min_position_offset": 0,
             "smoothing_factor": 0.5,
             "base_step": 0.17,
             "distance_weight": 1.0,
@@ -319,7 +493,13 @@ class ConfigMixin:
             "output_scale_x": 1.0,
             "output_scale_y": 1.0,
             "deadzone": 2.0,
+            "smoothing": 0.5,
+            "velocity_decay": 0.9,
+            "current_frame_weight": 0.6,
+            "last_frame_weight": 0.4,
             "uniform_threshold": 1.0,
+            "min_velocity_threshold": 0.0,
+            "max_velocity_threshold": 999.0,
             "compensation_factor": 1.0,
             "trigger": default_trigger,
             "classes": default_classes,
@@ -348,22 +528,32 @@ class ConfigMixin:
             "smooth_deadzone": 0.0,
             "smooth_algorithm": 1.0,
             "target_switch_delay": 0,
-            "dynamic_scope": {"enabled": False},
+            "target_reference_class": 0,
+            "dynamic_scope": {
+                "enabled": False,
+                "min_ratio": 0.5,
+                "min_scope": 0,
+                "shrink_duration_ms": 300,
+                "recover_duration_ms": 300,
+            },
             "trigger_only": False,
+            "auto_y": False,
             "disable_headshot_removed": False,
         }
         return {
             "group": "Default",
             "groups": {
                 "Default": {
-                "infer_model": "",
-                "original_infer_model": "",
-                "is_trt": False,
-                "yolo_format": "auto",
-                "sunone_model_variant": "yolo11",
-                "yolo_version": "yolo11",
-                "use_sunone_processing": False,
+                    "infer_model": "",
+                    "original_infer_model": "",
+                    "is_trt": False,
+                    "is_v8": False,
+                    "yolo_format": "auto",
+                    "sunone_model_variant": "yolo11",
+                    "yolo_version": "yolo11",
+                    "use_sunone_processing": False,
                     "right_down": False,
+                    "long_press_duration": 350,
                     "aim_keys": {"mouse_side2": default_key},
                     "disable_headshot": False,
                     "disable_headshot_keys": ["m"],
@@ -378,14 +568,91 @@ class ConfigMixin:
             "infer_debug": False,
             "print_fps": False,
             "show_motion_speed": False,
+            "show_infer_time": False,
+            "show_fov": False,
             "move_method": "makcu",
             "screen_width": 1920,
             "screen_height": 1080,
             "capture_offset_x": 0,
             "capture_offset_y": 0,
+            "aim_controller": "pid",
             "ui_language": "en",
             "gui_width_scale": 1.0,
             "gui_font_scale": 1.0,
+            "gui_dpi_scale": 0.0,
+            "is_curve": False,
+            "is_curve_uniform": False,
+            "is_show_curve": False,
+            "is_show_down": False,
+            "down_switch_key": "caps_lock",
+            "game_sensitivity": 1.0,
+            "mouse_dpi": 800,
+            "distance_scoring_weight": 1.0,
+            "center_scoring_weight": 1.0,
+            "size_scoring_weight": 1.0,
+            "offset_boundary_x": 0,
+            "offset_boundary_y": 0,
+            "knots_count": 2,
+            "distortion_mean": 0.0,
+            "distortion_st_dev": 0.0,
+            "distortion_frequency": 0.0,
+            "target_points": 6,
+            "mask_left": False,
+            "mask_right": False,
+            "mask_middle": False,
+            "mask_side1": False,
+            "mask_side2": False,
+            "mask_x": False,
+            "mask_y": False,
+            "mask_wheel": False,
+            "aim_mask_x": False,
+            "aim_mask_y": False,
+            "is_show_priority_debug": False,
+            "is_obs": False,
+            "obs_ip": "0.0.0.0",
+            "obs_port": 4455,
+            "obs_fps": 240,
+            "is_cjk": False,
+            "cjk_device_id": 0,
+            "cjk_fps": 60,
+            "cjk_resolution": "1920x1080",
+            "cjk_crop_size": "1920x1080",
+            "cjk_fourcc_format": "",
+            "enable_parallel_processing": True,
+            "turbo_mode": True,
+            "skip_frame_processing": True,
+            "performance_mode": "balanced",
+            "use_async_move": False,
+            "frame_skip_ratio": 0,
+            "cpu_optimization": True,
+            "memory_optimization": True,
+            "sunone_max_detections": 0,
+            "auto_flashbang": {
+                "enabled": False,
+                "delay_ms": 150,
+                "turn_angle": 90,
+                "sensitivity_multiplier": 2.5,
+                "return_delay": 80,
+                "min_confidence": 0.3,
+                "min_size": 5,
+                "use_curve": True,
+                "curve_speed": 8.0,
+                "curve_knots": 3,
+            },
+            "recoil": {
+                "use_mouse_re_trajectory": False,
+                "replay_speed": 1.0,
+                "pixel_enhancement_ratio": 1.0,
+                "mapping": {},
+            },
+            "games": {
+                "Default": {
+                    "Default": [
+                        {"number": 1, "offset": [0.0, 0.0]},
+                    ]
+                }
+            },
+            "picked_game": "Default",
             "small_target_enhancement": {
                 "enabled": True,
                 "boost_factor": 0.1,
@@ -395,6 +662,42 @@ class ConfigMixin:
                 "smooth_enabled": True,
                 "smooth_frames": 2,
                 "adaptive_nms": True,
+            },
+            "sunone": {
+                "use_smoothing": True,
+                "smoothness": 6,
+                "tracking_smoothing": False,
+                "use_kalman": False,
+                "kalman_process_noise": 0.01,
+                "kalman_measurement_noise": 0.1,
+                "kalman_speed_multiplier_x": 1.0,
+                "kalman_speed_multiplier_y": 1.0,
+                "reset_threshold": 4.0,
+                "speed": {
+                    "min_multiplier": 0.5,
+                    "max_multiplier": 0.7,
+                    "snap_radius": 3.2,
+                    "near_radius": 40.0,
+                    "speed_curve_exponent": 10.0,
+                    "snap_boost_factor": 4.0,
+                },
+                "prediction": {
+                    "mode": 0,
+                    "interval": 0.01,
+                    "kalman_lead_ms": 0.0,
+                    "kalman_max_lead_ms": 0.0,
+                    "velocity_smoothing": 0.4,
+                    "velocity_scale": 1.0,
+                    "kalman_process_noise": 0.01,
+                    "kalman_measurement_noise": 0.1,
+                    "future_positions": 6,
+                    "draw_future_positions": False,
+                },
+                "debug": {
+                    "show_prediction": False,
+                    "show_step": False,
+                    "show_future": False,
+                },
             },
         }
 
@@ -407,6 +710,117 @@ class ConfigMixin:
             class_num = self.get_current_class_num()
             for key_name in config["groups"][group]["aim_keys"]:
                 key_config = config["groups"][group]["aim_keys"][key_name]
+                default_trigger = {
+                    "status": False,
+                    "start_delay": 150,
+                    "press_delay": 1,
+                    "end_delay": 200,
+                    "random_delay": 20,
+                    "x_trigger_scope": 0.5,
+                    "y_trigger_scope": 0.5,
+                    "x_trigger_offset": 0.0,
+                    "y_trigger_offset": 0.0,
+                    "continuous": False,
+                    "recoil": False,
+                }
+                if not isinstance(key_config.get("trigger"), dict):
+                    key_config["trigger"] = dict(default_trigger)
+                else:
+                    for key, value in default_trigger.items():
+                        if key not in key_config["trigger"]:
+                            key_config["trigger"][key] = value
+                if not isinstance(key_config.get("classes"), list):
+                    key_config["classes"] = list(range(class_num))
+                if "min_position_offset" not in key_config:
+                    key_config["min_position_offset"] = 0
+                if "smoothing_factor" not in key_config:
+                    key_config["smoothing_factor"] = 0.5
+                if "base_step" not in key_config:
+                    key_config["base_step"] = 0.17
+                if "distance_weight" not in key_config:
+                    key_config["distance_weight"] = 1.0
+                if "fov_angle" not in key_config:
+                    key_config["fov_angle"] = 90.0
+                if "history_size" not in key_config:
+                    key_config["history_size"] = 12
+                if "deadzone" not in key_config:
+                    key_config["deadzone"] = 2.0
+                if "smoothing" not in key_config:
+                    key_config["smoothing"] = 0.5
+                if "velocity_decay" not in key_config:
+                    key_config["velocity_decay"] = 0.9
+                if "current_frame_weight" not in key_config:
+                    key_config["current_frame_weight"] = 0.6
+                if "last_frame_weight" not in key_config:
+                    key_config["last_frame_weight"] = 0.4
+                if "output_scale_x" not in key_config:
+                    key_config["output_scale_x"] = 1.0
+                if "output_scale_y" not in key_config:
+                    key_config["output_scale_y"] = 1.0
+                if "uniform_threshold" not in key_config:
+                    key_config["uniform_threshold"] = 1.0
+                if "min_velocity_threshold" not in key_config:
+                    key_config["min_velocity_threshold"] = 0.0
+                if "max_velocity_threshold" not in key_config:
+                    key_config["max_velocity_threshold"] = 999.0
+                if "compensation_factor" not in key_config:
+                    key_config["compensation_factor"] = 1.0
+                if "move_deadzone" not in key_config:
+                    key_config["move_deadzone"] = 1.0
+                if "pid_kp_x" not in key_config:
+                    key_config["pid_kp_x"] = 0.4
+                if "pid_kp_y" not in key_config:
+                    key_config["pid_kp_y"] = 0.4
+                if "pid_ki_x" not in key_config:
+                    key_config["pid_ki_x"] = 0.001
+                if "pid_ki_y" not in key_config:
+                    key_config["pid_ki_y"] = 0.001
+                if "pid_kd_x" not in key_config:
+                    key_config["pid_kd_x"] = 0.05
+                if "pid_kd_y" not in key_config:
+                    key_config["pid_kd_y"] = 0.05
+                if "smooth_x" not in key_config:
+                    key_config["smooth_x"] = 0
+                if "smooth_y" not in key_config:
+                    key_config["smooth_y"] = 0
+                if "smooth_deadzone" not in key_config:
+                    key_config["smooth_deadzone"] = 0.0
+                if "smooth_algorithm" not in key_config:
+                    key_config["smooth_algorithm"] = 1.0
+                if "target_switch_delay" not in key_config:
+                    key_config["target_switch_delay"] = 0
+                if "target_reference_class" not in key_config:
+                    key_config["target_reference_class"] = 0
+                if "auto_y" not in key_config:
+                    key_config["auto_y"] = False
+                if "overshoot_threshold" not in key_config:
+                    key_config["overshoot_threshold"] = 3.0
+                if "overshoot_x_factor" not in key_config:
+                    key_config["overshoot_x_factor"] = 0.5
+                if "overshoot_y_factor" not in key_config:
+                    key_config["overshoot_y_factor"] = 0.3
+                if "dynamic_scope" not in key_config or not isinstance(
+                    key_config.get("dynamic_scope"), dict
+                ):
+                    key_config["dynamic_scope"] = {
+                        "enabled": False,
+                        "min_ratio": 0.5,
+                        "min_scope": 0,
+                        "shrink_duration_ms": 300,
+                        "recover_duration_ms": 300,
+                    }
+                else:
+                    dyn_cfg = key_config["dynamic_scope"]
+                    if "enabled" not in dyn_cfg:
+                        dyn_cfg["enabled"] = False
+                    if "min_ratio" not in dyn_cfg:
+                        dyn_cfg["min_ratio"] = 0.5
+                    if "min_scope" not in dyn_cfg:
+                        dyn_cfg["min_scope"] = 0
+                    if "shrink_duration_ms" not in dyn_cfg:
+                        dyn_cfg["shrink_duration_ms"] = 300
+                    if "recover_duration_ms" not in dyn_cfg:
+                        dyn_cfg["recover_duration_ms"] = 300
                 if "class_aim_positions" not in key_config:
                     key_config["class_aim_positions"] = {}
                 cap = key_config["class_aim_positions"]
