@@ -1,61 +1,111 @@
-Exception: Error: [1000] Message: 	width keyword does not exist.
-
-The above exception was the direct cause of the following exception:
-
 Traceback (most recent call last):
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
+  File "C:\Users\Kirill\Desktop\ZTXAI\main.py", line 133, in <module>
     valorant_instance.start()
-    ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 454, in start
+  File "C:\Users\Kirill\Desktop\ZTXAI\src\app.py", line 457, in start
     self.gui()
-    ~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1429, in gui
-    self.build_aim_settings_ui()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1882, in build_aim_settings_ui
-    self.sunone_settings_group = dpg.add_collapsing_header(
-                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^
-        label=self.tr("label_sunone_settings"),
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        default_open=True,
-        ^^^^^^^^^^^^^^^^^^
-        width=self.scaled_width_xlarge,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 3433, in add_collapsing_header
-    return internal_dpg.add_collapsing_header(label=label, user_data=user_data, use_internal_label=use_internal_label, tag=tag, indent=indent, parent=parent, before=before, payload_type=payload_type, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, delay_search=delay_search, tracked=tracked, track_offset=track_offset, closable=closable, default_open=default_open, open_on_double_click=open_on_double_click, open_on_arrow=open_on_arrow, leaf=leaf, bullet=bullet, **kwargs)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-SystemError: <built-in function add_collapsing_header> returned a result with an exception set
-[Global Exception] 2026-01-15 22:23:10
+  File "C:\Users\Kirill\Desktop\ZTXAI\core\gui.py", line 1759, in gui
+    self.render_group_combo()
+  File "C:\Users\Kirill\Desktop\ZTXAI\core\model.py", line 34, in render_group_combo
+    self.refresh_engine()
+  File "C:\Users\Kirill\Desktop\ZTXAI\core\model.py", line 576, in refresh_engine
+    left = int((self.screen_width - region_w) // 2 + offset_x)
+                ~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'int' and 'str'
+[Thread Exception] 2026-01-21 08:59:16
 Traceback (most recent call last):
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
-    valorant_instance.start()
-    ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 454, in start
-    self.gui()
-    ~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1878, in gui
-    dpg.start_dearpygui()
-    ~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
-    internal_dpg.render_dearpygui_frame()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-KeyboardInterrupt
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1052, in _bootstrap_inner
+    self.run()
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 989, in run
+    self._target(*self._args, **self._kwargs)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 565, in infer
+    [cls_id in selected_classes_set for cls_id in all_class_ids],
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unhashable type: 'numpy.ndarray'
 
-[Global Exception] 2026-01-15 23:18:24
+[Thread Exception] 2026-01-21 08:59:26
 Traceback (most recent call last):
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\main.py", line 133, in <module>
-    valorant_instance.start()
-    ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\app.py", line 454, in start
-    self.gui()
-    ~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\core\gui.py", line 1835, in gui
-    dpg.start_dearpygui()
-    ~~~~~~~~~~~~~~~~~~~^^
-  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\China_AI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
-    internal_dpg.render_dearpygui_frame()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-KeyboardInterrupt
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1052, in _bootstrap_inner
+    self.run()
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 989, in run
+    self._target(*self._args, **self._kwargs)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 565, in infer
+    [cls_id in selected_classes_set for cls_id in all_class_ids],
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unhashable type: 'numpy.ndarray'
+
+[Global Exception] 2026-01-21 11:19:44
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 85, in <module>
+    from src.app import Aassist
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 16, in <module>
+    from core.aiming import AimingMixin
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\__init__.py", line 4, in <module>
+    from .gui import GuiMixin
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\gui.py", line 1786
+    self.is_trt_checkbox = dpg.add_checkbox(
+IndentationError: expected an indented block after 'with' statement on line 1785
+
+[Thread Exception] 2026-01-21 11:25:54
+Traceback (most recent call last):
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1052, in _bootstrap_inner
+    self.run()
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 989, in run
+    self._target(*self._args, **self._kwargs)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 518, in infer
+    boxes, scores, classes = sunone_postprocess(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\infer_function.py", line 179, in sunone_postprocess
+    detections = sunone_decode_yolo10(pred, shape, num_classes, img_scale, conf_threshold)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\infer_function.py", line 120, in sunone_decode_yolo10
+    channels = shape[2]
+               ~~~~~^^^
+IndexError: tuple index out of range
+
+[Thread Exception] 2026-01-21 11:26:09
+Traceback (most recent call last):
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1052, in _bootstrap_inner
+    self.run()
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 989, in run
+    self._target(*self._args, **self._kwargs)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 518, in infer
+    boxes, scores, classes = sunone_postprocess(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\infer_function.py", line 179, in sunone_postprocess
+    detections = sunone_decode_yolo10(pred, shape, num_classes, img_scale, conf_threshold)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\infer_function.py", line 120, in sunone_decode_yolo10
+    channels = shape[2]
+               ~~~~~^^^
+IndexError: tuple index out of range
+
+[Thread Exception] 2026-01-21 11:27:25
+Traceback (most recent call last):
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1052, in _bootstrap_inner
+    self.run()
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 989, in run
+    self._target(*self._args, **self._kwargs)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 518, in infer
+    boxes, scores, classes = sunone_postprocess(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\infer_function.py", line 179, in sunone_postprocess
+    detections = sunone_decode_yolo10(pred, shape, num_classes, img_scale, conf_threshold)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\infer_function.py", line 120, in sunone_decode_yolo10
+    channels = shape[2]
+               ~~~~~^^^
+IndexError: tuple index out of range
+
+[Global Exception] 2026-01-21 12:42:18
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 85, in <module>
+    from src.app import Aassist
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 16, in <module>
+    from core.aiming import AimingMixin
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\__init__.py", line 4, in <module>
+    from .gui import GuiMixin
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\gui.py", line 1795
+    ++                           
+                                 ^
+SyntaxError: invalid syntax
 
