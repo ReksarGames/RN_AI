@@ -41,7 +41,7 @@
   "mask_wheel": false,
   "groups": {
     "DeltaForce": {
-      "infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/.weights/valorant35.engine",
+      "infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/Original/.weights/valorant35.engine",
       "auto_y": false,
       "long_press_duration": 100,
       "right_down": false,
@@ -83,8 +83,8 @@
           "max_velocity_threshold": 100,
           "class_aim_positions": {
             "0": {
-              "aim_bot_position": 0.1,
-              "aim_bot_position2": 0.14,
+              "aim_bot_position": 0.5,
+              "aim_bot_position2": 0.54,
               "confidence_threshold": 0.28,
               "iou_t": 0.8
             },
@@ -114,11 +114,8 @@
             }
           },
           "class_priority_order": [
-            0,
-            1,
-            2,
-            3,
-            4
+            7,
+            0
           ],
           "overshoot_threshold": 3.0,
           "overshoot_x_factor": 0.5,
@@ -288,9 +285,9 @@
       },
       "is_v8": true,
       "is_trt": true,
-      "original_infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/.weights/valorant35.onnx",
+      "original_infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/Original/.weights/valorant35.onnx",
       "yolo_format": "v8",
-      "disable_headshot": false,
+      "disable_headshot": true,
       "disable_headshot_keys": [
         "m"
       ],
@@ -299,7 +296,8 @@
       "triggerbot_button_key": "mouse_side1",
       "disable_headshot_button_key": "m",
       "use_sunone_processing": true,
-      "sunone_model_variant": "yolo10"
+      "sunone_model_variant": "yolo10",
+      "yolo_version": "yolo10"
     },
     "BS": {
       "infer_model": "./weights/Blood Strike [V1] by BihiBihi.onnx",
@@ -568,7 +566,8 @@
       "triggerbot_button_key": "",
       "disable_headshot_button_key": "m",
       "use_sunone_processing": false,
-      "sunone_model_variant": "yolo11"
+      "sunone_model_variant": "yolo11",
+      "yolo_version": "yolo11"
     }
   },
   "games": {

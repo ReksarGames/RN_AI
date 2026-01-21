@@ -1,5 +1,6 @@
 import queue
 import random
+import re
 import threading
 import time
 from threading import Thread
@@ -82,15 +83,47 @@ class AimingMixin:
                     self.dual_pid._i_term["x"] = 0
                     self.dual_pid._i_term["y"] = 0
             return None
+        priority_order = self.pressed_key_config.get("class_priority_order", [])
+        if isinstance(priority_order, str):
+            parts = re.split(r"[-,\s]+", priority_order.strip())
+            parsed = []
+            for part in parts:
+                if not part:
+                    continue
+                try:
+                    parsed.append(int(part))
+                except ValueError:
+                    continue
+            priority_order = parsed
+
         aim_scope = self.get_dynamic_aim_scope()
+        base_scope = float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
+        if base_scope <= 0:
+            base_scope = aim_scope
         valid_targets = []
         for target in targets:
             dx = target["pos"][0] - self.screen_center_x
             dy = target["pos"][1] - self.screen_center_y
             distance = (dx * dx + dy * dy) ** 0.5
+            target["distance_to_center"] = distance
             if distance <= aim_scope:
-                target["distance_to_center"] = distance
                 valid_targets.append(target)
+        if priority_order:
+            for class_id in priority_order:
+                candidates = []
+                for target in targets:
+                    try:
+                        target_class = int(target.get("class_id"))
+                    except (TypeError, ValueError):
+                        continue
+                    if target_class != class_id:
+                        continue
+                    if base_scope > 0 and target["distance_to_center"] > base_scope:
+                        continue
+                    candidates.append(target)
+                if candidates:
+                    candidates.sort(key=lambda x: x["distance_to_center"])
+                    return candidates[0]
         if not valid_targets:
             if self.last_target_count > 0:
                 self.last_target_count = 0
@@ -138,7 +171,23 @@ class AimingMixin:
                 return None
         self.last_target_count_by_class[reference_class] = current_target_count
         self.last_target_count = current_total_count
-        valid_targets.sort(key=lambda x: x["distance_to_center"])
+        if priority_order:
+            priority_map = {cid: idx for idx, cid in enumerate(priority_order)}
+
+            def priority_key(target):
+                class_id = target.get("class_id")
+                try:
+                    class_id = int(class_id)
+                except (TypeError, ValueError):
+                    class_id = None
+                return (
+                    priority_map.get(class_id, len(priority_map)),
+                    target["distance_to_center"],
+                )
+
+            valid_targets.sort(key=priority_key)
+        else:
+            valid_targets.sort(key=lambda x: x["distance_to_center"])
         return valid_targets[0]
 
     def aim_bot_func(self, uTimerID, uMsg, dwUser, dw1, dw2):
@@ -246,6 +295,10 @@ class AimingMixin:
                             "aim_controller",
                             self.config.get("aim_controller", "pid"),
                         )
+                        if self.config["groups"][self.group].get(
+                            "use_sunone_processing", False
+                        ):
+                            controller = "sunone"
                         if controller == "sunone" and hasattr(self, "sunone_aim"):
                             settings = self.config.get("sunone", {})
                             if hasattr(self, "engine") and self.engine:
@@ -266,6 +319,8 @@ class AimingMixin:
                                 settings,
                             )
                             relative_move_x, relative_move_y = (dx, dy)
+                        elif controller == "sunone":
+                            return
                         else:
                             relative_move_x, relative_move_y = self.dual_pid.compute(
                                 result_center_x, result_center_y
@@ -367,7 +422,17 @@ class AimingMixin:
                     return
             if self.engine is None:
                 return
-        yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
+        group_cfg = self.config["groups"][self.group]
+        use_sunone_processing = group_cfg.get("use_sunone_processing", False)
+        yolo_format = group_cfg.get("yolo_format", "auto")
+        yolo_version = str(
+            group_cfg.get("yolo_version", group_cfg.get("sunone_model_variant", "yolo11"))
+        ).strip().lower()
+        if yolo_version and not yolo_version.startswith("yolo"):
+            yolo_version = f"yolo{yolo_version}"
+        v8_like_versions = {"yolo8", "yolo9", "yolo10", "yolo11", "yolo12"}
+        if not use_sunone_processing and yolo_version in v8_like_versions:
+            yolo_format = "v8"
         v8_count = self.engine.get_class_num_v8()
         v5_count = self.engine.get_class_num()
         if yolo_format == "v8":
@@ -476,7 +541,9 @@ class AimingMixin:
             infer_time_ms = display_latency_ms
             pred = outputs[0]
             if pred.ndim == 1:
-                if is_v8_like:
+                if yolo_version == "yolo10":
+                    C = 6
+                elif is_v8_like:
                     C = self.engine.get_class_num_v8() + 4
                 else:
                     C = self.engine.get_class_num() + 5
@@ -514,7 +581,9 @@ class AimingMixin:
             group_config = self.config["groups"][self.group]
             use_sunone_processing = group_config.get("use_sunone_processing", False)
             if use_sunone_processing:
-                sunone_variant = group_config.get("sunone_model_variant", "yolo11")
+                sunone_variant = group_config.get(
+                    "yolo_version", group_config.get("sunone_model_variant", "yolo11")
+                )
                 boxes, scores, classes = sunone_postprocess(
                     pred,
                     confidence_threshold,
@@ -528,38 +597,57 @@ class AimingMixin:
                 is_v8_like = True
                 nms_algo = "v8"
             else:
-                nms_algo = yolo_format
-                if nms_algo == "auto":
-                    if pred.ndim == 3 and pred.shape[1] != pred.shape[2]:
-                        nms_algo = "v8" if pred.shape[1] < pred.shape[2] else "v5"
-                    else:
-                        nms_algo = "v8" if is_v8_like else "v5"
                 engine_nms_handled = False
-                if (
-                    img_input is not None
-                    and hasattr(self.engine, "infer_with_nms")
-                ):
-                    try:
-                        boxes, scores, classes = self.engine.infer_with_nms(
-                            img_input, confidence_threshold, iou_t, nms_algo
-                        )
-                        engine_nms_handled = True
-                    except Exception as e:
-                        print(f"[NMS] Engine NMS failed: {e}, falling back to manual NMS")
-                if not engine_nms_handled and nms_algo == "v8":
-                    adaptive_nms_enabled = (
-                        self.config["small_target_enhancement"]["enabled"]
-                        and self.config["small_target_enhancement"]["adaptive_nms"]
-                    )
-                    boxes, scores, classes = nms_v8(
-                        pred, confidence_threshold, iou_t, adaptive_nms_enabled
+                if yolo_version == "yolo10":
+                    boxes, scores, classes = sunone_postprocess(
+                        pred,
+                        confidence_threshold,
+                        iou_t,
+                        1.0,
+                        self.engine.get_class_num(),
+                        self.config["small_target_enhancement"]["adaptive_nms"],
+                        self.config.get("sunone_max_detections", 0),
+                        variant="yolo10",
                     )
                     is_v8_like = True
+                    nms_algo = "v8"
+                    engine_nms_handled = True
                 else:
-                    boxes, scores, classes = nms(
-                        pred, confidence_threshold, iou_t, class_num
-                    )
-                    is_v8_like = False
+                    nms_algo = yolo_format
+                    if nms_algo == "auto":
+                        if pred.ndim == 3 and pred.shape[1] != pred.shape[2]:
+                            nms_algo = "v8" if pred.shape[1] < pred.shape[2] else "v5"
+                        else:
+                            nms_algo = "v8" if is_v8_like else "v5"
+                    use_engine_nms = nms_algo in {"v5", "standard"}
+                    if (
+                        use_engine_nms
+                        and img_input is not None
+                        and hasattr(self.engine, "infer_with_nms")
+                    ):
+                        try:
+                            boxes, scores, classes = self.engine.infer_with_nms(
+                                img_input, confidence_threshold, iou_t, nms_algo
+                            )
+                            engine_nms_handled = True
+                        except Exception as e:
+                            print(
+                                f"[NMS] Engine NMS failed: {e}, falling back to manual NMS"
+                            )
+                    if not engine_nms_handled and nms_algo == "v8":
+                        adaptive_nms_enabled = (
+                            self.config["small_target_enhancement"]["enabled"]
+                            and self.config["small_target_enhancement"]["adaptive_nms"]
+                        )
+                        boxes, scores, classes = nms_v8(
+                            pred, confidence_threshold, iou_t, adaptive_nms_enabled
+                        )
+                        is_v8_like = True
+                    elif not engine_nms_handled:
+                        boxes, scores, classes = nms(
+                            pred, confidence_threshold, iou_t, class_num
+                        )
+                        is_v8_like = False
             post_ms = (time.perf_counter() - t3) * 1000
             total_ms = cap_ms + pre_ms + current_infer_time_ms + post_ms
 
@@ -604,10 +692,7 @@ class AimingMixin:
                                 if keep
                             ]
                 else:
-                    boxes = []
-                    scores = []
-                    classes = []
-                    class_ids = []
+                    class_ids = all_class_ids.tolist()
             if (
                 self.config["auto_flashbang"]["enabled"]
                 and len(boxes) > 0

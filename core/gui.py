@@ -153,14 +153,14 @@ TRANSLATIONS = {
         "label_infer_model": "Inference Model",
         "label_select_model": "Select Model",
         "label_yolo_format": "YOLO Format",
-        "label_sunone_variant": "Sunone Variant",
+        "label_sunone_variant": "YOLO Version",
         "label_sunone_variant_yolo8": "YOLOv8",
         "label_sunone_variant_yolo9": "YOLOv9",
         "label_sunone_variant_yolo10": "YOLOv10",
         "label_sunone_variant_yolo11": "YOLOv11",
         "label_sunone_variant_yolo12": "YOLOv12",
         "label_use_sunone_processing": "Use Sunone Processing",
-        "help_sunone_variant": "Select the specific YOLO variant the Sunone postprocess should expect.",
+        "help_sunone_variant": "Select YOLO version (v8-v12) for decoding; used by both standard and Sunone paths.",
         "label_yolo_auto": "Auto",
         "label_yolo_auto": "Auto",
         "label_yolo_v5": "YOLOv5/v7",
@@ -822,12 +822,14 @@ class GuiMixin:
     def on_sunone_variant_change(self, sender, app_data):
         variant = self.parse_sunone_variant_label(app_data)
         self.config["groups"][self.group]["sunone_model_variant"] = variant
+        self.config["groups"][self.group]["yolo_version"] = variant
         print(f"Sunone variant set to: {variant}")
 
     def sync_sunone_variant_ui(self):
         if not hasattr(self, "sunone_variant_combo"):
             return
-        variant = self.config["groups"][self.group].get("sunone_model_variant", "yolo11")
+        group_cfg = self.config["groups"][self.group]
+        variant = group_cfg.get("yolo_version", group_cfg.get("sunone_model_variant", "yolo11"))
         dpg.set_value(self.sunone_variant_combo, self.get_sunone_variant_label(variant))
 
     def on_use_sunone_processing_change(self, sender, app_data):
