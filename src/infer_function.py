@@ -142,6 +142,28 @@ def _prepare_sunone_matrix(output: np.ndarray, features: int) -> np.ndarray:
         return np.resize(flat, (max(1, flat.size // features), features))
 
 
+def _prepare_sunone_columns(output: np.ndarray, rows_expected: int) -> np.ndarray:
+    arr = np.asarray(output, dtype=np.float32)
+    if arr.size == 0 or rows_expected <= 0:
+        return np.empty((rows_expected, 0), dtype=np.float32)
+    if arr.ndim == 3:
+        arr = np.squeeze(arr)
+    if arr.ndim == 2:
+        if arr.shape[0] == rows_expected:
+            return arr
+        if arr.shape[1] == rows_expected:
+            return arr.transpose()
+    if arr.ndim == 1:
+        if arr.size % rows_expected == 0:
+            return arr.reshape(rows_expected, -1)
+    flat = arr.flatten()
+    if flat.size % rows_expected == 0:
+        return flat.reshape(rows_expected, -1)
+    if arr.ndim == 2:
+        return arr
+    return np.empty((rows_expected, 0), dtype=np.float32)
+
+
 def _build_box(cx, cy, ow, oh, img_scale):
     half_ow = 0.5 * ow
     half_oh = 0.5 * oh
@@ -189,22 +211,22 @@ def sunone_decode_yolo11(
     detections: List[Detection] = []
     if num_classes <= 0:
         return detections
-    matrix = _prepare_sunone_matrix(output, 4 + num_classes)
-    if matrix.size == 0:
+    rows_expected = 4 + num_classes
+    matrix = _prepare_sunone_columns(output, rows_expected)
+    if matrix.size == 0 or matrix.shape[0] < rows_expected:
         return detections
-    rows = matrix.shape[1]
-    for row in matrix:
-        classes_scores = row[4 : 4 + num_classes]
+    for i in range(matrix.shape[1]):
+        classes_scores = matrix[4 : 4 + num_classes, i]
         if classes_scores.size == 0:
             continue
         class_id = int(np.argmax(classes_scores))
         score = float(classes_scores[class_id])
         if score <= conf_threshold:
             continue
-        cx = float(row[0])
-        cy = float(row[1])
-        ow = float(row[2])
-        oh = float(row[3])
+        cx = float(matrix[0, i])
+        cy = float(matrix[1, i])
+        ow = float(matrix[2, i])
+        oh = float(matrix[3, i])
         box = _build_box(cx, cy, ow, oh, img_scale)
         detections.append(Detection(box, score, class_id))
     return detections
@@ -226,8 +248,14 @@ def sunone_postprocess(
     if variant == "yolo10":
         detections = sunone_decode_yolo10(pred, img_scale, conf_threshold)
     else:
+        dims = [int(d) for d in pred.shape if int(d) > 4]
+        if dims:
+            rows = min(dims)
+            inferred_classes = max(1, rows - 4)
+        else:
+            inferred_classes = max(1, int(num_classes))
         detections = sunone_decode_yolo11(
-            pred, num_classes, img_scale, conf_threshold
+            pred, inferred_classes, img_scale, conf_threshold
         )
     filtered = sunone_nms(detections, iou_threshold, adaptive_nms, max_detections)
     if not filtered:
@@ -253,7 +281,7 @@ def sunone_postprocess(
     ).T
     boxes = centers
     scores = np.array([det.confidence for det in filtered], dtype=np.float32)
-    classes = np.array([det.class_id for det in filtered], dtype=np.int32)
+    classes = np.array([det.class_id for det in filtered], dtype=np.int32).reshape(-1)
     return boxes, scores, classes
 
 

@@ -275,6 +275,21 @@ class ConfigMixin:
         return (config, aim_keys_dist, aim_keys, group)
 
     def _create_default_config(self):
+        class_names = [
+            "player",
+            "bot",
+            "weapon",
+            "outline",
+            "dead_body",
+            "hideout_target_human",
+            "hideout_target_balls",
+            "head",
+            "smoke",
+            "fire",
+            "third_person",
+        ]
+        default_classes = list(range(len(class_names)))
+
         default_trigger = {
             "status": False,
             "start_delay": 150,
@@ -305,15 +320,16 @@ class ConfigMixin:
             "uniform_threshold": 1.0,
             "compensation_factor": 1.0,
             "trigger": default_trigger,
-            "classes": [0],
-            "class_priority_order": [0],
+            "classes": default_classes,
+            "class_priority_order": default_classes[:],
             "class_aim_positions": {
-                "0": {
+                str(i): {
                     "aim_bot_position": 0.5,
                     "aim_bot_position2": 0.5,
                     "confidence_threshold": 0.5,
                     "iou_t": 1.0,
                 }
+                for i in default_classes
             },
             "overshoot_threshold": 3.0,
             "overshoot_x_factor": 0.5,
@@ -354,19 +370,7 @@ class ConfigMixin:
                     "disable_headshot_button_key": "m",
                 }
             },
-            "class_names": [
-                "player",
-                "bot",
-                "weapon",
-                "outline",
-                "dead_body",
-                "hideout_target_human",
-                "hideout_target_balls",
-                "head",
-                "smoke",
-                "fire",
-                "third_person",
-            ],
+            "class_names": class_names,
             "class_names_file": "",
             "infer_debug": False,
             "print_fps": False,

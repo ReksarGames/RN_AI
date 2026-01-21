@@ -76,16 +76,7 @@
           },
           "classes": [
             0,
-            1,
-            2,
-            3,
-            4,
-            10,
-            9,
-            8,
-            7,
-            6,
-            5
+            7
           ],
           "min_position_offset": 1,
           "min_velocity_threshold": 10,
