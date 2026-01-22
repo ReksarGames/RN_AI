@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-echo Starting ZTXAI...
+echo Starting RN_AI...
 set SCRIPT_DIR=%~dp0
 pushd "%SCRIPT_DIR%"
 if not exist ".venv\Scripts\python.exe" (

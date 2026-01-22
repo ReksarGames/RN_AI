@@ -2,14 +2,14 @@
   "group": "Default",
   "groups": {
     "Default": {
-      "infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/Original/.weights/sunxds_0.7.6.engine",
-      "original_infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/Original/.weights/sunxds_0.7.6.onnx",
+      "infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/.weights/valorant35.engine",
+      "original_infer_model": "E:/sunone_aimbot_cpp/sunone_aimbot_cpp/ZTXAI/.weights/valorant35.onnx",
       "is_trt": true,
       "is_v8": false,
       "yolo_format": "auto",
-      "sunone_model_variant": "yolo12",
-      "yolo_version": "yolo12",
-      "use_sunone_processing": false,
+      "sunone_model_variant": "yolo10",
+      "yolo_version": "yolo10",
+      "use_sunone_processing": true,
       "right_down": false,
       "long_press_duration": 350,
       "aim_keys": {
@@ -50,7 +50,17 @@
             "recoil": false
           },
           "classes": [
-            0
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            9,
+            10,
+            0,
+            7
           ],
           "class_priority_order": [
             7,
@@ -61,7 +71,7 @@
               "aim_bot_position": 0.1,
               "aim_bot_position2": 0.2,
               "confidence_threshold": 0.5,
-              "iou_t": 1.0
+              "iou_t": 0.8
             },
             "1": {
               "aim_bot_position": 0.5,
@@ -73,7 +83,7 @@
               "aim_bot_position": 0.5,
               "aim_bot_position2": 0.5,
               "confidence_threshold": 0.5,
-              "iou_t": 1.0
+              "iou_t": 0.8
             },
             "3": {
               "aim_bot_position": 0.5,
@@ -103,7 +113,7 @@
               "aim_bot_position": 0.5,
               "aim_bot_position2": 0.5,
               "confidence_threshold": 0.5,
-              "iou_t": 1.0
+              "iou_t": 0.8
             },
             "8": {
               "aim_bot_position": 0.5,
@@ -127,9 +137,9 @@
           "overshoot_threshold": 3.0,
           "overshoot_x_factor": 0.5,
           "overshoot_y_factor": 0.3,
-          "move_deadzone": 0.5,
-          "pid_kp_x": 0.4,
-          "pid_kp_y": 0.4,
+          "move_deadzone": 0.4,
+          "pid_kp_x": 0.1,
+          "pid_kp_y": 0.1,
           "pid_ki_x": 0.001,
           "pid_ki_y": 0.001,
           "pid_kd_x": 0.05,
@@ -138,18 +148,19 @@
           "smooth_y": 0,
           "smooth_deadzone": 0.0,
           "smooth_algorithm": 1.0,
-          "target_switch_delay": 0,
+          "target_switch_delay": 20,
           "target_reference_class": 0,
           "dynamic_scope": {
-            "enabled": false,
+            "enabled": true,
             "min_ratio": 0.5,
-            "min_scope": 0,
-            "shrink_duration_ms": 300,
-            "recover_duration_ms": 300
+            "min_scope": 60,
+            "shrink_duration_ms": 160,
+            "recover_duration_ms": 60
           },
-          "trigger_only": false,
+          "trigger_only": true,
           "auto_y": false,
-          "disable_headshot_removed": true
+          "disable_headshot_removed": false,
+          "target_lock_distance": 80
         },
         "mouse_side1": {
           "confidence_threshold": 0.5,
@@ -188,6 +199,15 @@
             "recoil": false
           },
           "classes": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            9,
+            10,
             0,
             7
           ],
@@ -197,10 +217,10 @@
           ],
           "class_aim_positions": {
             "0": {
-              "aim_bot_position": 0.2,
-              "aim_bot_position2": 0.3,
+              "aim_bot_position": 0.1,
+              "aim_bot_position2": 0.2,
               "confidence_threshold": 0.5,
-              "iou_t": 1.0
+              "iou_t": 0.8
             },
             "1": {
               "aim_bot_position": 0.5,
@@ -212,7 +232,7 @@
               "aim_bot_position": 0.5,
               "aim_bot_position2": 0.5,
               "confidence_threshold": 0.5,
-              "iou_t": 1.0
+              "iou_t": 0.8
             },
             "3": {
               "aim_bot_position": 0.5,
@@ -242,7 +262,7 @@
               "aim_bot_position": 0.5,
               "aim_bot_position2": 0.5,
               "confidence_threshold": 0.5,
-              "iou_t": 1.0
+              "iou_t": 0.8
             },
             "8": {
               "aim_bot_position": 0.5,
@@ -266,7 +286,7 @@
           "overshoot_threshold": 3.0,
           "overshoot_x_factor": 0.5,
           "overshoot_y_factor": 0.3,
-          "move_deadzone": 0.5,
+          "move_deadzone": 0.4,
           "pid_kp_x": 0.4,
           "pid_kp_y": 0.4,
           "pid_ki_x": 0.001,
@@ -277,21 +297,22 @@
           "smooth_y": 0,
           "smooth_deadzone": 0.0,
           "smooth_algorithm": 1.0,
-          "target_switch_delay": 0,
+          "target_switch_delay": 20,
           "target_reference_class": 0,
           "dynamic_scope": {
-            "enabled": false,
+            "enabled": true,
             "min_ratio": 0.5,
-            "min_scope": 0,
-            "shrink_duration_ms": 300,
-            "recover_duration_ms": 300
+            "min_scope": 60,
+            "shrink_duration_ms": 160,
+            "recover_duration_ms": 60
           },
           "trigger_only": true,
           "auto_y": false,
-          "disable_headshot_removed": false
+          "disable_headshot_removed": false,
+          "target_lock_distance": 160
         }
       },
-      "disable_headshot": true,
+      "disable_headshot": false,
       "disable_headshot_keys": [
         "m"
       ],
@@ -421,7 +442,7 @@
   },
   "sunone": {
     "use_smoothing": true,
-    "smoothness": 6,
+    "smoothness": 1,
     "tracking_smoothing": true,
     "use_kalman": true,
     "kalman_process_noise": 0.04,

@@ -12,8 +12,8 @@ from pynput.keyboard import Key, KeyCode
 # Constants
 BAR_HEIGHT = 2
 SHADOW_OFFSET = 2
-VERSION = "v2.1.5"
-UPDATE_TIME = "2025-11-04"
+VERSION = "v3.1.5"
+UPDATE_TIME = "2026-21-06"
 
 # Global variable for TensorRT availability
 TENSORRT_AVAILABLE = False

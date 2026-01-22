@@ -8,3 +8,98 @@ Traceback (most recent call last):
     "distance_scoring_weight": self.config["distance_scoring_weight"],
                                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
 KeyError: 'distance_scoring_weight'
+[Global Exception] 2026-01-21 19:44:59
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 133, in <module>
+    valorant_instance.start()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 457, in start
+    self.gui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\gui.py", line 1871, in gui
+    dpg.start_dearpygui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
+    internal_dpg.render_dearpygui_frame()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 163, in <module>
+    valorant_instance._secure_cleanup()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 510, in _secure_cleanup
+    self.screenshot_manager.close()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\screenshot_manager.py", line 952, in close
+    self.display_thread.join(timeout=1)
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1130, in join
+    self._wait_for_tstate_lock(timeout=max(timeout, 0))
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1146, in _wait_for_tstate_lock
+    if lock.acquire(block, timeout):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+[Global Exception] 2026-01-21 19:49:31
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 133, in <module>
+    valorant_instance.start()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 457, in start
+    self.gui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\gui.py", line 1871, in gui
+    dpg.start_dearpygui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
+    internal_dpg.render_dearpygui_frame()
+KeyboardInterrupt
+
+[Global Exception] 2026-01-22 09:52:58
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 133, in <module>
+    valorant_instance.start()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 460, in start
+    self.gui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\gui.py", line 1873, in gui
+    dpg.start_dearpygui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
+    internal_dpg.render_dearpygui_frame()
+KeyboardInterrupt
+
+[Thread Exception] 2026-01-22 10:14:15
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\makcu\controller.py", line 16, in wrapper
+    loop = asyncio.get_running_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no running event loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1052, in _bootstrap_inner
+    self.run()
+  File "C:\Users\legio\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 989, in run
+    self._target(*self._args, **self._kwargs)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 1139, in trigger_process
+    self.mouse_left_up()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\aiming.py", line 1108, in mouse_left_up
+    self.makcu.release(MouseButton.LEFT)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\makcu\controller.py", line 24, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\makcu\controller.py", line 151, in release
+    self.mouse.release(button)
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\makcu\mouse.py", line 65, in release
+    self.transport.send_command(self._RELEASE_COMMANDS[button])
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\makcu\connection.py", line 522, in send_command
+    self.serial.write(f"{command}\r\n".encode('ascii'))
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\serial\serialwin32.py", line 325, in write
+    raise SerialTimeoutException('Write timeout')
+serial.serialutil.SerialTimeoutException: Write timeout
+
+[Global Exception] 2026-01-22 10:19:08
+Traceback (most recent call last):
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\main.py", line 133, in <module>
+    valorant_instance.start()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\src\app.py", line 460, in start
+    self.gui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\core\gui.py", line 1873, in gui
+    dpg.start_dearpygui()
+  File "E:\sunone_aimbot_cpp\sunone_aimbot_cpp\ZTXAI\.venv\Lib\site-packages\dearpygui\dearpygui.py", line 102, in start_dearpygui
+    internal_dpg.render_dearpygui_frame()
+KeyboardInterrupt
+

@@ -143,6 +143,9 @@ class Aassist(
         self.pnmh_listen_switch = False
         self.makcu_listen_switch = False
         self.trigger_only_active = False
+        self.triggerbot_key_status = False
+        self.triggerbot_key = ""
+        self.triggerbot_key_config = None
         self.move_r = None
         self.move_dll = None
         self.add_key_name = ""
