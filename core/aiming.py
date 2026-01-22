@@ -14,6 +14,141 @@ from src.infer_function import nms, nms_v8, read_img, sunone_postprocess
 class AimingMixin:
     """Mixin class for aiming, targeting, mouse control and trigger system."""
 
+    def _clear_target_lock(self):
+        self._target_lock_active = False
+        self._target_lock_id = None
+        self._target_lock_center = None
+        self._target_lock_lost_time = None
+
+    def _get_lock_distance(self, cfg):
+        dyn_cfg = cfg.get("dynamic_scope", {}) or {}
+        if not bool(dyn_cfg.get("enabled", False)):
+            return 0.0
+        try:
+            return max(1.0, float(cfg.get("target_lock_distance", 100) or 100))
+        except Exception:
+            return 0.0
+
+    def _get_lock_reacquire_time(self, cfg):
+        try:
+            return max(0.0, float(cfg.get("target_lock_reacquire_time", 0.3) or 0.3))
+        except Exception:
+            return 0.0
+
+    def _make_lock_id(self, target, grid=10):
+        box = target.get("box")
+        if not box:
+            return None
+        left, top, width, height = box
+        try:
+            x1 = int(left // grid) * grid
+            y1 = int(top // grid) * grid
+            x2 = int((left + width) // grid) * grid
+            y2 = int((top + height) // grid) * grid
+        except Exception:
+            return None
+        return (x1, y1, x2, y2)
+
+    def _get_box_center(self, target):
+        box = target.get("box")
+        if not box:
+            return None
+        left, top, width, height = box
+        try:
+            return (left + width * 0.5, top + height * 0.5)
+        except Exception:
+            return None
+
+    def _get_lock_center(self, target):
+        pos = target.get("pos")
+        if not pos:
+            return None
+        try:
+            offset_x = getattr(self, "identify_rect_left", 0) or 0
+            offset_y = getattr(self, "identify_rect_top", 0) or 0
+            return (pos[0] - offset_x, pos[1] - offset_y)
+        except Exception:
+            return None
+
+    def _update_target_lock(self, target, use_box_center=False):
+        if target is None:
+            self._clear_target_lock()
+            return
+        lock_id = self._make_lock_id(target)
+        if lock_id is None:
+            self._clear_target_lock()
+            return
+        if use_box_center:
+            center = self._get_box_center(target)
+        else:
+            center = self._get_lock_center(target)
+        if center is None:
+            self._clear_target_lock()
+            return
+        self._target_lock_active = True
+        self._target_lock_id = lock_id
+        self._target_lock_center = center
+        self._target_lock_lost_time = None
+
+    def _apply_target_lock(self, targets, lock_distance, reacquire_time):
+        if not getattr(self, "_target_lock_active", False):
+            return targets, False
+        now = time.time()
+        if not targets:
+            if self._target_lock_lost_time is None:
+                self._target_lock_lost_time = now
+            lost_for = now - self._target_lock_lost_time
+            if lost_for >= reacquire_time:
+                self._clear_target_lock()
+                return targets, False
+            return [], True
+        locked_idx = -1
+        locked_id = getattr(self, "_target_lock_id", None)
+        if locked_id is not None:
+            for idx, target in enumerate(targets):
+                if self._make_lock_id(target) == locked_id:
+                    locked_idx = idx
+                    break
+        if locked_idx == -1:
+            center = self._target_lock_center
+            if center:
+                best_dist = float("inf")
+                for idx, target in enumerate(targets):
+                    candidate_center = self._get_box_center(target)
+                    if candidate_center is None:
+                        continue
+                    dx = candidate_center[0] - center[0]
+                    dy = candidate_center[1] - center[1]
+                    dist = (dx * dx + dy * dy) ** 0.5
+                    if dist < best_dist:
+                        best_dist = dist
+                        locked_idx = idx
+                if locked_idx != -1 and best_dist > lock_distance:
+                    locked_idx = -1
+        if locked_idx != -1:
+            candidate = targets[locked_idx]
+            candidate_center = self._get_box_center(candidate)
+            if candidate_center is not None:
+                self._target_lock_center = candidate_center
+            self._target_lock_id = self._make_lock_id(candidate)
+            self._target_lock_lost_time = None
+            return [candidate], False
+        if self._target_lock_lost_time is None:
+            self._target_lock_lost_time = now
+        lost_for = now - self._target_lock_lost_time
+        if lost_for >= reacquire_time:
+            self._clear_target_lock()
+            return targets, False
+        return [], True
+
+    def _update_target_counts(self, targets, reference_class):
+        current_total_count = len(targets)
+        current_target_count = len(
+            [t for t in targets if t.get("class_id") == reference_class]
+        )
+        self.last_target_count_by_class[reference_class] = current_target_count
+        self.last_target_count = current_total_count
+
     def smooth_small_targets(self, targets):
         """
         Apply historical smoothing to small targets to improve detection stability
@@ -75,14 +210,9 @@ class AimingMixin:
 
     def select_target_by_priority(self, targets):
         """Intelligent target selection: priority algorithm based on distance to center, with target count monitoring and integral reset"""
-        if not targets:
-            if self.last_target_count > 0:
-                self.last_target_count = 0
-                self.last_target_count_by_class.clear()
-                if hasattr(self, "dual_pid"):
-                    self.dual_pid._i_term["x"] = 0
-                    self.dual_pid._i_term["y"] = 0
-            return None
+        lock_distance = self._get_lock_distance(self.pressed_key_config)
+        lock_enabled = lock_distance > 0
+        lock_reacquire_time = self._get_lock_reacquire_time(self.pressed_key_config)
         priority_order = self.pressed_key_config.get("class_priority_order", [])
         if isinstance(priority_order, str):
             parts = re.split(r"[-,\s]+", priority_order.strip())
@@ -96,10 +226,30 @@ class AimingMixin:
                     continue
             priority_order = parsed
 
+        reference_class = self.pressed_key_config.get("target_reference_class", 0)
         aim_scope = self.get_dynamic_aim_scope()
         base_scope = float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
         if base_scope <= 0:
             base_scope = aim_scope
+        if lock_enabled:
+            targets, lock_blocking = self._apply_target_lock(
+                targets, lock_distance, lock_reacquire_time
+            )
+            if lock_blocking:
+                return None
+        if not targets:
+            self._clear_target_lock()
+            if self.last_target_count > 0:
+                self.last_target_count = 0
+                self.last_target_count_by_class.clear()
+                if hasattr(self, "dual_pid"):
+                    self.dual_pid._i_term["x"] = 0
+                    self.dual_pid._i_term["y"] = 0
+            return None
+        if lock_enabled and getattr(self, "_target_lock_active", False) and len(targets) == 1:
+            self._update_target_counts(targets, reference_class)
+            self._update_target_lock(targets[0])
+            return targets[0]
         valid_targets = []
         for target in targets:
             dx = target["pos"][0] - self.screen_center_x
@@ -108,6 +258,8 @@ class AimingMixin:
             target["distance_to_center"] = distance
             if distance <= aim_scope:
                 valid_targets.append(target)
+        if not lock_enabled:
+            self._clear_target_lock()
         if priority_order:
             for class_id in priority_order:
                 candidates = []
@@ -123,8 +275,16 @@ class AimingMixin:
                     candidates.append(target)
                 if candidates:
                     candidates.sort(key=lambda x: x["distance_to_center"])
-                    return candidates[0]
+                    selected = candidates[0]
+                    if lock_distance > 0:
+                        self._update_target_lock(selected)
+                    else:
+                        self._clear_target_lock()
+                    return selected
         if not valid_targets:
+            if lock_enabled and getattr(self, "_target_lock_active", False):
+                return None
+            self._clear_target_lock()
             if self.last_target_count > 0:
                 self.last_target_count = 0
                 self.last_target_count_by_class.clear()
@@ -134,7 +294,6 @@ class AimingMixin:
                     print("Target moved out of range, reset PID integral term")
             return None
         target_switch_delay = self.pressed_key_config.get("target_switch_delay", 0)
-        reference_class = self.pressed_key_config.get("target_reference_class", 0)
         current_total_count = len(valid_targets)
         prev_total_count = self.last_target_count
         current_target_count = len(
@@ -188,7 +347,12 @@ class AimingMixin:
             valid_targets.sort(key=priority_key)
         else:
             valid_targets.sort(key=lambda x: x["distance_to_center"])
-        return valid_targets[0]
+        selected = valid_targets[0]
+        if lock_distance > 0:
+            self._update_target_lock(selected)
+        else:
+            self._clear_target_lock()
+        return selected
 
     def aim_bot_func(self, uTimerID, uMsg, dwUser, dw1, dw2):
         if self.aim_key_status:
@@ -251,6 +415,12 @@ class AimingMixin:
                                 self.pressed_key_config["min_position_offset"],
                             ),
                         ),
+                        "box": (
+                            result_center_x - width / 2,
+                            result_center_y - height / 2,
+                            width,
+                            height,
+                        ),
                         "size": final_size_score,
                         "absolute_size": absolute_area,
                         "relative_size": relative_size,
@@ -267,16 +437,6 @@ class AimingMixin:
                     aim_bot_scope = float(self.get_dynamic_aim_scope())
                 except Exception:
                     aim_bot_scope = 0
-                if aim_bot_scope > 0 and len(target_objects) > 0:
-                    max_dist_sq = aim_bot_scope * aim_bot_scope
-                    cx, cy = (self.screen_center_x, self.screen_center_y)
-                    target_objects = [
-                        t
-                        for t in target_objects
-                        if (t["pos"][0] - cx) * (t["pos"][0] - cx)
-                        + (t["pos"][1] - cy) * (t["pos"][1] - cy)
-                        <= max_dist_sq
-                    ]
                 if (
                     self.config["small_target_enhancement"]["enabled"]
                     and self.config["small_target_enhancement"]["smooth_enabled"]
@@ -288,17 +448,11 @@ class AimingMixin:
                 if nearest is not None:
                     result_center_x = nearest["pos"][0] - self.screen_center_x
                     result_center_y = nearest["pos"][1] - self.screen_center_y
-                    if self.aim_key_status and not getattr(
-                        self, "trigger_only_active", False
-                    ):
+                    if self.aim_key_status:
                         controller = self.pressed_key_config.get(
                             "aim_controller",
                             self.config.get("aim_controller", "pid"),
                         )
-                        if self.config["groups"][self.group].get(
-                            "use_sunone_processing", False
-                        ):
-                            controller = "sunone"
                         if controller == "sunone" and hasattr(self, "sunone_aim"):
                             settings = self.config.get("sunone", {})
                             if hasattr(self, "engine") and self.engine:
@@ -720,9 +874,7 @@ class AimingMixin:
                                 print("Auto flashbang feature only supports ZTX models")
                                 self._dopa_warning_shown = True
             if len(boxes) > 0:
-                if self.aim_key_status and not getattr(
-                    self, "trigger_only_active", False
-                ):
+                if self.aim_key_status:
                     try:
                         self.que_aim.put_nowait((boxes, class_ids))
                     except queue.Full:
@@ -731,16 +883,28 @@ class AimingMixin:
                         except queue.Empty:
                             pass
                         self.que_aim.put_nowait((boxes, class_ids))
-                trigger_enabled = self.pressed_key_config["trigger"]["status"]
-                if trigger_enabled:
+                trigger_payload = None
+                trigger_key = group_config.get("triggerbot_button_key", "")
+                targeting_key = group_config.get("targeting_button_key", "")
+                triggerbot_active = getattr(self, "triggerbot_key_status", False)
+                if triggerbot_active:
+                    trigger_cfg = group_config.get("aim_keys", {}).get(
+                        targeting_key, self.pressed_key_config
+                    )
+                    trigger_payload = ("triggerbot", boxes, trigger_cfg)
+                elif self.aim_key_status:
+                    trigger_cfg = self.pressed_key_config
+                    if trigger_cfg.get("trigger", {}).get("status", False):
+                        trigger_payload = ("aim", boxes, trigger_cfg)
+                if trigger_payload:
                     try:
-                        self.que_trigger.put_nowait(boxes)
+                        self.que_trigger.put_nowait(trigger_payload)
                     except queue.Full:
                         try:
                             self.que_trigger.get_nowait()
                         except queue.Empty:
                             pass
-                        self.que_trigger.put_nowait(boxes)
+                        self.que_trigger.put_nowait(trigger_payload)
             if infer_debug and self.screenshot_manager and (frame_count % 3 == 0):
                 if self.aim_key_status:
                     current_key = self.old_pressed_aim_key
@@ -903,12 +1067,9 @@ class AimingMixin:
     def get_dynamic_aim_scope(self):
         """Get the aim scope (in pixels) to use for the current frame."""
         try:
-            return self._update_dynamic_aim_scope()
+            return float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
         except Exception:
-            try:
-                return float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
-            except Exception:
-                return 0.0
+            return 0.0
 
     def reset_dynamic_aim_scope(self, for_key=None):
         """When dynamic aim scope is enabled, reset current scope to base scope for specified key.
@@ -946,6 +1107,11 @@ class AimingMixin:
         if self.config["move_method"] == "makcu" and self.makcu is not None:
             self.makcu.release(MouseButton.LEFT)
 
+    def _is_trigger_source_active(self, source):
+        if source == "triggerbot":
+            return bool(getattr(self, "triggerbot_key_status", False))
+        return bool(self.aim_key_status)
+
     def trigger_process(
         self,
         start_delay=0,
@@ -981,11 +1147,11 @@ class AimingMixin:
             time.sleep(end_delay / 1000)
         self.trigger_status = False
 
-    def continuous_trigger_process(self, recoil_enabled=False):
+    def continuous_trigger_process(self, trigger_cfg, recoil_enabled=False, source="aim"):
         """Continuous trigger process - keep firing until key released"""
         self.time_begin_period(1)
-        start_delay = self.pressed_key_config["trigger"]["start_delay"]
-        random_delay = self.pressed_key_config["trigger"]["random_delay"]
+        start_delay = trigger_cfg["trigger"]["start_delay"]
+        random_delay = trigger_cfg["trigger"]["random_delay"]
         if start_delay > 0:
             if random_delay > 0:
                 actual_start_delay = random.randint(
@@ -998,7 +1164,7 @@ class AimingMixin:
         if recoil_enabled:
             self.start_trigger_recoil()
         try:
-            while self.aim_key_status and self.continuous_trigger_active:
+            while self._is_trigger_source_active(source) and self.continuous_trigger_active:
                 time.sleep(0.01)
         finally:
             self.mouse_left_up()
@@ -1067,22 +1233,34 @@ class AimingMixin:
                 continue
             last_check_time = current_time
             try:
-                aim_targets = self.que_trigger.get_nowait()
+                payload = self.que_trigger.get_nowait()
             except queue.Empty:
-                aim_targets = []
-            if len(aim_targets):
+                payload = None
+            if payload:
+                if (
+                    isinstance(payload, tuple)
+                    and len(payload) == 3
+                    and isinstance(payload[2], dict)
+                ):
+                    trigger_mode, aim_targets, trigger_cfg = payload
+                else:
+                    trigger_mode = "aim"
+                    aim_targets = payload
+                    trigger_cfg = self.pressed_key_config
+                if not self._is_trigger_source_active(trigger_mode):
+                    continue
                 for item in aim_targets:
                     result_center_x, result_center_y, width, height = item
-                    x_trigger_offset = self.pressed_key_config["trigger"][
+                    x_trigger_offset = trigger_cfg["trigger"][
                         "x_trigger_offset"
                     ]
-                    y_trigger_offset = self.pressed_key_config["trigger"][
+                    y_trigger_offset = trigger_cfg["trigger"][
                         "y_trigger_offset"
                     ]
-                    x_trigger_scope = self.pressed_key_config["trigger"][
+                    x_trigger_scope = trigger_cfg["trigger"][
                         "x_trigger_scope"
                     ]
-                    y_trigger_scope = self.pressed_key_config["trigger"][
+                    y_trigger_scope = trigger_cfg["trigger"][
                         "y_trigger_scope"
                     ]
                     left = result_center_x - width / 2
@@ -1105,40 +1283,31 @@ class AimingMixin:
                         < self.screen_center_y
                         < relative_screen_bottom
                     ):
-                        continuous_enabled = self.pressed_key_config["trigger"].get(
-                            "continuous", False
-                        )
-                        recoil_enabled = self.pressed_key_config["trigger"].get(
-                            "recoil", False
-                        )
+                        continuous_enabled = trigger_cfg["trigger"].get("continuous", False)
+                        recoil_enabled = trigger_cfg["trigger"].get("recoil", False)
+                        key_active = self._is_trigger_source_active(trigger_mode)
                         if continuous_enabled:
                             if (
                                 not self.continuous_trigger_active
-                                and self.aim_key_status
+                                and key_active
                             ):
                                 self.continuous_trigger_active = True
                                 self.continuous_trigger_thread = Thread(
                                     target=self.continuous_trigger_process,
-                                    args=(recoil_enabled,),
+                                    args=(trigger_cfg, recoil_enabled, trigger_mode),
                                 )
                                 self.continuous_trigger_thread.daemon = True
                                 self.continuous_trigger_thread.start()
                         else:
-                            if not self.trigger_status and self.aim_key_status:
+                            if not self.trigger_status and key_active:
                                 self.trigger_status = True
                                 Thread(
                                     target=self.trigger_process,
                                     args=(
-                                        self.pressed_key_config["trigger"][
-                                            "start_delay"
-                                        ],
-                                        self.pressed_key_config["trigger"][
-                                            "press_delay"
-                                        ],
-                                        self.pressed_key_config["trigger"]["end_delay"],
-                                        self.pressed_key_config["trigger"][
-                                            "random_delay"
-                                        ],
+                                        trigger_cfg["trigger"]["start_delay"],
+                                        trigger_cfg["trigger"]["press_delay"],
+                                        trigger_cfg["trigger"]["end_delay"],
+                                        trigger_cfg["trigger"]["random_delay"],
                                         recoil_enabled,
                                     ),
                                 ).start()
@@ -1150,7 +1319,8 @@ class AimingMixin:
         self.last_target_count_by_class.clear()
         self.is_waiting_for_switch = False
         self.target_switch_time = 0
-        self.stop_continuous_trigger()
-        self.stop_trigger_recoil()
+        if not getattr(self, "triggerbot_key_status", False):
+            self.stop_continuous_trigger()
+            self.stop_trigger_recoil()
         if hasattr(self, "sunone_aim"):
             self.sunone_aim.reset()

@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 echo ========================================
-echo    ZTXAI - Build Script
+echo    RN_AI - Build Script
 echo ========================================
 echo.
 

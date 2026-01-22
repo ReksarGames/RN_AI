@@ -107,13 +107,6 @@ class ModelMixin:
                     "trigger"
                 ].get("recoil", False),
             )
-            if getattr(self, "trigger_only_input", None) is not None:
-                dpg.set_value(
-                    self.trigger_only_input,
-                    self.config["groups"][self.group]["aim_keys"][self.select_key].get(
-                        "trigger_only", False
-                    ),
-                )
             dpg.set_value(
                 self.start_delay_input,
                 self.config["groups"][self.group]["aim_keys"][self.select_key][
@@ -208,7 +201,7 @@ class ModelMixin:
                 dpg.set_value(
                     self.dynamic_scope_enabled_input, bool(dyn.get("enabled", False))
                 )
-            if self.dynamic_scope_min_scope_input is not None:
+            if getattr(self, "dynamic_scope_min_scope_input", None) is not None:
                 if "min_scope" in dyn:
                     dpg.set_value(
                         self.dynamic_scope_min_scope_input, int(dyn.get("min_scope", 0))
@@ -220,15 +213,20 @@ class ModelMixin:
                         self.dynamic_scope_min_scope_input,
                         int(base_scope * max(0.0, min(1.0, ratio))),
                     )
-            if self.dynamic_scope_shrink_ms_input is not None:
+            if getattr(self, "dynamic_scope_shrink_ms_input", None) is not None:
                 dpg.set_value(
                     self.dynamic_scope_shrink_ms_input,
                     int(dyn.get("shrink_duration_ms", 300)),
                 )
-            if self.dynamic_scope_recover_ms_input is not None:
+            if getattr(self, "dynamic_scope_recover_ms_input", None) is not None:
                 dpg.set_value(
                     self.dynamic_scope_recover_ms_input,
                     int(dyn.get("recover_duration_ms", 300)),
+                )
+            if getattr(self, "target_lock_distance_input", None) is not None:
+                dpg.set_value(
+                    self.target_lock_distance_input,
+                    int(key_cfg.get("target_lock_distance", 100)),
                 )
         if hasattr(self, "update_button_lists"):
             self.update_button_lists()

@@ -81,6 +81,29 @@ class InputMixin:
             return ["mouse_side2", "mouse_x2"]
         return [key]
 
+    def _keys_match(self, key, other):
+        if not key or not other:
+            return False
+        return other in self._get_mouse_key_variants(key)
+
+    def _get_triggerbot_key(self):
+        try:
+            return self.config["groups"][self.group].get("triggerbot_button_key", "")
+        except Exception:
+            return ""
+
+    def _get_targeting_key(self):
+        try:
+            return self.config["groups"][self.group].get("targeting_button_key", "")
+        except Exception:
+            return ""
+
+    def _is_triggerbot_key(self, key):
+        trigger_key = self._get_triggerbot_key()
+        if not trigger_key:
+            return False
+        return trigger_key in self._get_mouse_key_variants(key)
+
     def _is_trigger_only_key(self, key):
         try:
             return bool(
@@ -162,13 +185,28 @@ class InputMixin:
                 if self._is_disable_headshot_key(candidate):
                     self._toggle_disable_headshot()
                     break
+            triggerbot_only = False
+            if self._is_triggerbot_key(key):
+                trigger_key = self._get_triggerbot_key()
+                self.triggerbot_key_status = True
+                self.triggerbot_key = trigger_key
+                try:
+                    self.triggerbot_key_config = self.config["groups"][self.group][
+                        "aim_keys"
+                    ].get(trigger_key)
+                except Exception:
+                    self.triggerbot_key_config = None
+                triggerbot_only = not self._keys_match(
+                    trigger_key, self._get_targeting_key()
+                )
             if self.old_pressed_aim_key == "":
                 for candidate in self._get_mouse_key_variants(key):
+                    if triggerbot_only and self._get_triggerbot_key() in self._get_mouse_key_variants(candidate):
+                        continue
                     if candidate in self.aim_key:
                         self.refresh_pressed_key_config(candidate)
                         self.old_pressed_aim_key = candidate
                         self.aim_key_status = True
-                        self.trigger_only_active = self._is_trigger_only_key(candidate)
                         self.reset_dynamic_aim_scope(candidate)
                         break
         else:
@@ -194,9 +232,19 @@ class InputMixin:
                 if candidate in self.aim_key and candidate == self.old_pressed_aim_key:
                     self.old_pressed_aim_key = ""
                     self.aim_key_status = False
-                    self.trigger_only_active = False
                     self.reset_pid()
+                    self.reset_target_lock(candidate)
                     break
+            if self._is_triggerbot_key(key):
+                self.triggerbot_key_status = False
+                self.triggerbot_key = ""
+                self.triggerbot_key_config = None
+                if hasattr(self, "stop_continuous_trigger"):
+                    self.stop_continuous_trigger()
+                if hasattr(self, "stop_trigger_recoil"):
+                    self.stop_trigger_recoil()
+                if hasattr(self, "trigger_status"):
+                    self.trigger_status = False
 
     def on_scroll(self, x, y, dx, dy):
         if dy == 1:
@@ -208,8 +256,23 @@ class InputMixin:
         key = key2str(key)
         if self._is_disable_headshot_key(key):
             self._toggle_disable_headshot()
+        if self._is_triggerbot_key(key):
+            trigger_key = self._get_triggerbot_key()
+            self.triggerbot_key_status = True
+            self.triggerbot_key = trigger_key
+            try:
+                self.triggerbot_key_config = self.config["groups"][self.group][
+                    "aim_keys"
+                ].get(trigger_key)
+            except Exception:
+                self.triggerbot_key_config = None
+        triggerbot_only = (
+            self._is_triggerbot_key(key)
+            and not self._keys_match(self._get_triggerbot_key(), self._get_targeting_key())
+        )
         if (
-            key in self.aim_key
+            not triggerbot_only
+            and key in self.aim_key
             and key not in self.pressed_key
             and (self.old_pressed_aim_key == "")
         ):
@@ -217,7 +280,6 @@ class InputMixin:
             self.reset_pid()
             self.old_pressed_aim_key = key
             self.aim_key_status = True
-            self.trigger_only_active = self._is_trigger_only_key(key)
         if key not in self.pressed_key:
             self.pressed_key.append(key)
 
@@ -241,9 +303,15 @@ class InputMixin:
         if key in self.aim_key and key == self.old_pressed_aim_key:
             self.old_pressed_aim_key = ""
             self.aim_key_status = False
-            self.trigger_only_active = False
             self.reset_pid()
             self.reset_target_lock(key)
+        if self._is_triggerbot_key(key):
+            self.triggerbot_key_status = False
+            self.triggerbot_key = ""
+            self.triggerbot_key_config = None
+            self.stop_continuous_trigger()
+            self.stop_trigger_recoil()
+            self.trigger_status = False
         if key in self.pressed_key:
             self.pressed_key.remove(key)
 
@@ -304,6 +372,11 @@ class InputMixin:
                         setattr(self, flag_name, False)
                     except Exception:
                         pass
+            if hasattr(self, "_clear_target_lock"):
+                try:
+                    self._clear_target_lock()
+                except Exception:
+                    pass
         except Exception:
             return
 
@@ -462,13 +535,28 @@ class InputMixin:
                                     self.right_pressed = True
                             if self._is_disable_headshot_key(key):
                                 self._toggle_disable_headshot()
+                            triggerbot_only = False
+                            if self._is_triggerbot_key(key):
+                                trigger_key = self._get_triggerbot_key()
+                                self.triggerbot_key_status = True
+                                self.triggerbot_key = trigger_key
+                                try:
+                                    self.triggerbot_key_config = self.config["groups"][
+                                        self.group
+                                    ]["aim_keys"].get(trigger_key)
+                                except Exception:
+                                    self.triggerbot_key_config = None
+                                triggerbot_only = not self._keys_match(
+                                    trigger_key, self._get_targeting_key()
+                                )
                             if not self.aim_key_status and self.old_pressed_aim_key == "":
                                 for candidate in self._get_mouse_key_variants(key):
+                                    if triggerbot_only and self._get_triggerbot_key() in self._get_mouse_key_variants(candidate):
+                                        continue
                                     if candidate in self.aim_key:
                                         self.refresh_pressed_key_config(candidate)
                                         self.old_pressed_aim_key = candidate
                                         self.aim_key_status = True
-                                        self.trigger_only_active = self._is_trigger_only_key(candidate)
                                         self.reset_dynamic_aim_scope(candidate)
                                         break
                         else:
@@ -486,9 +574,19 @@ class InputMixin:
                                 ):
                                     self.old_pressed_aim_key = ""
                                     self.aim_key_status = False
-                                    self.trigger_only_active = False
                                     self.reset_pid()
+                                    self.reset_target_lock(candidate)
                                     break
+                            if self._is_triggerbot_key(key):
+                                self.triggerbot_key_status = False
+                                self.triggerbot_key = ""
+                                self.triggerbot_key_config = None
+                                if hasattr(self, "stop_continuous_trigger"):
+                                    self.stop_continuous_trigger()
+                                if hasattr(self, "stop_trigger_recoil"):
+                                    self.stop_trigger_recoil()
+                                if hasattr(self, "trigger_status"):
+                                    self.trigger_status = False
 
                     self.makcu.set_button_callback(_makcu_button_callback)
                     self.makcu.enable_button_monitoring(True)
@@ -557,6 +655,9 @@ class InputMixin:
             self.right_pressed = False
             self.aim_key_status = False
             self.old_pressed_aim_key = ""
+            self.triggerbot_key_status = False
+            self.triggerbot_key = ""
+            self.triggerbot_key_config = None
         except Exception as e:
             print("Disconnect device failed: " + f"{e}")
 

@@ -361,21 +361,11 @@ class ConfigMixin:
             if "disable_headshot_class_id" not in group_val:
                 group_val["disable_headshot_class_id"] = -1
             if "targeting_button_key" not in group_val:
-                default_target = ""
-                for key_name, key_cfg in group_val.get("aim_keys", {}).items():
-                    if not key_cfg.get("trigger_only", False):
-                        default_target = key_name
-                        break
-                if not default_target and group_val.get("aim_keys"):
-                    default_target = next(iter(group_val["aim_keys"].keys()))
-                group_val["targeting_button_key"] = default_target
+                group_val["targeting_button_key"] = next(
+                    iter(group_val.get("aim_keys", {})), ""
+                )
             if "triggerbot_button_key" not in group_val:
-                default_trigger = ""
-                for key_name, key_cfg in group_val.get("aim_keys", {}).items():
-                    if key_cfg.get("trigger_only", False):
-                        default_trigger = key_name
-                        break
-                group_val["triggerbot_button_key"] = default_trigger
+                group_val["triggerbot_button_key"] = ""
             if "disable_headshot_button_key" not in group_val:
                 keys = group_val.get("disable_headshot_keys", [])
                 group_val["disable_headshot_button_key"] = keys[0] if keys else "m"
@@ -536,7 +526,7 @@ class ConfigMixin:
                 "shrink_duration_ms": 300,
                 "recover_duration_ms": 300,
             },
-            "trigger_only": False,
+            "target_lock_distance": 100,
             "auto_y": False,
             "disable_headshot_removed": False,
         }
@@ -821,6 +811,8 @@ class ConfigMixin:
                         dyn_cfg["shrink_duration_ms"] = 300
                     if "recover_duration_ms" not in dyn_cfg:
                         dyn_cfg["recover_duration_ms"] = 300
+                if "target_lock_distance" not in key_config:
+                    key_config["target_lock_distance"] = 100
                 if "class_aim_positions" not in key_config:
                     key_config["class_aim_positions"] = {}
                 cap = key_config["class_aim_positions"]
@@ -859,8 +851,6 @@ class ConfigMixin:
                     key_config["overshoot_x_factor"] = 0.5
                 if "overshoot_y_factor" not in key_config:
                     key_config["overshoot_y_factor"] = 0.3
-                if "trigger_only" not in key_config:
-                    key_config["trigger_only"] = False
                 if "disable_headshot_removed" not in key_config:
                     key_config["disable_headshot_removed"] = False
                 for i in range(class_num):

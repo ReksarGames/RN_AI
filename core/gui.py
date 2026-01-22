@@ -118,6 +118,7 @@ TRANSLATIONS = {
         "label_button_none": "None",
         "label_disable_headshot_status": "Disable headshot",
         "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
+        "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_aim_weights": "Weights for target selection: distance, center, and size influence priority.",
         "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
         "help_kalman": "Kalman filter smooths noisy target positions for steadier tracking.",
@@ -256,6 +257,7 @@ TRANSLATIONS = {
         "label_min_scope": "Min Scope",
         "label_shrink_duration": "Shrink Duration",
         "label_recover_duration": "Recover Duration",
+        "label_target_lock_distance": "Lock Distance",
         "label_pid_params": "PID Controller Parameters",
         "label_pid_x_p": "X Proportional",
         "label_pid_x_i": "X Integral",
@@ -391,6 +393,7 @@ TRANSLATIONS = {
         "label_button_none": "Нет",
         "label_disable_headshot_status": "Отключить хедшот",
         "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
+        "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет.",
         "help_speed_curve": "Кривая скорости определяет скорость движения прицела в зависимости от расстояния до цели.",
         "help_kalman": "Фильтр Калмана сглаживает шумные позиции цели для более стабильного трекинга.",
@@ -519,6 +522,7 @@ TRANSLATIONS = {
         "label_min_scope": "Мин. область",
         "label_shrink_duration": "Длительность сжатия",
         "label_recover_duration": "Длительность восстановления",
+        "label_target_lock_distance": "Дистанция фиксации",
         "label_pid_params": "Параметры PID-контроллера",
         "label_pid_x_p": "Пропорциональный X",
         "label_pid_x_i": "Интегральный X",
@@ -711,7 +715,6 @@ class GuiMixin:
         if key:
             if not self._ensure_aim_key(key):
                 return
-            group_cfg["aim_keys"][key]["trigger_only"] = False
         other = group_cfg.get("triggerbot_button_key", "")
         if prev and prev != key and prev != other:
             self._remove_aim_key(prev)
@@ -725,7 +728,6 @@ class GuiMixin:
         if key:
             if not self._ensure_aim_key(key):
                 return
-            group_cfg["aim_keys"][key]["trigger_only"] = True
         other = group_cfg.get("targeting_button_key", "")
         if prev and prev != key and prev != other:
             self._remove_aim_key(prev)
@@ -2313,26 +2315,16 @@ class GuiMixin:
             self.attach_tooltip(
                 self.dynamic_scope_enabled_input, self.tr("help_smart_target")
             )
-            self.dynamic_scope_min_scope_input = dpg.add_input_int(
-                label=self.tr("label_min_scope"),
-                min_value=0,
+        with dpg.group(horizontal=True):
+            self.target_lock_distance_input = dpg.add_input_int(
+                label=self.tr("label_target_lock_distance"),
+                min_value=1,
                 max_value=2000,
-                callback=self.on_dynamic_scope_min_scope_change,
+                callback=self.on_target_lock_distance_change,
                 width=self.scaled_width_normal,
             )
-            self.dynamic_scope_shrink_ms_input = dpg.add_input_int(
-                label=self.tr("label_shrink_duration"),
-                min_value=0,
-                max_value=5000,
-                callback=self.on_dynamic_scope_shrink_ms_change,
-                width=self.scaled_width_normal,
-            )
-            self.dynamic_scope_recover_ms_input = dpg.add_input_int(
-                label=self.tr("label_recover_duration"),
-                min_value=0,
-                max_value=5000,
-                callback=self.on_dynamic_scope_recover_ms_change,
-                width=self.scaled_width_normal,
+            self.attach_tooltip(
+                self.target_lock_distance_input, self.tr("help_target_lock_distance")
             )
         with dpg.group(horizontal=True):
             self.move_deadzone_input = dpg.add_input_float(
@@ -2510,17 +2502,6 @@ class GuiMixin:
                 )
                 self.attach_tooltip(
                     self.trigger_recoil_input, self.tr("help_trigger_recoil")
-                )
-                self.trigger_only_input = dpg.add_checkbox(
-                    label=self.tr("label_trigger_only"),
-                    tag="trigger_only",
-                    default_value=self.config["groups"][self.group]["aim_keys"][
-                        self.select_key
-                    ].get("trigger_only", False),
-                    callback=self.on_trigger_only_change,
-                )
-                self.attach_tooltip(
-                    self.trigger_only_input, self.tr("help_trigger_only")
                 )
         with dpg.group(horizontal=True):
             self.start_delay_input = dpg.add_input_int(
@@ -3755,6 +3736,14 @@ class GuiMixin:
             v = 300
         key_cfg["dynamic_scope"]["recover_duration_ms"] = max(0, v)
 
+    def on_target_lock_distance_change(self, sender, app_data):
+        key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+        try:
+            v = int(app_data)
+        except Exception:
+            v = 100
+        key_cfg["target_lock_distance"] = max(1, v)
+
     def on_min_position_offset_change(self, sender, app_data):
         self.config["groups"][self.group]["aim_keys"][self.select_key][
             "min_position_offset"
@@ -4687,7 +4676,6 @@ class GuiMixin:
             int,
         )
         aim_key_group.register_item("status", "status", bool)
-        aim_key_group.register_item("trigger_only", "trigger_only", bool)
         aim_key_group.register_item("start_delay", "start_delay", float)
         aim_key_group.register_item("long_press_duration", "long_press_duration", int)
         aim_key_group.register_item("press_delay", "press_delay", float)
@@ -4979,10 +4967,6 @@ class GuiMixin:
             app_data: New configuration value
         """
         self.config_handler.handle_change(sender, app_data)
-
-    def on_trigger_only_change(self, sender, app_data):
-        self.on_change(sender, app_data)
-        self.update_button_lists()
 
     def on_tab_change(self, sender, app_data):
         if hasattr(self, "tab_bar_container"):

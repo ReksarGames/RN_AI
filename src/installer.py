@@ -1,5 +1,5 @@
 """
-ZTXAI Installer - Console wizard for installing dependencies
+RN_AI Installer - Console wizard for installing dependencies
 
 Usage: python installer.py
 """
@@ -17,7 +17,7 @@ TORCH_INDEX = "https://download.pytorch.org/whl/cu128"
 
 def print_header():
     print("\n" + "=" * 50)
-    print("         ZTXAI Installer")
+    print("         RN_AI Installer")
     print("=" * 50 + "\n")
 
 
@@ -331,7 +331,7 @@ def main():
     print("\n" + "=" * 50)
     print("         Installation Complete!")
     print("=" * 50)
-    print("\nTo start ZTXAI, run:")
+    print("\nTo start RN_AI, run:")
     print("  python main.py")
     print("  or double-click run.bat")
     print()
