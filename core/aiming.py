@@ -248,7 +248,7 @@ class AimingMixin:
             return None
         if lock_enabled and getattr(self, "_target_lock_active", False) and len(targets) == 1:
             self._update_target_counts(targets, reference_class)
-            self._update_target_lock(targets[0])
+            self._update_target_lock(targets[0], use_box_center=True)
             return targets[0]
         valid_targets = []
         for target in targets:
@@ -277,7 +277,7 @@ class AimingMixin:
                     candidates.sort(key=lambda x: x["distance_to_center"])
                     selected = candidates[0]
                     if lock_distance > 0:
-                        self._update_target_lock(selected)
+                        self._update_target_lock(selected, use_box_center=True)
                     else:
                         self._clear_target_lock()
                     return selected
@@ -349,7 +349,7 @@ class AimingMixin:
             valid_targets.sort(key=lambda x: x["distance_to_center"])
         selected = valid_targets[0]
         if lock_distance > 0:
-            self._update_target_lock(selected)
+            self._update_target_lock(selected, use_box_center=True)
         else:
             self._clear_target_lock()
         return selected

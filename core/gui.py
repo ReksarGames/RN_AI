@@ -119,6 +119,7 @@ TRANSLATIONS = {
         "label_disable_headshot_status": "Disable headshot",
         "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
+        "help_target_lock_reacquire_time": "How long (s) to keep lock after target disappears; 0 = instant switch.",
         "help_aim_weights": "Weights for target selection: distance, center, and size influence priority.",
         "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
         "help_kalman": "Kalman filter smooths noisy target positions for steadier tracking.",
@@ -258,6 +259,7 @@ TRANSLATIONS = {
         "label_shrink_duration": "Shrink Duration",
         "label_recover_duration": "Recover Duration",
         "label_target_lock_distance": "Lock Distance",
+        "label_target_lock_reacquire_time": "Reacquire Time (s)",
         "label_pid_params": "PID Controller Parameters",
         "label_pid_x_p": "X Proportional",
         "label_pid_x_i": "X Integral",
@@ -394,6 +396,7 @@ TRANSLATIONS = {
         "label_disable_headshot_status": "Отключить хедшот",
         "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
+        "help_target_lock_reacquire_time": "Сколько секунд удерживать фиксацию после пропажи цели; 0 = мгновенное переключение.",
         "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет.",
         "help_speed_curve": "Кривая скорости определяет скорость движения прицела в зависимости от расстояния до цели.",
         "help_kalman": "Фильтр Калмана сглаживает шумные позиции цели для более стабильного трекинга.",
@@ -523,6 +526,7 @@ TRANSLATIONS = {
         "label_shrink_duration": "Длительность сжатия",
         "label_recover_duration": "Длительность восстановления",
         "label_target_lock_distance": "Дистанция фиксации",
+        "label_target_lock_reacquire_time": "Время удержания (с)",
         "label_pid_params": "Параметры PID-контроллера",
         "label_pid_x_p": "Пропорциональный X",
         "label_pid_x_i": "Интегральный X",
@@ -2326,6 +2330,19 @@ class GuiMixin:
             self.attach_tooltip(
                 self.target_lock_distance_input, self.tr("help_target_lock_distance")
             )
+            self.target_lock_reacquire_time_input = dpg.add_input_float(
+                label=self.tr("label_target_lock_reacquire_time"),
+                min_value=0.0,
+                max_value=5.0,
+                step=0.05,
+                format="%.2f",
+                callback=self.on_target_lock_reacquire_time_change,
+                width=self.scaled_width_normal,
+            )
+            self.attach_tooltip(
+                self.target_lock_reacquire_time_input,
+                self.tr("help_target_lock_reacquire_time"),
+            )
         with dpg.group(horizontal=True):
             self.move_deadzone_input = dpg.add_input_float(
                 label=self.tr("label_move_deadzone"),
@@ -3744,6 +3761,14 @@ class GuiMixin:
             v = 100
         key_cfg["target_lock_distance"] = max(1, v)
 
+    def on_target_lock_reacquire_time_change(self, sender, app_data):
+        key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+        try:
+            v = float(app_data)
+        except Exception:
+            v = 0.3
+        key_cfg["target_lock_reacquire_time"] = max(0.0, v)
+
     def on_min_position_offset_change(self, sender, app_data):
         self.config["groups"][self.group]["aim_keys"][self.select_key][
             "min_position_offset"
@@ -4657,6 +4682,12 @@ class GuiMixin:
         aim_key_group.register_item("target_switch_delay", "target_switch_delay", int)
         aim_key_group.register_item(
             "target_reference_class", "target_reference_class", int
+        )
+        aim_key_group.register_item(
+            "target_lock_distance", "target_lock_distance", int
+        )
+        aim_key_group.register_item(
+            "target_lock_reacquire_time", "target_lock_reacquire_time", float
         )
         aim_key_group.register_item(
             "dynamic_scope.enabled", "dynamic_scope.enabled", bool

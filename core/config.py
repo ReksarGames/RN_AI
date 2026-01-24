@@ -813,6 +813,8 @@ class ConfigMixin:
                         dyn_cfg["recover_duration_ms"] = 300
                 if "target_lock_distance" not in key_config:
                     key_config["target_lock_distance"] = 100
+                if "target_lock_reacquire_time" not in key_config:
+                    key_config["target_lock_reacquire_time"] = 0.3
                 if "class_aim_positions" not in key_config:
                     key_config["class_aim_positions"] = {}
                 cap = key_config["class_aim_positions"]
