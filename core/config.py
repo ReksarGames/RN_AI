@@ -466,7 +466,6 @@ class ConfigMixin:
             "x_trigger_offset": 0.0,
             "y_trigger_offset": 0.0,
             "continuous": False,
-            "recoil": False,
         }
         default_key = {
             "confidence_threshold": 0.5,
@@ -711,7 +710,6 @@ class ConfigMixin:
                     "x_trigger_offset": 0.0,
                     "y_trigger_offset": 0.0,
                     "continuous": False,
-                    "recoil": False,
                 }
                 if not isinstance(key_config.get("trigger"), dict):
                     key_config["trigger"] = dict(default_trigger)

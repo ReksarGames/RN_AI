@@ -169,7 +169,6 @@ class Aassist(
         self.y_trigger_offset_input = None
         self.status_input = None
         self.continuous_trigger_input = None
-        self.trigger_recoil_input = None
         self.deadzone_input = None
         self.history_size_input = None
         self.output_scale_x_input = None

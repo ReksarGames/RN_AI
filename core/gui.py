@@ -2513,13 +2513,6 @@ class GuiMixin:
                     label=self.tr("label_continuous_trigger"),
                     callback=self.on_continuous_trigger_change,
                 )
-                self.trigger_recoil_input = dpg.add_checkbox(
-                    label=self.tr("label_trigger_recoil"),
-                    callback=self.on_trigger_recoil_change,
-                )
-                self.attach_tooltip(
-                    self.trigger_recoil_input, self.tr("help_trigger_recoil")
-                )
         with dpg.group(horizontal=True):
             self.start_delay_input = dpg.add_input_int(
                 label=self.tr("label_trigger_delay"),
@@ -3961,12 +3954,6 @@ class GuiMixin:
             "continuous"
         ] = app_data
         print(f"Continuous trigger set to: {app_data}")
-
-    def on_trigger_recoil_change(self, sender, app_data):
-        self.config["groups"][self.group]["aim_keys"][self.select_key]["trigger"][
-            "recoil"
-        ] = app_data
-        print(f"Trigger recoil set to: {app_data}")
 
     def on_start_delay_change(self, sender, app_data):
         self.config["groups"][self.group]["aim_keys"][self.select_key]["trigger"][

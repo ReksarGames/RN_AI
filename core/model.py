@@ -102,12 +102,6 @@ class ModelMixin:
                 ].get("continuous", False),
             )
             dpg.set_value(
-                self.trigger_recoil_input,
-                self.config["groups"][self.group]["aim_keys"][self.select_key][
-                    "trigger"
-                ].get("recoil", False),
-            )
-            dpg.set_value(
                 self.start_delay_input,
                 self.config["groups"][self.group]["aim_keys"][self.select_key][
                     "trigger"
