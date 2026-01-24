@@ -37,7 +37,7 @@
           "max_velocity_threshold": 999.0,
           "compensation_factor": 1.0,
           "trigger": {
-            "status": true,
+            "status": false,
             "start_delay": 75,
             "press_delay": 3,
             "end_delay": 200,
@@ -46,8 +46,7 @@
             "y_trigger_scope": 0.3400001525878906,
             "x_trigger_offset": 0.21000002324581146,
             "y_trigger_offset": 0.06999999284744263,
-            "continuous": false,
-            "recoil": true
+            "continuous": false
           },
           "classes": [
             0,
@@ -184,8 +183,7 @@
             "y_trigger_scope": 0.5,
             "x_trigger_offset": 0.0,
             "y_trigger_offset": 0.0,
-            "continuous": false,
-            "recoil": false
+            "continuous": false
           },
           "classes": [
             1,
@@ -348,9 +346,9 @@
   "down_switch_key": "caps_lock",
   "game_sensitivity": 1.0,
   "mouse_dpi": 800,
-  "distance_scoring_weight": 1.0,
-  "center_scoring_weight": 1.0,
-  "size_scoring_weight": 1.0,
+  "distance_scoring_weight": 0.0,
+  "center_scoring_weight": 0.0,
+  "size_scoring_weight": 0.0,
   "offset_boundary_x": 0,
   "offset_boundary_y": 0,
   "knots_count": 2,

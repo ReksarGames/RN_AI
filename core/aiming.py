@@ -1107,6 +1107,74 @@ class AimingMixin:
         if self.config["move_method"] == "makcu" and self.makcu is not None:
             self.makcu.release(MouseButton.LEFT)
 
+    def _force_reset_input_states(self, reason=""):
+        try:
+            print(f"[Safety] Resetting input states: {reason}")
+        except Exception:
+            pass
+        try:
+            self.trigger_status = False
+        except Exception:
+            pass
+        try:
+            self.continuous_trigger_active = False
+        except Exception:
+            pass
+        try:
+            self.triggerbot_key_status = False
+            self.triggerbot_key = ""
+            self.triggerbot_key_config = None
+        except Exception:
+            pass
+        try:
+            self.aim_key_status = False
+            self.old_pressed_aim_key = ""
+        except Exception:
+            pass
+        if hasattr(self, "stop_continuous_trigger"):
+            try:
+                self.stop_continuous_trigger()
+            except Exception:
+                pass
+        if hasattr(self, "stop_trigger_recoil"):
+            try:
+                self.stop_trigger_recoil()
+            except Exception:
+                pass
+        if hasattr(self, "reset_target_lock"):
+            try:
+                self.reset_target_lock(self.old_pressed_aim_key)
+            except Exception:
+                pass
+        if hasattr(self, "reset_pid"):
+            try:
+                self.reset_pid()
+            except Exception:
+                pass
+
+    def _safe_mouse_left_down(self):
+        try:
+            self.mouse_left_down()
+            return True
+        except Exception as e:
+            print(f"[Trigger] mouse_left_down failed: {e}")
+            self._force_reset_input_states("mouse_left_down error")
+            return False
+
+    def _safe_mouse_left_up(self):
+        try:
+            self.mouse_left_up()
+            return True
+        except Exception as e:
+            print(f"[Trigger] mouse_left_up failed: {e}")
+            try:
+                if self.config.get("move_method") == "makcu" and self.makcu is not None:
+                    self.makcu.unlock(MouseButton.LEFT)
+            except Exception as unlock_e:
+                print(f"[Trigger] mouse_left_up unlock failed: {unlock_e}")
+            self._force_reset_input_states("mouse_left_up error")
+            return False
+
     def _is_trigger_source_active(self, source):
         if source == "triggerbot":
             return bool(getattr(self, "triggerbot_key_status", False))
@@ -1121,31 +1189,33 @@ class AimingMixin:
         recoil_enabled=False,
     ):
         self.time_begin_period(1)
-        if start_delay > 0:
-            if random_delay > 0:
-                start_delay = random.randint(
-                    max(0, start_delay - random_delay), start_delay + random_delay
-                )
-            time.sleep(start_delay / 1000)
-        self.mouse_left_down()
-        if recoil_enabled:
-            self.start_trigger_recoil()
-        if press_delay > 0:
-            if random_delay > 0:
-                press_delay = random.randint(
-                    max(0, press_delay - random_delay), press_delay + random_delay
-                )
-            time.sleep(press_delay / 1000)
-        self.mouse_left_up()
-        if recoil_enabled:
-            self.stop_trigger_recoil()
+        pressed = False
+        try:
+            if start_delay > 0:
+                if random_delay > 0:
+                    start_delay = random.randint(
+                        max(0, start_delay - random_delay), start_delay + random_delay
+                    )
+                time.sleep(start_delay / 1000)
+            pressed = self._safe_mouse_left_down()
+            if press_delay > 0:
+                if random_delay > 0:
+                    press_delay = random.randint(
+                        max(0, press_delay - random_delay), press_delay + random_delay
+                    )
+                time.sleep(press_delay / 1000)
+        finally:
+            if pressed:
+                self._safe_mouse_left_up()
+            else:
+                self._safe_mouse_left_up()
+            self.trigger_status = False
         if end_delay > 0:
             if random_delay > 0:
                 end_delay = random.randint(
                     max(0, end_delay - random_delay), end_delay + random_delay
                 )
             time.sleep(end_delay / 1000)
-        self.trigger_status = False
 
     def continuous_trigger_process(self, trigger_cfg, recoil_enabled=False, source="aim"):
         """Continuous trigger process - keep firing until key released"""
@@ -1160,16 +1230,15 @@ class AimingMixin:
             else:
                 actual_start_delay = start_delay
             time.sleep(actual_start_delay / 1000)
-        self.mouse_left_down()
-        if recoil_enabled:
-            self.start_trigger_recoil()
+        pressed = self._safe_mouse_left_down()
+        if not pressed:
+            self.continuous_trigger_active = False
+            return
         try:
             while self._is_trigger_source_active(source) and self.continuous_trigger_active:
                 time.sleep(0.01)
         finally:
-            self.mouse_left_up()
-            if recoil_enabled:
-                self.stop_trigger_recoil()
+            self._safe_mouse_left_up()
             self.continuous_trigger_active = False
 
     def stop_continuous_trigger(self):
@@ -1178,45 +1247,17 @@ class AimingMixin:
             self.continuous_trigger_active = False
 
     def start_trigger_recoil(self):
-        """Start trigger recoil compensation"""
-        if self.trigger_recoil_active:
-            return
-        if self.config.get("recoil", {}).get("use_mouse_re_trajectory", False):
-            try:
-                self._load_mouse_re_trajectory_for_current()
-                if self._current_mouse_re_points:
-                    self.trigger_recoil_active = True
-                    self._recoil_is_replaying = True
-                    self.trigger_recoil_thread = threading.Thread(
-                        target=self._recoil_replay_worker,
-                        args=(self._current_mouse_re_points,),
-                        daemon=True,
-                    )
-                    self.trigger_recoil_thread.start()
-                    print("Trigger recoil started (mouse_re mode)")
-            except Exception as e:
-                print(f"Trigger recoil start failed: {e}")
-        if not self.trigger_recoil_active:
-            self.trigger_recoil_active = True
-            self.trigger_recoil_pressed = True
-            self.end = False
-            self.now_num = 0
-            self.now_stage = 0
-            self.timer_id2 = self.time_set_event(self.delay, 1, self.down, 0, 1)
+        """Trigger recoil removed."""
+        self.trigger_recoil_active = False
+        self.trigger_recoil_pressed = False
 
     def stop_trigger_recoil(self):
-        """Stop trigger recoil compensation"""
-        if self.trigger_recoil_active:
-            self.trigger_recoil_active = False
-            if self._recoil_is_replaying:
-                self._recoil_is_replaying = False
-            if hasattr(self, "timer_id2") and self.timer_id2:
-                self.time_kill_event(self.timer_id2)
-                self.timer_id2 = 0
-            self.trigger_recoil_pressed = False
-            self.end = True
-            self.now_num = 0
-            self.now_stage = 0
+        """Trigger recoil removed."""
+        self.trigger_recoil_active = False
+        self.trigger_recoil_pressed = False
+        if hasattr(self, "timer_id2") and self.timer_id2:
+            self.time_kill_event(self.timer_id2)
+            self.timer_id2 = 0
 
     def trigger(self):
         self.time_begin_period(1)
@@ -1284,7 +1325,6 @@ class AimingMixin:
                         < relative_screen_bottom
                     ):
                         continuous_enabled = trigger_cfg["trigger"].get("continuous", False)
-                        recoil_enabled = trigger_cfg["trigger"].get("recoil", False)
                         key_active = self._is_trigger_source_active(trigger_mode)
                         if continuous_enabled:
                             if (
@@ -1294,7 +1334,7 @@ class AimingMixin:
                                 self.continuous_trigger_active = True
                                 self.continuous_trigger_thread = Thread(
                                     target=self.continuous_trigger_process,
-                                    args=(trigger_cfg, recoil_enabled, trigger_mode),
+                                    args=(trigger_cfg, False, trigger_mode),
                                 )
                                 self.continuous_trigger_thread.daemon = True
                                 self.continuous_trigger_thread.start()
@@ -1308,7 +1348,7 @@ class AimingMixin:
                                         trigger_cfg["trigger"]["press_delay"],
                                         trigger_cfg["trigger"]["end_delay"],
                                         trigger_cfg["trigger"]["random_delay"],
-                                        recoil_enabled,
+                                        False,
                                     ),
                                 ).start()
                         break
