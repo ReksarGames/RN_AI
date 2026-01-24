@@ -99,7 +99,7 @@ TRANSLATIONS = {
         "help_aim_controller": "Select aiming controller. PID is classic; Sunone adds smoothing/kalman/prediction.",
         "help_sunone_settings": "Sunone smoothing and Kalman options for stable tracking.",
         "help_prediction": "Predicts target movement. Standard uses velocity; Kalman filters velocity; combined uses both.",
-        "help_trigger": "Auto-fire when target is inside the trigger zone.",
+        "help_trigger": "Auto-fire when target is inside the trigger zone. Continuous keeps LMB pressed while the key is held.",
         "help_class_settings": "Manage model classes: enable/disable targets and priorities.",
         "help_class_aim_config": "Choose a class and set aim positions. 0 = top of body, 1 = bottom.",
         "help_aim_position": "Aim position inside the box: 0.0 top, 1.0 bottom.",
@@ -120,7 +120,8 @@ TRANSLATIONS = {
         "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "How long (s) to keep lock after target disappears; 0 = instant switch.",
-        "help_aim_weights": "Weights for target selection: distance, center, and size influence priority.",
+        "help_aim_weights": "Weights for target selection: distance, center, and size influence priority. Tie-break applies weights only when targets are within the chosen % of the closest target.",
+        "help_aim_weight_tiebreak": "Apply aim weights only when targets are within this % of the closest target distance. 0 disables.",
         "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
         "help_kalman": "Kalman filter smooths noisy target positions for steadier tracking.",
         "help_prediction_lead": "Lead time (ms) adds forward prediction to aim position.",
@@ -205,6 +206,7 @@ TRANSLATIONS = {
         "label_class_priority_debug": "Class Priority Debug",
         "label_show_aim_scope": "Show Aim Scope",
         "label_aim_weights": "Aim Weights",
+        "label_aim_weight_tiebreak": "Tie-break (%)",
         "label_distance_weight": "Distance Weight",
         "label_center_weight": "Center Weight",
         "label_size_weight": "Size Weight",
@@ -376,7 +378,7 @@ TRANSLATIONS = {
         "help_aim_controller": "Выбор контроллера прицеливания. PID — классический; Sunone добавляет сглаживание, Калман и предсказание.",
         "help_sunone_settings": "Сглаживание и Калман в Sunone для стабильного трекинга.",
         "help_prediction": "Предсказывает движение цели. Standard использует скорость; Kalman фильтрует скорость; combined использует оба метода.",
-        "help_trigger": "Авто-выстрел, когда цель внутри триггер-зоны.",
+        "help_trigger": "Авто-выстрел, когда цель внутри триггер-зоны. Continuous удерживает ЛКМ, пока кнопка зажата.",
         "help_class_settings": "Управление классами модели: включение/отключение целей и приоритетов.",
         "help_class_aim_config": "Выбор класса и настройка точки прицеливания. 0 = верх тела, 1 = низ.",
         "help_aim_position": "Позиция прицела внутри бокса: 0.0 — верх, 1.0 — низ.",
@@ -397,7 +399,8 @@ TRANSLATIONS = {
         "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "Сколько секунд удерживать фиксацию после пропажи цели; 0 = мгновенное переключение.",
-        "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет.",
+        "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет. Tie-break применяет веса только когда цели в пределах выбранного % от ближайшей.",
+        "help_aim_weight_tiebreak": "Использовать веса только когда цели в пределах этого % от ближайшей цели. 0 = выкл.",
         "help_speed_curve": "Кривая скорости определяет скорость движения прицела в зависимости от расстояния до цели.",
         "help_kalman": "Фильтр Калмана сглаживает шумные позиции цели для более стабильного трекинга.",
         "help_prediction_lead": "Время упреждения (мс) добавляет опережение к позиции прицела.",
@@ -472,6 +475,7 @@ TRANSLATIONS = {
         "label_class_priority_debug": "Отладка приоритета классов",
         "label_show_aim_scope": "Показывать область прицеливания",
         "label_aim_weights": "Веса прицеливания",
+        "label_aim_weight_tiebreak": "Тай-брейк (%)",
         "label_distance_weight": "Вес дистанции",
         "label_center_weight": "Вес центра",
         "label_size_weight": "Вес размера",
@@ -2383,6 +2387,18 @@ class GuiMixin:
                 callback=self.on_size_scoring_weight_change,
                 width=self.scaled_width_normal,
             )
+        with dpg.group(horizontal=True):
+            dpg.add_input_float(
+                label=self.tr("label_aim_weight_tiebreak"),
+                default_value=float(self.config.get("aim_weight_tiebreak_ratio", 0.1)) * 100.0,
+                min_value=0.0,
+                max_value=100.0,
+                step=1.0,
+                format="%.0f",
+                callback=self.on_aim_weight_tiebreak_change,
+                width=self.scaled_width_normal,
+            )
+            self.add_help_marker(self.tr("help_aim_weight_tiebreak"))
         self.pid_params_group = dpg.add_collapsing_header(
             label=self.tr("label_pid_params"), default_open=True
         )
@@ -2814,6 +2830,15 @@ class GuiMixin:
         self.config["size_scoring_weight"] = app_data
         self.init_target_priority()
         print(f"changed to: {self.config['size_scoring_weight']}")
+
+    def on_aim_weight_tiebreak_change(self, sender, app_data):
+        try:
+            ratio = float(app_data) / 100.0
+        except Exception:
+            ratio = 0.1
+        ratio = max(0.0, min(1.0, ratio))
+        self.config["aim_weight_tiebreak_ratio"] = ratio
+        print(f"changed to: {self.config['aim_weight_tiebreak_ratio']}")
 
     def on_print_fps_change(self, sender, app_data):
         self.config["print_fps"] = app_data
@@ -4421,6 +4446,11 @@ class GuiMixin:
             "size_scoring_weight",
             float,
             self.init_target_priority,
+        )
+        scoring_group.register_item(
+            "aim_weight_tiebreak_ratio",
+            "aim_weight_tiebreak_ratio",
+            float,
         )
         screenshot_group = ConfigItemGroup(self.config_handler)
         screenshot_group.register_item(
