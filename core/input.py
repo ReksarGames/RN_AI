@@ -446,10 +446,11 @@ class InputMixin:
                     self._makcu_move_queue = Queue(maxsize=1024)
                     self._makcu_send_interval = 0.0015
                     self._makcu_last_send_ts = 0.0
+                    self._makcu_sender_stop = False
 
                     def _makcu_sender_worker():
                         last_ts = 0.0
-                        while not getattr(self, "end", False):
+                        while not getattr(self, "_makcu_sender_stop", False):
                             try:
                                 dx, dy = self._makcu_move_queue.get(timeout=0.1)
                             except Exception:
@@ -651,6 +652,10 @@ class InputMixin:
                             except Exception:
                                 pass
                         self.makcu = None
+            if hasattr(self, "_makcu_sender_stop"):
+                self._makcu_sender_stop = True
+            if hasattr(self, "_makcu_sender_started"):
+                self._makcu_sender_started = False
             self.left_pressed = False
             self.right_pressed = False
             self.aim_key_status = False
