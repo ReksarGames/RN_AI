@@ -231,6 +231,46 @@ class AimingMixin:
         base_scope = float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
         if base_scope <= 0:
             base_scope = aim_scope
+
+        def _get_tiebreak_ratio():
+            try:
+                return max(0.0, float(self.config.get("aim_weight_tiebreak_ratio", 0.1)))
+            except Exception:
+                return 0.1
+
+        def _choose_with_weights(candidates):
+            if not candidates:
+                return None
+            if len(candidates) == 1:
+                return candidates[0]
+            ratio = _get_tiebreak_ratio()
+            if ratio <= 0:
+                return min(candidates, key=lambda t: t["distance_to_center"])
+            min_dist = min(t["distance_to_center"] for t in candidates)
+            scope = aim_scope if aim_scope > 0 else max(1.0, min_dist)
+            threshold = scope * ratio
+            near = [t for t in candidates if t["distance_to_center"] <= min_dist + threshold]
+            if len(near) == 1:
+                return near[0]
+            try:
+                w_dist = float(self.config.get("distance_scoring_weight", 1.0) or 1.0)
+                w_center = float(self.config.get("center_scoring_weight", 1.0) or 1.0)
+                w_size = float(self.config.get("size_scoring_weight", 1.0) or 1.0)
+            except Exception:
+                w_dist, w_center, w_size = (1.0, 1.0, 1.0)
+            if w_dist == 0 and w_center == 0 and w_size == 0:
+                return min(near, key=lambda t: t["distance_to_center"])
+            max_dist = max(1.0, max(t["distance_to_center"] for t in near))
+            max_center = max(1.0, max(abs(t.get("dx", 0.0)) + abs(t.get("dy", 0.0)) for t in near))
+            max_size = max(1e-6, max(float(t.get("size", 0.0)) for t in near))
+
+            def _score(t):
+                dist_norm = t["distance_to_center"] / max_dist
+                center_norm = (abs(t.get("dx", 0.0)) + abs(t.get("dy", 0.0))) / max_center
+                size_norm = float(t.get("size", 0.0)) / max_size
+                return (w_dist * dist_norm) + (w_center * center_norm) + (w_size * (1.0 - size_norm))
+
+            return min(near, key=_score)
         if lock_enabled:
             targets, lock_blocking = self._apply_target_lock(
                 targets, lock_distance, lock_reacquire_time
@@ -256,6 +296,8 @@ class AimingMixin:
             dy = target["pos"][1] - self.screen_center_y
             distance = (dx * dx + dy * dy) ** 0.5
             target["distance_to_center"] = distance
+            target["dx"] = dx
+            target["dy"] = dy
             if distance <= aim_scope:
                 valid_targets.append(target)
         if not lock_enabled:
@@ -274,8 +316,7 @@ class AimingMixin:
                         continue
                     candidates.append(target)
                 if candidates:
-                    candidates.sort(key=lambda x: x["distance_to_center"])
-                    selected = candidates[0]
+                    selected = _choose_with_weights(candidates)
                     if lock_distance > 0:
                         self._update_target_lock(selected, use_box_center=True)
                     else:
@@ -347,7 +388,7 @@ class AimingMixin:
             valid_targets.sort(key=priority_key)
         else:
             valid_targets.sort(key=lambda x: x["distance_to_center"])
-        selected = valid_targets[0]
+        selected = _choose_with_weights(valid_targets)
         if lock_distance > 0:
             self._update_target_lock(selected, use_box_center=True)
         else:

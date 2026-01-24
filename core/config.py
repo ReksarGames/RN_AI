@@ -122,6 +122,8 @@ class ConfigMixin:
             config["center_scoring_weight"] = 1.0
         if "size_scoring_weight" not in config:
             config["size_scoring_weight"] = 1.0
+        if "aim_weight_tiebreak_ratio" not in config:
+            config["aim_weight_tiebreak_ratio"] = 0.1
         if "offset_boundary_x" not in config:
             config["offset_boundary_x"] = 0
         if "offset_boundary_y" not in config:
@@ -579,6 +581,7 @@ class ConfigMixin:
             "distance_scoring_weight": 1.0,
             "center_scoring_weight": 1.0,
             "size_scoring_weight": 1.0,
+            "aim_weight_tiebreak_ratio": 0.1,
             "offset_boundary_x": 0,
             "offset_boundary_y": 0,
             "knots_count": 2,

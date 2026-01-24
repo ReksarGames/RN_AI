@@ -463,5 +463,6 @@
       "show_step": true,
       "show_future": true
     }
-  }
+  },
+  "aim_weight_tiebreak_ratio": 0.0
 }
