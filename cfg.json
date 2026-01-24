@@ -37,7 +37,7 @@
           "max_velocity_threshold": 999.0,
           "compensation_factor": 1.0,
           "trigger": {
-            "status": false,
+            "status": true,
             "start_delay": 75,
             "press_delay": 3,
             "end_delay": 200,
