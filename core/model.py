@@ -228,6 +228,11 @@ class ModelMixin:
                     self.target_lock_distance_input,
                     int(key_cfg.get("target_lock_distance", 100)),
                 )
+            if getattr(self, "target_lock_reacquire_time_input", None) is not None:
+                dpg.set_value(
+                    self.target_lock_reacquire_time_input,
+                    float(key_cfg.get("target_lock_reacquire_time", 0.3)),
+                )
         if hasattr(self, "update_button_lists"):
             self.update_button_lists()
 

@@ -191,6 +191,8 @@ class Aassist(
         self.dynamic_scope_min_scope_input = None
         self.dynamic_scope_shrink_ms_input = None
         self.dynamic_scope_recover_ms_input = None
+        self.target_lock_distance_input = None
+        self.target_lock_reacquire_time_input = None
         self.current_selected_class = "0"
         self.class_priority_input = None
         self.infer_model_input = None

@@ -38,38 +38,26 @@
           "compensation_factor": 1.0,
           "trigger": {
             "status": false,
-            "start_delay": 150,
-            "press_delay": 1,
+            "start_delay": 75,
+            "press_delay": 3,
             "end_delay": 200,
             "random_delay": 20,
             "x_trigger_scope": 0.5,
-            "y_trigger_scope": 0.5,
-            "x_trigger_offset": 0.0,
-            "y_trigger_offset": 0.0,
+            "y_trigger_scope": 0.3400001525878906,
+            "x_trigger_offset": 0.21000002324581146,
+            "y_trigger_offset": 0.06999999284744263,
             "continuous": false,
-            "recoil": false
+            "recoil": true
           },
           "classes": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            8,
-            9,
-            10,
             0,
             7
           ],
-          "class_priority_order": [
-            7,
-            0
-          ],
+          "class_priority_order": [],
           "class_aim_positions": {
             "0": {
               "aim_bot_position": 0.1,
-              "aim_bot_position2": 0.2,
+              "aim_bot_position2": 0.1,
               "confidence_threshold": 0.5,
               "iou_t": 0.8
             },
@@ -148,7 +136,7 @@
           "smooth_y": 0,
           "smooth_deadzone": 0.0,
           "smooth_algorithm": 1.0,
-          "target_switch_delay": 20,
+          "target_switch_delay": 1,
           "target_reference_class": 0,
           "dynamic_scope": {
             "enabled": true,
@@ -160,7 +148,8 @@
           "trigger_only": true,
           "auto_y": false,
           "disable_headshot_removed": false,
-          "target_lock_distance": 80
+          "target_lock_distance": 80,
+          "target_lock_reacquire_time": 7.450580596923828e-09
         },
         "mouse_side1": {
           "confidence_threshold": 0.5,
@@ -309,7 +298,8 @@
           "trigger_only": true,
           "auto_y": false,
           "disable_headshot_removed": false,
-          "target_lock_distance": 160
+          "target_lock_distance": 160,
+          "target_lock_reacquire_time": 0.3
         }
       },
       "disable_headshot": false,
@@ -447,22 +437,22 @@
     "use_kalman": true,
     "kalman_process_noise": 0.04,
     "kalman_measurement_noise": 1.0,
-    "kalman_speed_multiplier_x": 0.5,
+    "kalman_speed_multiplier_x": 0.55,
     "kalman_speed_multiplier_y": 0.5,
     "reset_threshold": 4.0,
     "speed": {
-      "min_multiplier": 0.5,
+      "min_multiplier": 0.51,
       "max_multiplier": 0.7,
-      "snap_radius": 1.5,
-      "near_radius": 30.0,
+      "snap_radius": 0.8,
+      "near_radius": 25.0,
       "speed_curve_exponent": 0.01,
-      "snap_boost_factor": 4.0
+      "snap_boost_factor": 2.0
     },
     "prediction": {
       "mode": 2,
       "interval": 0.01,
-      "kalman_lead_ms": 0.0,
-      "kalman_max_lead_ms": 0.0,
+      "kalman_lead_ms": 10.0,
+      "kalman_max_lead_ms": 80.0,
       "velocity_smoothing": 0.4,
       "velocity_scale": 1.0,
       "kalman_process_noise": 0.01,
@@ -471,9 +461,9 @@
       "draw_future_positions": true
     },
     "debug": {
-      "show_prediction": false,
-      "show_step": false,
-      "show_future": false
+      "show_prediction": true,
+      "show_step": true,
+      "show_future": true
     }
   }
 }
