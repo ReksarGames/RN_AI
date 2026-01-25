@@ -97,6 +97,22 @@ install.bat
 ```
 </details>
 
+<details>
+<summary><b>Optional: Full GPU/CPU Wizard (installer.py)</b></summary>
+
+```batch
+python src/installer.py
+```
+
+What it does:
+- **GPU mode**: downloads the CUDA 12.8 installer to the repo folder, then installs PyTorch CUDA (cu128), TensorRT, and onnxruntime-gpu.
+- **CPU mode**: installs onnxruntime-directml.
+
+Notes:
+- It installs Python packages into **the Python environment you run it with** (system Python or an active venv).
+- CUDA itself is installed **system-wide** by the NVIDIA installer it launches.
+</details>
+
 <details open>
 <summary><b>Step 2: Run the Application</b></summary>
 
