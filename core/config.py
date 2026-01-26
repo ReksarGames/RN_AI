@@ -82,6 +82,8 @@ class ConfigMixin:
             config["capture_offset_x"] = 0
         if "capture_offset_y" not in config:
             config["capture_offset_y"] = 0
+        if "capture_size" not in config:
+            config["capture_size"] = "auto"
         if "aim_controller" not in config:
             config["aim_controller"] = "pid"
         if "ui_language" not in config:
@@ -566,6 +568,7 @@ class ConfigMixin:
             "screen_height": 1080,
             "capture_offset_x": 0,
             "capture_offset_y": 0,
+            "capture_size": "auto",
             "aim_controller": "pid",
             "ui_language": "en",
             "gui_width_scale": 1.0,

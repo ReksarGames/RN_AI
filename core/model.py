@@ -525,6 +525,25 @@ class ModelMixin:
         except Exception as e:
             print(f"[State reset] Error resetting states: {e}")
 
+    def _get_capture_size_override(self):
+        try:
+            value = str(self.config.get("capture_size", "auto")).strip().lower()
+        except Exception:
+            return None
+        if not value or value == "auto":
+            return None
+        value = value.replace(" ", "")
+        parts = value.split("x")
+        if len(parts) != 2:
+            return None
+        if not parts[0].isdigit() or not parts[1].isdigit():
+            return None
+        w = int(parts[0])
+        h = int(parts[1])
+        if w <= 0 or h <= 0:
+            return None
+        return (w, h)
+
     def refresh_engine(self):
         self._clear_queues()
         self._reset_aim_states()
@@ -600,6 +619,9 @@ class ModelMixin:
         region_shape = self.engine.get_input_shape()
         region_w = int(region_shape[3])
         region_h = int(region_shape[2])
+        override = self._get_capture_size_override()
+        if override:
+            region_w, region_h = override
         left = int((self.screen_width - region_w) // 2 + offset_x)
         top = int((self.screen_height - region_h) // 2 + offset_y)
         left = max(0, min(left, self.screen_width - region_w))
@@ -710,6 +732,9 @@ class ModelMixin:
             offset_y = int(self.config.get("capture_offset_y", 0))
             region_w = self.engine.get_input_shape()[3]
             region_h = self.engine.get_input_shape()[2]
+            override = self._get_capture_size_override()
+            if override:
+                region_w, region_h = override
             left = int((self.screen_width - region_w) // 2 + offset_x)
             top = int((self.screen_height - region_h) // 2 + offset_y)
             left = max(0, min(left, self.screen_width - region_w))

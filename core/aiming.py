@@ -1302,10 +1302,13 @@ class AimingMixin:
 
     def trigger(self):
         self.time_begin_period(1)
-        input_shape_weight = self.engine.get_input_shape()[3]
-        input_shape_height = self.engine.get_input_shape()[2]
-        identify_rect_left = self.screen_center_x - input_shape_weight / 2
-        identify_rect_top = self.screen_center_y - input_shape_height / 2
+        identify_rect_left = getattr(self, "identify_rect_left", None)
+        identify_rect_top = getattr(self, "identify_rect_top", None)
+        if identify_rect_left is None or identify_rect_top is None:
+            input_shape_weight = self.engine.get_input_shape()[3]
+            input_shape_height = self.engine.get_input_shape()[2]
+            identify_rect_left = self.screen_center_x - input_shape_weight / 2
+            identify_rect_top = self.screen_center_y - input_shape_height / 2
         last_check_time = time.perf_counter()
         check_interval = 0.002
         while self.running:

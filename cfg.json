@@ -334,6 +334,7 @@
   "screen_height": 2160,
   "capture_offset_x": 0,
   "capture_offset_y": 0,
+  "capture_size": "auto",
   "aim_controller": "sunone",
   "ui_language": "en",
   "gui_width_scale": 1.4199999570846558,
