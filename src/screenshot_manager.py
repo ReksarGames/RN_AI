@@ -283,6 +283,26 @@ class ScreenshotManager:
         except Exception as e:
             return None
 
+    def _parse_capture_size(self):
+        """Parse manual capture size override (e.g., 320x320). Returns (w, h) or None."""
+        try:
+            value = str(self.config.get("capture_size", "auto")).strip().lower()
+        except Exception:
+            return None
+        if not value or value == "auto":
+            return None
+        value = value.replace(" ", "")
+        parts = value.split("x")
+        if len(parts) != 2:
+            return None
+        if not parts[0].isdigit() or not parts[1].isdigit():
+            return None
+        w = int(parts[0])
+        h = int(parts[1])
+        if w <= 0 or h <= 0:
+            return None
+        return (w, h)
+
     def _start_capture_pipeline(self):
         """启动截图处理管道（仅分离模式）"""
         if not self.enable_parallel_processing:
@@ -508,8 +528,12 @@ class ScreenshotManager:
                 self.bettercam_capture = None
             if self.engine is None:
                 return False
-            width = self.engine.get_input_shape()[3]
-            height = self.engine.get_input_shape()[2]
+            override = self._parse_capture_size()
+            if override:
+                width, height = override
+            else:
+                width = self.engine.get_input_shape()[3]
+                height = self.engine.get_input_shape()[2]
             if width <= 0 or height <= 0:
                 print(f'BetterCam初始化失败: 无效的模型输入尺寸 {width}x{height}')
                 return False
@@ -637,8 +661,12 @@ class ScreenshotManager:
             if region is None and self.engine is not None:
                 region_key = 'default'
                 if region_key not in self._region_cache:
-                    input_shape_weight = self.engine.get_input_shape()[3]
-                    input_shape_height = self.engine.get_input_shape()[2]
+                    override = self._parse_capture_size()
+                    if override:
+                        input_shape_weight, input_shape_height = override
+                    else:
+                        input_shape_weight = self.engine.get_input_shape()[3]
+                        input_shape_height = self.engine.get_input_shape()[2]
                     offset_x = int(self.config.get("capture_offset_x", 0))
                     offset_y = int(self.config.get("capture_offset_y", 0))
                     left = (self.screen_width - input_shape_weight) // 2 + offset_x
@@ -1041,6 +1069,10 @@ class ScreenshotManager:
         elif config_key.startswith('obs_') and self.config.get('is_obs', False):
             need_reinit = True
         elif config_key in ['capture_offset_x', 'capture_offset_y']:
+            self._region_cache = {}
+            if not self.config.get('is_cjk', False) and not self.config.get('is_obs', False):
+                need_reinit = True
+        elif config_key == 'capture_size':
             self._region_cache = {}
             if not self.config.get('is_cjk', False) and not self.config.get('is_obs', False):
                 need_reinit = True

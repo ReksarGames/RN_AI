@@ -108,6 +108,7 @@ TRANSLATIONS = {
         "help_mouse_re": "Recoil compensation using mouse_re trajectory files.",
         "help_capture_source": "Select capture input: Standard (screen), OBS, or Capture Card.",
         "help_capture_offsets": "Offsets shift the capture region from screen center.",
+        "help_capture_size": "Override standard capture size (e.g., 320x320 or 640x640). Auto uses model size.",
         "label_buttons": "Buttons",
         "label_targeting_buttons": "Targeting Buttons",
         "label_triggerbot_buttons": "Triggerbot Buttons",
@@ -182,6 +183,7 @@ TRANSLATIONS = {
         "label_capture_fps": "Capture FPS",
         "label_capture_resolution": "Capture Resolution",
         "label_capture_crop": "Capture Crop Size",
+        "label_capture_size": "Capture Size",
         "label_video_codec": "Video Codec",
         "label_capture_offset_x": "Capture Offset X",
         "label_capture_offset_y": "Capture Offset Y",
@@ -387,6 +389,7 @@ TRANSLATIONS = {
         "help_mouse_re": "Компенсация отдачи с использованием файлов траекторий mouse_re.",
         "help_capture_source": "Выбор источника захвата: Standard (экран), OBS или карта захвата.",
         "help_capture_offsets": "Смещения сдвигают область захвата от центра экрана.",
+        "help_capture_size": "Переопределяет размер стандартного захвата (например, 320x320 или 640x640). Auto использует размер модели.",
         "label_buttons": "Кнопки",
         "label_targeting_buttons": "Кнопки прицеливания",
         "label_triggerbot_buttons": "Кнопки триггербота",
@@ -451,6 +454,7 @@ TRANSLATIONS = {
         "label_capture_fps": "FPS захвата",
         "label_capture_resolution": "Разрешение захвата",
         "label_capture_crop": "Размер обрезки захвата",
+        "label_capture_size": "Размер захвата",
         "label_video_codec": "Видеокодек",
         "label_capture_offset_x": "Смещение захвата X",
         "label_capture_offset_y": "Смещение захвата Y",
@@ -850,6 +854,25 @@ class GuiMixin:
         state = "enabled" if flag else "disabled"
         print(f"Sunone processing {state}")
 
+    def _parse_capture_size(self):
+        try:
+            value = str(self.config.get("capture_size", "auto")).strip().lower()
+        except Exception:
+            return None
+        if not value or value == "auto":
+            return None
+        value = value.replace(" ", "")
+        parts = value.split("x")
+        if len(parts) != 2:
+            return None
+        if not parts[0].isdigit() or not parts[1].isdigit():
+            return None
+        w = int(parts[0])
+        h = int(parts[1])
+        if w <= 0 or h <= 0:
+            return None
+        return (w, h)
+
     def update_capture_status_text(self):
         if not hasattr(self, "capture_status_text") or self.capture_status_text is None:
             return
@@ -870,7 +893,11 @@ class GuiMixin:
             offset_x = int(self.config.get("capture_offset_x", 0))
             offset_y = int(self.config.get("capture_offset_y", 0))
             size_label = ""
-            if hasattr(self, "engine") and self.engine is not None:
+            override = self._parse_capture_size()
+            if override:
+                region_w, region_h = override
+                size_label = f" {region_w}x{region_h}"
+            elif hasattr(self, "engine") and self.engine is not None:
                 try:
                     region_w = self.engine.get_input_shape()[3]
                     region_h = self.engine.get_input_shape()[2]
@@ -896,11 +923,15 @@ class GuiMixin:
     def update_capture_region(self):
         if not hasattr(self, "engine") or self.engine is None:
             return
-        try:
-            region_w = self.engine.get_input_shape()[3]
-            region_h = self.engine.get_input_shape()[2]
-        except Exception:
-            return
+        override = self._parse_capture_size()
+        if override:
+            region_w, region_h = override
+        else:
+            try:
+                region_w = self.engine.get_input_shape()[3]
+                region_h = self.engine.get_input_shape()[2]
+            except Exception:
+                return
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
         left = int((self.screen_width - region_w) // 2 + offset_x)
@@ -1371,6 +1402,20 @@ class GuiMixin:
                                 )
                                 self.add_help_marker(
                                     self.tr("help_capture_offsets"),
+                                    same_line=False,
+                                )
+                            with dpg.group(
+                                horizontal=True, parent=self.standard_capture_group
+                            ):
+                                self.capture_size_input = dpg.add_input_text(
+                                    label=self.tr("label_capture_size"),
+                                    default_value=self.config.get("capture_size", "auto"),
+                                    callback=self.on_capture_size_change,
+                                    width=self.scaled_width_medium,
+                                    hint="auto/320x320/640x640",
+                                )
+                                self.add_help_marker(
+                                    self.tr("help_capture_size"),
                                     same_line=False,
                                 )
                             self.obs_settings_group = dpg.add_group()
@@ -2947,6 +2992,27 @@ class GuiMixin:
             self.screenshot_manager.update_config("capture_offset_y", int(app_data))
         self.update_capture_region()
         self.update_capture_status_text()
+
+    def on_capture_size_change(self, sender, app_data):
+        value = str(app_data).strip().lower()
+        normalized = "auto"
+        if value and value != "auto":
+            value = value.replace(" ", "")
+            parts = value.split("x")
+            if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
+                normalized = f"{int(parts[0])}x{int(parts[1])}"
+            else:
+                try:
+                    dpg.set_value(sender, self.config.get("capture_size", "auto"))
+                except Exception:
+                    pass
+                return
+        self.config["capture_size"] = normalized
+        if self.screenshot_manager:
+            self.screenshot_manager.update_config("capture_size", normalized)
+        self.update_capture_region()
+        self.update_capture_status_text()
+        print(f"changed to: {self.config['capture_size']}")
 
     def on_cjk_fourcc_format_change(self, sender, app_data):
         self.config["cjk_fourcc_format"] = app_data
@@ -4539,6 +4605,16 @@ class GuiMixin:
             int,
             lambda: self.screenshot_manager.update_config(
                 "cjk_crop_size", self.config["cjk_crop_size"]
+            )
+            if self.screenshot_manager
+            else None,
+        )
+        screenshot_group.register_item(
+            "capture_size",
+            "capture_size",
+            str,
+            lambda: self.screenshot_manager.update_config(
+                "capture_size", self.config["capture_size"]
             )
             if self.screenshot_manager
             else None,
