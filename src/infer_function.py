@@ -183,6 +183,11 @@ def sunone_decode_yolo10(
     matrix = _prepare_sunone_matrix(output, 6)
     if matrix.size == 0:
         return detections
+    try:
+        max_coord = float(np.max(matrix[:, :4]))
+    except Exception:
+        max_coord = 0.0
+    coord_scale = img_scale if max_coord <= 2.0 else 1.0
     for det in matrix:
         if det.size < 6:
             continue
@@ -194,10 +199,10 @@ def sunone_decode_yolo10(
         cy = float(det[1])
         dx = float(det[2])
         dy = float(det[3])
-        x1 = int(cx * img_scale)
-        y1 = int(cy * img_scale)
-        x2 = int(dx * img_scale)
-        y2 = int(dy * img_scale)
+        x1 = int(cx * coord_scale)
+        y1 = int(cy * coord_scale)
+        x2 = int(dx * coord_scale)
+        y2 = int(dy * coord_scale)
         detections.append(Detection((x1, y1, x2, y2), confidence, class_id))
     return detections
 
@@ -215,6 +220,11 @@ def sunone_decode_yolo11(
     matrix = _prepare_sunone_columns(output, rows_expected)
     if matrix.size == 0 or matrix.shape[0] < rows_expected:
         return detections
+    try:
+        max_coord = float(np.max(matrix[:4, :]))
+    except Exception:
+        max_coord = 0.0
+    coord_scale = img_scale if max_coord <= 2.0 else 1.0
     for i in range(matrix.shape[1]):
         classes_scores = matrix[4 : 4 + num_classes, i]
         if classes_scores.size == 0:
@@ -227,7 +237,7 @@ def sunone_decode_yolo11(
         cy = float(matrix[1, i])
         ow = float(matrix[2, i])
         oh = float(matrix[3, i])
-        box = _build_box(cx, cy, ow, oh, img_scale)
+        box = _build_box(cx, cy, ow, oh, coord_scale)
         detections.append(Detection(box, score, class_id))
     return detections
 
