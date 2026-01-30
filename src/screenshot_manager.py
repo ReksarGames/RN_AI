@@ -531,6 +531,8 @@ class ScreenshotManager:
             override = self._parse_capture_size()
             if override:
                 width, height = override
+            elif self.config.get("dynamic_shape", False):
+                width, height = 640, 640
             else:
                 shape = self.engine.get_input_shape()
                 try:
@@ -668,6 +670,8 @@ class ScreenshotManager:
                     override = self._parse_capture_size()
                     if override:
                         input_shape_weight, input_shape_height = override
+                    elif self.config.get("dynamic_shape", False):
+                        input_shape_weight, input_shape_height = 640, 640
                     else:
                         shape = self.engine.get_input_shape()
                         try:
@@ -786,8 +790,13 @@ class ScreenshotManager:
                         cv2.namedWindow(window_name, cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO | cv2.WINDOW_GUI_EXPANDED)
                         cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
                         if self.engine is not None:
-                            cv2.resizeWindow(window_name, self.engine.get_input_shape()[3],
-                                             self.engine.get_input_shape()[2])
+                            try:
+                                shape = self.engine.get_input_shape()
+                                w = int(shape[3])
+                                h = int(shape[2])
+                                cv2.resizeWindow(window_name, w, h)
+                            except Exception:
+                                pass
                         window_created = True
                     except Exception as e:
                         print(f'创建OpenCV窗口失败: {e}')
@@ -875,7 +884,13 @@ class ScreenshotManager:
                 cv2.namedWindow('screenshot', cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO | cv2.WINDOW_GUI_EXPANDED)
                 cv2.setWindowProperty('screenshot', cv2.WND_PROP_TOPMOST, 1)
                 if self.engine is not None:
-                    cv2.resizeWindow('screenshot', self.engine.get_input_shape()[3], self.engine.get_input_shape()[2])
+                    try:
+                        shape = self.engine.get_input_shape()
+                        w = int(shape[3])
+                        h = int(shape[2])
+                        cv2.resizeWindow('screenshot', w, h)
+                    except Exception:
+                        pass
                 from src.infer_function import draw_boxes, draw_boxes_v8
                 if is_v8:
                     screenshot = draw_boxes_v8(screenshot, boxes, scores, classes)

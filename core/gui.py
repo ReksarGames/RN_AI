@@ -109,6 +109,7 @@ TRANSLATIONS = {
         "help_capture_source": "Select capture input: Standard (screen), OBS, or Capture Card.",
         "help_capture_offsets": "Offsets shift the capture region from screen center.",
         "help_capture_size": "Override standard capture size (e.g., 320x320 or 640x640). Auto uses model size.",
+        "help_dynamic_shape": "Force fixed capture size for dynamic-shape models (use Capture Size).",
         "label_buttons": "Buttons",
         "label_targeting_buttons": "Targeting Buttons",
         "label_triggerbot_buttons": "Triggerbot Buttons",
@@ -184,6 +185,7 @@ TRANSLATIONS = {
         "label_capture_resolution": "Capture Resolution",
         "label_capture_crop": "Capture Crop Size",
         "label_capture_size": "Capture Size",
+        "label_dynamic_shape": "Dynamic Shape",
         "label_video_codec": "Video Codec",
         "label_capture_offset_x": "Capture Offset X",
         "label_capture_offset_y": "Capture Offset Y",
@@ -390,6 +392,7 @@ TRANSLATIONS = {
         "help_capture_source": "Выбор источника захвата: Standard (экран), OBS или карта захвата.",
         "help_capture_offsets": "Смещения сдвигают область захвата от центра экрана.",
         "help_capture_size": "Переопределяет размер стандартного захвата (например, 320x320 или 640x640). Auto использует размер модели.",
+        "help_dynamic_shape": "Принудительно использовать размер захвата для моделей с динамическим входом.",
         "label_buttons": "Кнопки",
         "label_targeting_buttons": "Кнопки прицеливания",
         "label_triggerbot_buttons": "Кнопки триггербота",
@@ -455,6 +458,7 @@ TRANSLATIONS = {
         "label_capture_resolution": "Разрешение захвата",
         "label_capture_crop": "Размер обрезки захвата",
         "label_capture_size": "Размер захвата",
+        "label_dynamic_shape": "Dynamic Shape",
         "label_video_codec": "Видеокодек",
         "label_capture_offset_x": "Смещение захвата X",
         "label_capture_offset_y": "Смещение захвата Y",
@@ -873,6 +877,20 @@ class GuiMixin:
             return None
         return (w, h)
 
+    def _get_engine_input_size(self):
+        override = self._parse_capture_size()
+        if override:
+            return override
+        if self.config.get("dynamic_shape", False):
+            return (640, 640)
+        if hasattr(self, "engine") and self.engine is not None:
+            try:
+                shape = self.engine.get_input_shape()
+                return (int(shape[3]), int(shape[2]))
+            except Exception:
+                pass
+        return (640, 640)
+
     def update_capture_status_text(self):
         if not hasattr(self, "capture_status_text") or self.capture_status_text is None:
             return
@@ -893,17 +911,8 @@ class GuiMixin:
             offset_x = int(self.config.get("capture_offset_x", 0))
             offset_y = int(self.config.get("capture_offset_y", 0))
             size_label = ""
-            override = self._parse_capture_size()
-            if override:
-                region_w, region_h = override
-                size_label = f" {region_w}x{region_h}"
-            elif hasattr(self, "engine") and self.engine is not None:
-                try:
-                    region_w = self.engine.get_input_shape()[3]
-                    region_h = self.engine.get_input_shape()[2]
-                    size_label = f" {region_w}x{region_h}"
-                except Exception:
-                    size_label = ""
+            region_w, region_h = self._get_engine_input_size()
+            size_label = f" {region_w}x{region_h}"
             details = (
                 f"{self.tr('label_capture_bettercam')}{size_label} "
                 f"offset ({offset_x}, {offset_y})"
@@ -923,15 +932,7 @@ class GuiMixin:
     def update_capture_region(self):
         if not hasattr(self, "engine") or self.engine is None:
             return
-        override = self._parse_capture_size()
-        if override:
-            region_w, region_h = override
-        else:
-            try:
-                region_w = self.engine.get_input_shape()[3]
-                region_h = self.engine.get_input_shape()[2]
-            except Exception:
-                return
+        region_w, region_h = self._get_engine_input_size()
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
         left = int((self.screen_width - region_w) // 2 + offset_x)
@@ -1416,6 +1417,18 @@ class GuiMixin:
                                 )
                                 self.add_help_marker(
                                     self.tr("help_capture_size"),
+                                    same_line=False,
+                                )
+                            with dpg.group(
+                                horizontal=True, parent=self.standard_capture_group
+                            ):
+                                self.dynamic_shape_input = dpg.add_checkbox(
+                                    label=self.tr("label_dynamic_shape"),
+                                    default_value=bool(self.config.get("dynamic_shape", False)),
+                                    callback=self.on_dynamic_shape_change,
+                                )
+                                self.add_help_marker(
+                                    self.tr("help_dynamic_shape"),
                                     same_line=False,
                                 )
                             self.obs_settings_group = dpg.add_group()
@@ -3013,6 +3026,13 @@ class GuiMixin:
         self.update_capture_region()
         self.update_capture_status_text()
         print(f"changed to: {self.config['capture_size']}")
+
+    def on_dynamic_shape_change(self, sender, app_data):
+        self.config["dynamic_shape"] = bool(app_data)
+        if self.screenshot_manager:
+            self.screenshot_manager.update_config("dynamic_shape", self.config["dynamic_shape"])
+        self.update_capture_region()
+        self.update_capture_status_text()
 
     def on_cjk_fourcc_format_change(self, sender, app_data):
         self.config["cjk_fourcc_format"] = app_data
@@ -4615,6 +4635,16 @@ class GuiMixin:
             str,
             lambda: self.screenshot_manager.update_config(
                 "capture_size", self.config["capture_size"]
+            )
+            if self.screenshot_manager
+            else None,
+        )
+        screenshot_group.register_item(
+            "dynamic_shape",
+            "dynamic_shape",
+            bool,
+            lambda: self.screenshot_manager.update_config(
+                "dynamic_shape", self.config["dynamic_shape"]
             )
             if self.screenshot_manager
             else None,

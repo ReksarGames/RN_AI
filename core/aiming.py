@@ -14,22 +14,6 @@ from src.infer_function import nms, nms_v8, read_img, sunone_postprocess
 class AimingMixin:
     """Mixin class for aiming, targeting, mouse control and trigger system."""
 
-    @staticmethod
-    def _is_yolo10_output(pred):
-        try:
-            arr = np.asarray(pred)
-        except Exception:
-            return False
-        if arr.size == 0:
-            return False
-        if arr.ndim == 3:
-            arr = np.squeeze(arr)
-        if arr.ndim == 2:
-            return arr.shape[1] == 6 or arr.shape[0] == 6
-        if arr.ndim == 1:
-            return arr.size % 6 == 0
-        return False
-
     def _clear_target_lock(self):
         self._target_lock_active = False
         self._target_lock_id = None
@@ -670,8 +654,38 @@ class AimingMixin:
                 is_v8_like = self.config["groups"][self.group].get("is_v8", False)
         if not isinstance(class_num, int):
             class_num = int(class_num) if class_num else 0
-        input_shape_weight = self.engine.get_input_shape()[3]
-        input_shape_height = self.engine.get_input_shape()[2]
+        def _parse_capture_size(value):
+            try:
+                text = str(value).strip().lower()
+            except Exception:
+                return None
+            if not text or text == "auto":
+                return None
+            text = text.replace(" ", "")
+            parts = text.split("x")
+            if len(parts) != 2 or not parts[0].isdigit() or not parts[1].isdigit():
+                return None
+            w = int(parts[0])
+            h = int(parts[1])
+            if w <= 0 or h <= 0:
+                return None
+            return (w, h)
+
+        override = _parse_capture_size(self.config.get("capture_size", "auto"))
+        if self.config.get("dynamic_shape", False):
+            if override:
+                input_shape_weight, input_shape_height = override
+            else:
+                input_shape_weight, input_shape_height = 640, 640
+        else:
+            shape = self.engine.get_input_shape()
+            try:
+                input_shape_weight = int(shape[3])
+                input_shape_height = int(shape[2])
+            except Exception:
+                input_shape_weight, input_shape_height = 640, 640
+            if override:
+                input_shape_weight, input_shape_height = override
         print("Model input size:", input_shape_weight, input_shape_height)
         frame_count = 0
         start_time = time.perf_counter()
@@ -799,7 +813,7 @@ class AimingMixin:
                     pred,
                     confidence_threshold,
                     iou_t,
-                    max(input_shape_weight, input_shape_height),
+                    1.0,
                     self.engine.get_class_num(),
                     self.config["small_target_enhancement"]["adaptive_nms"],
                     self.config.get("sunone_max_detections", 0),
@@ -810,31 +824,19 @@ class AimingMixin:
             else:
                 engine_nms_handled = False
                 if yolo_version == "yolo10":
-                    if self._is_yolo10_output(pred):
-                        boxes, scores, classes = sunone_postprocess(
-                            pred,
-                            confidence_threshold,
-                            iou_t,
-                            max(input_shape_weight, input_shape_height),
-                            self.engine.get_class_num(),
-                            self.config["small_target_enhancement"]["adaptive_nms"],
-                            self.config.get("sunone_max_detections", 0),
-                            variant="yolo10",
-                        )
-                        is_v8_like = True
-                        nms_algo = "v8"
-                        engine_nms_handled = True
-                    else:
-                        adaptive_nms_enabled = (
-                            self.config["small_target_enhancement"]["enabled"]
-                            and self.config["small_target_enhancement"]["adaptive_nms"]
-                        )
-                        boxes, scores, classes = nms_v8(
-                            pred, confidence_threshold, iou_t, adaptive_nms_enabled
-                        )
-                        is_v8_like = True
-                        nms_algo = "v8"
-                        engine_nms_handled = True
+                    boxes, scores, classes = sunone_postprocess(
+                        pred,
+                        confidence_threshold,
+                        iou_t,
+                        1.0,
+                        self.engine.get_class_num(),
+                        self.config["small_target_enhancement"]["adaptive_nms"],
+                        self.config.get("sunone_max_detections", 0),
+                        variant="yolo10",
+                    )
+                    is_v8_like = True
+                    nms_algo = "v8"
+                    engine_nms_handled = True
                 else:
                     nms_algo = yolo_format
                     if nms_algo == "auto":

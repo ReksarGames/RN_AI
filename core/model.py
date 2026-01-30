@@ -617,14 +617,20 @@ class ModelMixin:
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
         region_shape = self.engine.get_input_shape()
-        try:
-            region_w = int(region_shape[3])
-            region_h = int(region_shape[2])
-        except Exception:
-            region_w, region_h = 640, 640
         override = self._get_capture_size_override()
-        if override:
-            region_w, region_h = override
+        if self.config.get("dynamic_shape", False):
+            if override:
+                region_w, region_h = override
+            else:
+                region_w, region_h = 640, 640
+        else:
+            try:
+                region_w = int(region_shape[3])
+                region_h = int(region_shape[2])
+            except Exception:
+                region_w, region_h = 640, 640
+            if override:
+                region_w, region_h = override
         left = int((self.screen_width - region_w) // 2 + offset_x)
         top = int((self.screen_height - region_h) // 2 + offset_y)
         left = max(0, min(left, self.screen_width - region_w))

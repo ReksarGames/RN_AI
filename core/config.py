@@ -84,6 +84,8 @@ class ConfigMixin:
             config["capture_offset_y"] = 0
         if "capture_size" not in config:
             config["capture_size"] = "auto"
+        if "dynamic_shape" not in config:
+            config["dynamic_shape"] = False
         if "aim_controller" not in config:
             config["aim_controller"] = "pid"
         if "ui_language" not in config:
@@ -569,6 +571,7 @@ class ConfigMixin:
             "capture_offset_x": 0,
             "capture_offset_y": 0,
             "capture_size": "auto",
+            "dynamic_shape": False,
             "aim_controller": "pid",
             "ui_language": "en",
             "gui_width_scale": 1.0,
