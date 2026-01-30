@@ -542,7 +542,7 @@ class ScreenshotManager:
                 except Exception:
                     if not dynamic_shape:
                         self.config["dynamic_shape"] = True
-                        print("[Auto] Dynamic Shape enabled due to invalid input shape.")
+                        print("[Auto] Enabled capture-size fallback due to invalid input shape.")
                     width, height = 640, 640
             if width <= 0 or height <= 0:
                 print(f'BetterCam初始化失败: 无效的模型输入尺寸 {width}x{height}')
@@ -685,7 +685,7 @@ class ScreenshotManager:
                         except Exception:
                             if not dynamic_shape:
                                 self.config["dynamic_shape"] = True
-                                print("[Auto] Dynamic Shape enabled due to invalid input shape.")
+                                print("[Auto] Enabled capture-size fallback due to invalid input shape.")
                             input_shape_weight, input_shape_height = 640, 640
                     offset_x = int(self.config.get("capture_offset_x", 0))
                     offset_y = int(self.config.get("capture_offset_y", 0))
