@@ -109,7 +109,6 @@ TRANSLATIONS = {
         "help_capture_source": "Select capture input: Standard (screen), OBS, or Capture Card.",
         "help_capture_offsets": "Offsets shift the capture region from screen center.",
         "help_capture_size": "Override standard capture size (e.g., 320x320 or 640x640). Auto uses model size.",
-        "help_dynamic_shape": "Force fixed capture size for dynamic-shape models (use Capture Size).",
         "label_buttons": "Buttons",
         "label_targeting_buttons": "Targeting Buttons",
         "label_triggerbot_buttons": "Triggerbot Buttons",
@@ -185,7 +184,6 @@ TRANSLATIONS = {
         "label_capture_resolution": "Capture Resolution",
         "label_capture_crop": "Capture Crop Size",
         "label_capture_size": "Capture Size",
-        "label_dynamic_shape": "Dynamic Shape",
         "label_video_codec": "Video Codec",
         "label_capture_offset_x": "Capture Offset X",
         "label_capture_offset_y": "Capture Offset Y",
@@ -392,7 +390,6 @@ TRANSLATIONS = {
         "help_capture_source": "Выбор источника захвата: Standard (экран), OBS или карта захвата.",
         "help_capture_offsets": "Смещения сдвигают область захвата от центра экрана.",
         "help_capture_size": "Переопределяет размер стандартного захвата (например, 320x320 или 640x640). Auto использует размер модели.",
-        "help_dynamic_shape": "Принудительно использовать размер захвата для моделей с динамическим входом.",
         "label_buttons": "Кнопки",
         "label_targeting_buttons": "Кнопки прицеливания",
         "label_triggerbot_buttons": "Кнопки триггербота",
@@ -458,7 +455,6 @@ TRANSLATIONS = {
         "label_capture_resolution": "Разрешение захвата",
         "label_capture_crop": "Размер обрезки захвата",
         "label_capture_size": "Размер захвата",
-        "label_dynamic_shape": "Dynamic Shape",
         "label_video_codec": "Видеокодек",
         "label_capture_offset_x": "Смещение захвата X",
         "label_capture_offset_y": "Смещение захвата Y",
@@ -1417,18 +1413,6 @@ class GuiMixin:
                                 )
                                 self.add_help_marker(
                                     self.tr("help_capture_size"),
-                                    same_line=False,
-                                )
-                            with dpg.group(
-                                horizontal=True, parent=self.standard_capture_group
-                            ):
-                                self.dynamic_shape_input = dpg.add_checkbox(
-                                    label=self.tr("label_dynamic_shape"),
-                                    default_value=bool(self.config.get("dynamic_shape", False)),
-                                    callback=self.on_dynamic_shape_change,
-                                )
-                                self.add_help_marker(
-                                    self.tr("help_dynamic_shape"),
                                     same_line=False,
                                 )
                             self.obs_settings_group = dpg.add_group()
@@ -3026,13 +3010,6 @@ class GuiMixin:
         self.update_capture_region()
         self.update_capture_status_text()
         print(f"changed to: {self.config['capture_size']}")
-
-    def on_dynamic_shape_change(self, sender, app_data):
-        self.config["dynamic_shape"] = bool(app_data)
-        if self.screenshot_manager:
-            self.screenshot_manager.update_config("dynamic_shape", self.config["dynamic_shape"])
-        self.update_capture_region()
-        self.update_capture_status_text()
 
     def on_cjk_fourcc_format_change(self, sender, app_data):
         self.config["cjk_fourcc_format"] = app_data
@@ -4635,16 +4612,6 @@ class GuiMixin:
             str,
             lambda: self.screenshot_manager.update_config(
                 "capture_size", self.config["capture_size"]
-            )
-            if self.screenshot_manager
-            else None,
-        )
-        screenshot_group.register_item(
-            "dynamic_shape",
-            "dynamic_shape",
-            bool,
-            lambda: self.screenshot_manager.update_config(
-                "dynamic_shape", self.config["dynamic_shape"]
             )
             if self.screenshot_manager
             else None,
