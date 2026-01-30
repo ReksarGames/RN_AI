@@ -532,8 +532,12 @@ class ScreenshotManager:
             if override:
                 width, height = override
             else:
-                width = self.engine.get_input_shape()[3]
-                height = self.engine.get_input_shape()[2]
+                shape = self.engine.get_input_shape()
+                try:
+                    width = int(shape[3])
+                    height = int(shape[2])
+                except Exception:
+                    width, height = 640, 640
             if width <= 0 or height <= 0:
                 print(f'BetterCam初始化失败: 无效的模型输入尺寸 {width}x{height}')
                 return False
@@ -665,8 +669,12 @@ class ScreenshotManager:
                     if override:
                         input_shape_weight, input_shape_height = override
                     else:
-                        input_shape_weight = self.engine.get_input_shape()[3]
-                        input_shape_height = self.engine.get_input_shape()[2]
+                        shape = self.engine.get_input_shape()
+                        try:
+                            input_shape_weight = int(shape[3])
+                            input_shape_height = int(shape[2])
+                        except Exception:
+                            input_shape_weight, input_shape_height = 640, 640
                     offset_x = int(self.config.get("capture_offset_x", 0))
                     offset_y = int(self.config.get("capture_offset_y", 0))
                     left = (self.screen_width - input_shape_weight) // 2 + offset_x

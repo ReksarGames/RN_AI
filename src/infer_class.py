@@ -246,7 +246,10 @@ class OnnxRuntimeDmlEngine:
             self._initialize_session()
         outputs_meta = self._session.get_outputs()
         output_shapes = outputs_meta[0].shape
-        return output_shapes[2] - 5
+        try:
+            return int(output_shapes[2]) - 5
+        except Exception:
+            return 0
 
     def get_class_num_v8(self) -> int:
         """获取类别数量(YOLOv8格式)"""
@@ -254,7 +257,10 @@ class OnnxRuntimeDmlEngine:
             self._initialize_session()
         outputs_meta = self._session.get_outputs()
         output_shapes = outputs_meta[0].shape
-        return output_shapes[1] - 4
+        try:
+            return int(output_shapes[1]) - 4
+        except Exception:
+            return 0
 
     def get_performance_info(self) -> dict:
         """获取性能信息"""
