@@ -631,7 +631,7 @@ class ModelMixin:
             except Exception:
                 if not dynamic_shape:
                     self.config["dynamic_shape"] = True
-                    print("[Auto] Dynamic Shape enabled due to invalid input shape.")
+                    print("[Auto] Enabled capture-size fallback due to invalid input shape.")
                 region_w, region_h = 640, 640
             if override:
                 region_w, region_h = override
