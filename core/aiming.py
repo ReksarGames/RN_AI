@@ -14,6 +14,22 @@ from src.infer_function import nms, nms_v8, read_img, sunone_postprocess
 class AimingMixin:
     """Mixin class for aiming, targeting, mouse control and trigger system."""
 
+    @staticmethod
+    def _is_yolo10_output(pred):
+        try:
+            arr = np.asarray(pred)
+        except Exception:
+            return False
+        if arr.size == 0:
+            return False
+        if arr.ndim == 3:
+            arr = np.squeeze(arr)
+        if arr.ndim == 2:
+            return arr.shape[1] == 6 or arr.shape[0] == 6
+        if arr.ndim == 1:
+            return arr.size % 6 == 0
+        return False
+
     def _clear_target_lock(self):
         self._target_lock_active = False
         self._target_lock_id = None
@@ -794,19 +810,31 @@ class AimingMixin:
             else:
                 engine_nms_handled = False
                 if yolo_version == "yolo10":
-                    boxes, scores, classes = sunone_postprocess(
-                        pred,
-                        confidence_threshold,
-                        iou_t,
-                        1.0,
-                        self.engine.get_class_num(),
-                        self.config["small_target_enhancement"]["adaptive_nms"],
-                        self.config.get("sunone_max_detections", 0),
-                        variant="yolo10",
-                    )
-                    is_v8_like = True
-                    nms_algo = "v8"
-                    engine_nms_handled = True
+                    if self._is_yolo10_output(pred):
+                        boxes, scores, classes = sunone_postprocess(
+                            pred,
+                            confidence_threshold,
+                            iou_t,
+                            1.0,
+                            self.engine.get_class_num(),
+                            self.config["small_target_enhancement"]["adaptive_nms"],
+                            self.config.get("sunone_max_detections", 0),
+                            variant="yolo10",
+                        )
+                        is_v8_like = True
+                        nms_algo = "v8"
+                        engine_nms_handled = True
+                    else:
+                        adaptive_nms_enabled = (
+                            self.config["small_target_enhancement"]["enabled"]
+                            and self.config["small_target_enhancement"]["adaptive_nms"]
+                        )
+                        boxes, scores, classes = nms_v8(
+                            pred, confidence_threshold, iou_t, adaptive_nms_enabled
+                        )
+                        is_v8_like = True
+                        nms_algo = "v8"
+                        engine_nms_handled = True
                 else:
                     nms_algo = yolo_format
                     if nms_algo == "auto":
