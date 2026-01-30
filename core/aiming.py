@@ -692,6 +692,7 @@ class AimingMixin:
                 input_shape_weight, input_shape_height = override
         print("Model input size:", input_shape_weight, input_shape_height)
         frame_count = 0
+        printed_model_debug = False
         start_time = time.perf_counter()
         last_fps_update_time = time.perf_counter()
         fps_text = "FPS: 0.00"
@@ -809,6 +810,20 @@ class AimingMixin:
             t3 = time.perf_counter()
             group_config = self.config["groups"][self.group]
             use_sunone_processing = group_config.get("use_sunone_processing", False)
+            if infer_debug and not printed_model_debug:
+                try:
+                    output_shape = getattr(pred, "shape", None)
+                except Exception:
+                    output_shape = None
+                active_filter = sorted(class_aim_positions.keys())
+                print(
+                    "[DEBUG] class_num="
+                    f"{class_num}, output_shape={output_shape}, "
+                    f"yolo_format={yolo_format}, yolo_version={yolo_version}, "
+                    f"use_sunone_processing={use_sunone_processing}, "
+                    f"active_class_filter={active_filter}"
+                )
+                printed_model_debug = True
             if use_sunone_processing:
                 sunone_variant = group_config.get(
                     "yolo_version", group_config.get("sunone_model_variant", "yolo11")
