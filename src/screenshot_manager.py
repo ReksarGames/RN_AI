@@ -529,9 +529,10 @@ class ScreenshotManager:
             if self.engine is None:
                 return False
             override = self._parse_capture_size()
+            dynamic_shape = bool(self.config.get("dynamic_shape", False))
             if override:
                 width, height = override
-            elif self.config.get("dynamic_shape", False):
+            elif dynamic_shape:
                 width, height = 640, 640
             else:
                 shape = self.engine.get_input_shape()
@@ -539,6 +540,9 @@ class ScreenshotManager:
                     width = int(shape[3])
                     height = int(shape[2])
                 except Exception:
+                    if not dynamic_shape:
+                        self.config["dynamic_shape"] = True
+                        print("[Auto] Dynamic Shape enabled due to invalid input shape.")
                     width, height = 640, 640
             if width <= 0 or height <= 0:
                 print(f'BetterCam初始化失败: 无效的模型输入尺寸 {width}x{height}')
@@ -668,9 +672,10 @@ class ScreenshotManager:
                 region_key = 'default'
                 if region_key not in self._region_cache:
                     override = self._parse_capture_size()
+                    dynamic_shape = bool(self.config.get("dynamic_shape", False))
                     if override:
                         input_shape_weight, input_shape_height = override
-                    elif self.config.get("dynamic_shape", False):
+                    elif dynamic_shape:
                         input_shape_weight, input_shape_height = 640, 640
                     else:
                         shape = self.engine.get_input_shape()
@@ -678,6 +683,9 @@ class ScreenshotManager:
                             input_shape_weight = int(shape[3])
                             input_shape_height = int(shape[2])
                         except Exception:
+                            if not dynamic_shape:
+                                self.config["dynamic_shape"] = True
+                                print("[Auto] Dynamic Shape enabled due to invalid input shape.")
                             input_shape_weight, input_shape_height = 640, 640
                     offset_x = int(self.config.get("capture_offset_x", 0))
                     offset_y = int(self.config.get("capture_offset_y", 0))

@@ -672,7 +672,8 @@ class AimingMixin:
             return (w, h)
 
         override = _parse_capture_size(self.config.get("capture_size", "auto"))
-        if self.config.get("dynamic_shape", False):
+        dynamic_shape = bool(self.config.get("dynamic_shape", False))
+        if dynamic_shape:
             if override:
                 input_shape_weight, input_shape_height = override
             else:
@@ -683,6 +684,9 @@ class AimingMixin:
                 input_shape_weight = int(shape[3])
                 input_shape_height = int(shape[2])
             except Exception:
+                if not dynamic_shape:
+                    self.config["dynamic_shape"] = True
+                    print("[Auto] Dynamic Shape enabled due to invalid input shape.")
                 input_shape_weight, input_shape_height = 640, 640
             if override:
                 input_shape_weight, input_shape_height = override

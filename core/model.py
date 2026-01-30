@@ -618,7 +618,8 @@ class ModelMixin:
         offset_y = int(self.config.get("capture_offset_y", 0))
         region_shape = self.engine.get_input_shape()
         override = self._get_capture_size_override()
-        if self.config.get("dynamic_shape", False):
+        dynamic_shape = bool(self.config.get("dynamic_shape", False))
+        if dynamic_shape:
             if override:
                 region_w, region_h = override
             else:
@@ -628,6 +629,9 @@ class ModelMixin:
                 region_w = int(region_shape[3])
                 region_h = int(region_shape[2])
             except Exception:
+                if not dynamic_shape:
+                    self.config["dynamic_shape"] = True
+                    print("[Auto] Dynamic Shape enabled due to invalid input shape.")
                 region_w, region_h = 640, 640
             if override:
                 region_w, region_h = override
