@@ -542,7 +542,7 @@ class TensorRTInferenceEngine:
         img_float = self._preprocess_input.float().div_(255.0)
 
         # BGR -> RGB using flip (CUDA Graph compatible)
-        img_rgb = img_float[..., [2, 1, 0]]
+        img_rgb = torch.flip(img_float, dims=[-1])
 
         # HWC -> CHW -> NCHW
         img_chw = img_rgb.permute(2, 0, 1).unsqueeze(0)
