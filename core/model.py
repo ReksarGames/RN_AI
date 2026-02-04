@@ -222,6 +222,11 @@ class ModelMixin:
                     self.target_lock_distance_input,
                     int(key_cfg.get("target_lock_distance", 100)),
                 )
+            if getattr(self, "target_lock_fallback_class_input", None) is not None:
+                dpg.set_value(
+                    self.target_lock_fallback_class_input,
+                    int(key_cfg.get("target_lock_fallback_class", -1)),
+                )
             if getattr(self, "target_lock_reacquire_time_input", None) is not None:
                 dpg.set_value(
                     self.target_lock_reacquire_time_input,

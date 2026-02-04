@@ -121,6 +121,7 @@ TRANSLATIONS = {
         "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "How long (s) to keep lock after target disappears; 0 = instant switch.",
+        "help_target_lock_fallback_class": "Fallback class id to use when locked class disappears (-1 disables).",
         "help_aim_weights": "Weights for target selection: distance, center, and size influence priority. Tie-break applies weights only when targets are within the chosen % of the closest target.",
         "help_aim_weight_tiebreak": "Apply aim weights only when targets are within this % of the closest target distance. 0 disables.",
         "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
@@ -264,6 +265,7 @@ TRANSLATIONS = {
         "label_recover_duration": "Recover Duration",
         "label_target_lock_distance": "Lock Distance",
         "label_target_lock_reacquire_time": "Reacquire Time (s)",
+        "label_target_lock_fallback_class": "Fallback Class",
         "label_pid_params": "PID Controller Parameters",
         "label_pid_x_p": "X Proportional",
         "label_pid_x_i": "X Integral",
@@ -402,6 +404,7 @@ TRANSLATIONS = {
         "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "Сколько секунд удерживать фиксацию после пропажи цели; 0 = мгновенное переключение.",
+        "help_target_lock_fallback_class": "Класс для подхвата при пропаже основной цели (-1 выключает).",
         "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет. Tie-break применяет веса только когда цели в пределах выбранного % от ближайшей.",
         "help_aim_weight_tiebreak": "Использовать веса только когда цели в пределах этого % от ближайшей цели. 0 = выкл.",
         "help_speed_curve": "Кривая скорости определяет скорость движения прицела в зависимости от расстояния до цели.",
@@ -535,6 +538,7 @@ TRANSLATIONS = {
         "label_recover_duration": "Длительность восстановления",
         "label_target_lock_distance": "Дистанция фиксации",
         "label_target_lock_reacquire_time": "Время удержания (с)",
+        "label_target_lock_fallback_class": "Класс подхвата",
         "label_pid_params": "Параметры PID-контроллера",
         "label_pid_x_p": "Пропорциональный X",
         "label_pid_x_i": "Интегральный X",
@@ -2376,6 +2380,17 @@ class GuiMixin:
             self.attach_tooltip(
                 self.target_lock_distance_input, self.tr("help_target_lock_distance")
             )
+            self.target_lock_fallback_class_input = dpg.add_input_int(
+                label=self.tr("label_target_lock_fallback_class"),
+                min_value=-1,
+                max_value=999,
+                callback=self.on_target_lock_fallback_class_change,
+                width=self.scaled_width_normal,
+            )
+            self.attach_tooltip(
+                self.target_lock_fallback_class_input,
+                self.tr("help_target_lock_fallback_class"),
+            )
             self.target_lock_reacquire_time_input = dpg.add_input_float(
                 label=self.tr("label_target_lock_reacquire_time"),
                 min_value=0.0,
@@ -3842,6 +3857,14 @@ class GuiMixin:
             v = 100
         key_cfg["target_lock_distance"] = max(1, v)
 
+    def on_target_lock_fallback_class_change(self, sender, app_data):
+        key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+        try:
+            v = int(app_data)
+        except Exception:
+            v = -1
+        key_cfg["target_lock_fallback_class"] = v
+
     def on_target_lock_reacquire_time_change(self, sender, app_data):
         key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
         try:
@@ -4775,6 +4798,9 @@ class GuiMixin:
         )
         aim_key_group.register_item(
             "target_lock_distance", "target_lock_distance", int
+        )
+        aim_key_group.register_item(
+            "target_lock_fallback_class", "target_lock_fallback_class", int
         )
         aim_key_group.register_item(
             "target_lock_reacquire_time", "target_lock_reacquire_time", float
