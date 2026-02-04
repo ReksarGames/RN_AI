@@ -150,6 +150,21 @@ def collect_system_info() -> Dict[str, object]:
     except Exception:
         info["onnx_gpu_available"] = None
         info["onnx_dml_available"] = None
+    info["status_cuda"] = (
+        "OK" if info.get("cuda_in_path") else "Not detected (may need restart)"
+    )
+    info["status_pytorch_cuda"] = (
+        "OK" if info.get("cuda_available") else "Not working"
+    )
+    info["status_tensorrt"] = (
+        "OK" if info.get("tensorrt_installed") else "Not installed"
+    )
+    info["status_onnx_gpu"] = (
+        "OK" if info.get("onnx_gpu_available") else "Not detected"
+    )
+    info["status_onnx_dml"] = (
+        "OK" if info.get("onnx_dml_available") else "Not detected"
+    )
     return info
 
 
