@@ -532,6 +532,7 @@ class ConfigMixin:
                 "recover_duration_ms": 300,
             },
             "target_lock_distance": 100,
+            "target_lock_fallback_class": -1,
             "auto_y": False,
             "disable_headshot_removed": False,
         }
@@ -820,6 +821,8 @@ class ConfigMixin:
                         dyn_cfg["recover_duration_ms"] = 300
                 if "target_lock_distance" not in key_config:
                     key_config["target_lock_distance"] = 100
+                if "target_lock_fallback_class" not in key_config:
+                    key_config["target_lock_fallback_class"] = -1
                 if "target_lock_reacquire_time" not in key_config:
                     key_config["target_lock_reacquire_time"] = 0.3
                 if "class_aim_positions" not in key_config:

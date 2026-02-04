@@ -19,6 +19,7 @@ class AimingMixin:
         self._target_lock_id = None
         self._target_lock_center = None
         self._target_lock_lost_time = None
+        self._target_lock_class = None
 
     def _get_lock_distance(self, cfg):
         dyn_cfg = cfg.get("dynamic_scope", {}) or {}
@@ -89,8 +90,14 @@ class AimingMixin:
         self._target_lock_id = lock_id
         self._target_lock_center = center
         self._target_lock_lost_time = None
+        try:
+            self._target_lock_class = int(target.get("class_id"))
+        except Exception:
+            self._target_lock_class = None
 
-    def _apply_target_lock(self, targets, lock_distance, reacquire_time):
+    def _apply_target_lock(
+        self, targets, lock_distance, reacquire_time, reference_class=None, fallback_class=None
+    ):
         if not getattr(self, "_target_lock_active", False):
             return targets, False
         now = time.time()
@@ -113,7 +120,15 @@ class AimingMixin:
             center = self._target_lock_center
             if center:
                 best_dist = float("inf")
+                locked_class = getattr(self, "_target_lock_class", None)
+                restrict_to_fallback = (
+                    fallback_class is not None
+                    and reference_class is not None
+                    and locked_class == reference_class
+                )
                 for idx, target in enumerate(targets):
+                    if restrict_to_fallback and target.get("class_id") != fallback_class:
+                        continue
                     candidate_center = self._get_box_center(target)
                     if candidate_center is None:
                         continue
@@ -227,6 +242,13 @@ class AimingMixin:
             priority_order = parsed
 
         reference_class = self.pressed_key_config.get("target_reference_class", 0)
+        fallback_class = self.pressed_key_config.get("target_lock_fallback_class", -1)
+        try:
+            fallback_class = int(fallback_class)
+        except Exception:
+            fallback_class = -1
+        if fallback_class < 0:
+            fallback_class = None
         aim_scope = self.get_dynamic_aim_scope()
         base_scope = float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
         if base_scope <= 0:
@@ -273,7 +295,7 @@ class AimingMixin:
             return min(near, key=_score)
         if lock_enabled:
             targets, lock_blocking = self._apply_target_lock(
-                targets, lock_distance, lock_reacquire_time
+                targets, lock_distance, lock_reacquire_time, reference_class, fallback_class
             )
             if lock_blocking:
                 return None
