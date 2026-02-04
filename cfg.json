@@ -9,7 +9,7 @@
       "yolo_format": "auto",
       "sunone_model_variant": "yolo10",
       "yolo_version": "yolo10",
-      "use_sunone_processing": true,
+      "use_sunone_processing": false,
       "right_down": false,
       "long_press_duration": 350,
       "aim_keys": {
@@ -49,8 +49,7 @@
             "continuous": false
           },
           "classes": [
-            0,
-            7
+            0
           ],
           "class_priority_order": [],
           "class_aim_positions": {
@@ -146,7 +145,7 @@
           },
           "trigger_only": true,
           "auto_y": false,
-          "disable_headshot_removed": false,
+          "disable_headshot_removed": true,
           "target_lock_distance": 80,
           "target_lock_reacquire_time": 7.450580596923828e-09
         },
@@ -300,7 +299,7 @@
           "target_lock_reacquire_time": 0.3
         }
       },
-      "disable_headshot": false,
+      "disable_headshot": true,
       "disable_headshot_keys": [
         "m"
       ],
@@ -325,13 +324,14 @@
   ],
   "class_names_file": "",
   "infer_debug": true,
+  "run_log_enabled": true,
   "print_fps": true,
   "show_motion_speed": true,
   "show_infer_time": true,
   "show_fov": true,
   "move_method": "makcu",
-  "screen_width": 3840,
-  "screen_height": 2160,
+  "screen_width": 1920,
+  "screen_height": 1080,
   "capture_offset_x": 0,
   "capture_offset_y": 0,
   "capture_size": "auto",
@@ -465,5 +465,7 @@
       "show_future": true
     }
   },
-  "aim_weight_tiebreak_ratio": 0.0
+  "aim_weight_tiebreak_ratio": 0.0,
+  "dynamic_shape": false,
+  "run_log_enabled": true
 }

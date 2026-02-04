@@ -9,7 +9,7 @@ from makcu import create_controller
 
 from src.infer_class import OnnxRuntimeDmlEngine
 
-from .utils import TENSORRT_AVAILABLE
+from .utils import TENSORRT_AVAILABLE, log_model_info
 
 try:
     from src.inference_engine import TensorRTInferenceEngine
@@ -243,11 +243,6 @@ class ModelMixin:
         if hasattr(self, "yolo_format_combo") and self.yolo_format_combo is not None:
             yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
             dpg.set_value(self.yolo_format_combo, self.get_yolo_format_label(yolo_format))
-        if hasattr(self, "use_sunone_processing_checkbox"):
-            dpg.set_value(
-                self.use_sunone_processing_checkbox,
-                self.config["groups"][self.group].get("use_sunone_processing", False),
-            )
         dpg.set_value(
             self.right_down_checkbox, self.config["groups"][self.group]["right_down"]
         )
@@ -647,6 +642,43 @@ class ModelMixin:
         self.identify_rect_left = left
         self.identify_rect_top = top
         self.refresh_class_names()
+        try:
+            output_shape = None
+            providers = None
+            if hasattr(self.engine, "_session") and self.engine._session is not None:
+                outputs_meta = self.engine._session.get_outputs()
+                output_shape = [out.shape for out in outputs_meta]
+            elif hasattr(self.engine, "session") and self.engine.session is not None:
+                outputs_meta = self.engine.session.get_outputs()
+                output_shape = [out.shape for out in outputs_meta]
+            if hasattr(self.engine, "_providers"):
+                providers = self.engine._providers
+            engine_type = type(self.engine).__name__
+            yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
+            yolo_version = self.config["groups"][self.group].get(
+                "yolo_version",
+                self.config["groups"][self.group].get("sunone_model_variant", "yolo11"),
+            )
+            extra = {
+                "capture_size_override": self.config.get("capture_size", "auto"),
+                "dynamic_shape": bool(self.config.get("dynamic_shape", False)),
+                "screen": f"{self.screen_width}x{self.screen_height}",
+            }
+            log_model_info(
+                model_path=model_path,
+                group=self.group,
+                is_trt=is_trt,
+                yolo_format=yolo_format,
+                yolo_version=yolo_version,
+                input_shape=region_shape,
+                output_shape=output_shape,
+                providers=providers,
+                engine_type=engine_type,
+                extra=extra,
+                enabled=bool(self.config.get("run_log_enabled", False)),
+            )
+        except Exception:
+            pass
         if (
             TensorRTInferenceEngine is not None
             and isinstance(self.engine, TensorRTInferenceEngine)
