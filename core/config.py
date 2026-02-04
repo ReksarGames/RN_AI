@@ -98,6 +98,12 @@ class ConfigMixin:
             config["gui_dpi_scale"] = 0.0
         if "show_motion_speed" not in config:
             config["show_motion_speed"] = False
+        if "infer_debug" not in config:
+            config["infer_debug"] = False
+        if "print_fps" not in config:
+            config["print_fps"] = False
+        if "run_log_enabled" not in config:
+            config["run_log_enabled"] = False
         if "show_infer_time" not in config:
             config["show_infer_time"] = False
         if "show_fov" not in config:
@@ -562,6 +568,7 @@ class ConfigMixin:
             "class_names": class_names,
             "class_names_file": "",
             "infer_debug": False,
+            "run_log_enabled": False,
             "print_fps": False,
             "show_motion_speed": False,
             "show_infer_time": False,

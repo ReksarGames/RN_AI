@@ -13,7 +13,13 @@ from makcu import MouseButton
 
 from src.gui_handlers import ConfigItemGroup
 
-from .utils import TENSORRT_AVAILABLE, UPDATE_TIME, VERSION, create_gradient_image
+from .utils import (
+    TENSORRT_AVAILABLE,
+    UPDATE_TIME,
+    VERSION,
+    create_gradient_image,
+    log_run_event,
+)
 
 class DemoKalman1D:
     def __init__(self, process_noise, measurement_noise):
@@ -192,6 +198,7 @@ TRANSLATIONS = {
         "label_auto_detect": "Auto Detect",
         "label_infer_window": "Inference Window",
         "label_print_fps": "Print FPS",
+        "label_run_log": "Enable Run Log",
         "label_show_motion_speed": "Show Motion Speed",
         "label_show_curve": "Show Curve",
         "label_show_infer_time": "Show Infer Time",
@@ -465,6 +472,7 @@ TRANSLATIONS = {
         "label_auto_detect": "Автоопределение",
         "label_infer_window": "Окно инференса",
         "label_print_fps": "Показывать FPS",
+        "label_run_log": "Лог запусков",
         "label_show_motion_speed": "Показывать скорость движения",
         "label_show_curve": "Показывать кривую",
         "label_show_infer_time": "Показывать время инференса",
@@ -1205,6 +1213,11 @@ class GuiMixin:
                                 )
                             with dpg.group(horizontal=True):
                                 dpg.add_checkbox(
+                                    label=self.tr("label_run_log"),
+                                    default_value=self.config.get("run_log_enabled", False),
+                                    callback=self.on_run_log_change,
+                                )
+                                dpg.add_checkbox(
                                     label=self.tr("label_show_curve"),
                                     default_value=self.config["is_show_curve"],
                                     callback=self.on_is_show_curve_change,
@@ -1854,14 +1867,6 @@ class GuiMixin:
                                 self.is_trt_checkbox = dpg.add_checkbox(
                                     label=self.tr("label_trt"),
                                     callback=self.on_is_trt_change,
-                                )
-                                self.use_sunone_processing_checkbox = dpg.add_checkbox(
-                                    label=self.tr("label_use_sunone_processing"),
-                                    tag="use_sunone_processing_checkbox",
-                                    default_value=self.config["groups"][self.group].get(
-                                        "use_sunone_processing", False
-                                    ),
-                                    callback=self.on_use_sunone_processing_change,
                                 )
                                 self.sunone_variant_combo = dpg.add_combo(
                                     label=self.tr("label_sunone_variant"),
@@ -2804,29 +2809,68 @@ class GuiMixin:
                 if not os.path.exists(engine_path):
                     print(f"Engine file does not exist: {engine_path}")
                     print("Starting TRT engine conversion...")
-                    dpg.set_value(
-                        "output_text", "Converting TRT engine, please wait..."
-                    )
+                    dpg.set_value("output_text", "Converting TRT engine, please wait...")
+                    convert_start = time.perf_counter()
                     if current_model.endswith(".onnx"):
                         print("Converting TRT engine from ONNX file...")
                         from src.inference_engine import auto_convert_engine
 
-                        if auto_convert_engine(current_model):
+                        success = auto_convert_engine(current_model)
+                        elapsed = time.perf_counter() - convert_start
+                        if success:
                             print(f"TRT engine conversion successful: {engine_path}")
                             self.config["groups"][self.group]["infer_model"] = (
                                 engine_path
                             )
                             dpg.set_value(self.infer_model_input, engine_path)
+                            dpg.set_value(
+                                "output_text",
+                                f"TRT conversion completed in {elapsed:.1f}s",
+                            )
                         else:
                             print(
                                 "TRT engine conversion failed, will use original model"
                             )
                             self.config["groups"][self.group]["is_trt"] = False
                             dpg.set_value(self.is_trt_checkbox, False)
+                            dpg.set_value(
+                                "output_text",
+                                f"TRT conversion failed after {elapsed:.1f}s",
+                            )
+                        if bool(self.config.get("run_log_enabled", False)):
+                            log_run_event(
+                                "Engine conversion",
+                                {
+                                    "model_path": current_model,
+                                    "engine_path": engine_path,
+                                    "success": success,
+                                    "duration_sec": round(elapsed, 2),
+                                },
+                                enabled=True,
+                            )
+                    else:
+                        elapsed = time.perf_counter() - convert_start
+                        dpg.set_value(
+                            "output_text",
+                            "TRT conversion requires ONNX model",
+                        )
+                        if bool(self.config.get("run_log_enabled", False)):
+                            log_run_event(
+                                "Engine conversion",
+                                {
+                                    "model_path": current_model,
+                                    "engine_path": engine_path,
+                                    "success": False,
+                                    "duration_sec": round(elapsed, 2),
+                                    "reason": "model_not_onnx",
+                                },
+                                enabled=True,
+                            )
                 else:
                     print(f"Found existing engine file: {engine_path}")
                     self.config["groups"][self.group]["infer_model"] = engine_path
                     dpg.set_value(self.infer_model_input, engine_path)
+                    dpg.set_value("output_text", "TRT engine found, using cache")
             if self.go():
                 dpg.configure_item(sender, label=self.tr("label_stop"))
             else:
@@ -2900,6 +2944,10 @@ class GuiMixin:
     def on_print_fps_change(self, sender, app_data):
         self.config["print_fps"] = app_data
         print(f"changed to: {self.config['print_fps']}")
+
+    def on_run_log_change(self, sender, app_data):
+        self.config["run_log_enabled"] = app_data
+        print(f"changed to: {self.config['run_log_enabled']}")
 
     def on_show_motion_speed_change(self, sender, app_data):
         self.config["show_motion_speed"] = app_data
@@ -4502,6 +4550,7 @@ class GuiMixin:
         basic_group.register_item("is_curve", "is_curve", bool)
         basic_group.register_item("is_curve_uniform", "is_curve_uniform", bool)
         basic_group.register_item("print_fps", "print_fps", bool)
+        basic_group.register_item("run_log_enabled", "run_log_enabled", bool)
         basic_group.register_item(
             "show_motion_speed",
             "show_motion_speed",
