@@ -2805,6 +2805,20 @@ class GuiMixin:
             ):
                 print("TRT mode detected, checking engine file...")
                 current_model = self.config["groups"][self.group]["infer_model"]
+                if not os.path.exists(current_model):
+                    dpg.set_value("output_text", "Model file not found")
+                    if bool(self.config.get("run_log_enabled", False)):
+                        log_run_event(
+                            "Engine conversion",
+                            {
+                                "model_path": current_model,
+                                "success": False,
+                                "reason": "model_not_found",
+                            },
+                            enabled=True,
+                        )
+                    # Continue; go() will also fail and reset start button
+                
                 engine_path = os.path.splitext(current_model)[0] + ".engine"
                 if not os.path.exists(engine_path):
                     print(f"Engine file does not exist: {engine_path}")

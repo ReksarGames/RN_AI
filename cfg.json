@@ -466,6 +466,5 @@
     }
   },
   "aim_weight_tiebreak_ratio": 0.0,
-  "dynamic_shape": false,
-  "run_log_enabled": true
+  "dynamic_shape": false
 }
