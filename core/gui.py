@@ -13,7 +13,13 @@ from makcu import MouseButton
 
 from src.gui_handlers import ConfigItemGroup
 
-from .utils import TENSORRT_AVAILABLE, UPDATE_TIME, VERSION, create_gradient_image
+from .utils import (
+    TENSORRT_AVAILABLE,
+    UPDATE_TIME,
+    VERSION,
+    create_gradient_image,
+    log_run_event,
+)
 
 class DemoKalman1D:
     def __init__(self, process_noise, measurement_noise):
@@ -121,6 +127,7 @@ TRANSLATIONS = {
         "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "How long (s) to keep lock after target disappears; 0 = instant switch.",
+        "help_target_lock_fallback_class": "Fallback class id to use when locked class disappears (-1 disables).",
         "help_aim_weights": "Weights for target selection: distance, center, and size influence priority. Tie-break applies weights only when targets are within the chosen % of the closest target.",
         "help_aim_weight_tiebreak": "Apply aim weights only when targets are within this % of the closest target distance. 0 disables.",
         "help_speed_curve": "Speed curve controls how fast the aim moves based on distance to target.",
@@ -191,6 +198,7 @@ TRANSLATIONS = {
         "label_auto_detect": "Auto Detect",
         "label_infer_window": "Inference Window",
         "label_print_fps": "Print FPS",
+        "label_run_log": "Enable Run Log",
         "label_show_motion_speed": "Show Motion Speed",
         "label_show_curve": "Show Curve",
         "label_show_infer_time": "Show Infer Time",
@@ -264,6 +272,7 @@ TRANSLATIONS = {
         "label_recover_duration": "Recover Duration",
         "label_target_lock_distance": "Lock Distance",
         "label_target_lock_reacquire_time": "Reacquire Time (s)",
+        "label_target_lock_fallback_class": "Fallback Class",
         "label_pid_params": "PID Controller Parameters",
         "label_pid_x_p": "X Proportional",
         "label_pid_x_i": "X Integral",
@@ -402,6 +411,7 @@ TRANSLATIONS = {
         "help_smart_target": "Фиксирует текущую цель для стабильности; улучшает трекинг движущихся целей.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "Сколько секунд удерживать фиксацию после пропажи цели; 0 = мгновенное переключение.",
+        "help_target_lock_fallback_class": "Класс для подхвата при пропаже основной цели (-1 выключает).",
         "help_aim_weights": "Веса выбора цели: дистанция, центр и размер влияют на приоритет. Tie-break применяет веса только когда цели в пределах выбранного % от ближайшей.",
         "help_aim_weight_tiebreak": "Использовать веса только когда цели в пределах этого % от ближайшей цели. 0 = выкл.",
         "help_speed_curve": "Кривая скорости определяет скорость движения прицела в зависимости от расстояния до цели.",
@@ -462,6 +472,7 @@ TRANSLATIONS = {
         "label_auto_detect": "Автоопределение",
         "label_infer_window": "Окно инференса",
         "label_print_fps": "Показывать FPS",
+        "label_run_log": "Лог запусков",
         "label_show_motion_speed": "Показывать скорость движения",
         "label_show_curve": "Показывать кривую",
         "label_show_infer_time": "Показывать время инференса",
@@ -535,6 +546,7 @@ TRANSLATIONS = {
         "label_recover_duration": "Длительность восстановления",
         "label_target_lock_distance": "Дистанция фиксации",
         "label_target_lock_reacquire_time": "Время удержания (с)",
+        "label_target_lock_fallback_class": "Класс подхвата",
         "label_pid_params": "Параметры PID-контроллера",
         "label_pid_x_p": "Пропорциональный X",
         "label_pid_x_i": "Интегральный X",
@@ -873,6 +885,20 @@ class GuiMixin:
             return None
         return (w, h)
 
+    def _get_engine_input_size(self):
+        override = self._parse_capture_size()
+        if override:
+            return override
+        if self.config.get("dynamic_shape", False):
+            return (640, 640)
+        if hasattr(self, "engine") and self.engine is not None:
+            try:
+                shape = self.engine.get_input_shape()
+                return (int(shape[3]), int(shape[2]))
+            except Exception:
+                pass
+        return (640, 640)
+
     def update_capture_status_text(self):
         if not hasattr(self, "capture_status_text") or self.capture_status_text is None:
             return
@@ -893,17 +919,8 @@ class GuiMixin:
             offset_x = int(self.config.get("capture_offset_x", 0))
             offset_y = int(self.config.get("capture_offset_y", 0))
             size_label = ""
-            override = self._parse_capture_size()
-            if override:
-                region_w, region_h = override
-                size_label = f" {region_w}x{region_h}"
-            elif hasattr(self, "engine") and self.engine is not None:
-                try:
-                    region_w = self.engine.get_input_shape()[3]
-                    region_h = self.engine.get_input_shape()[2]
-                    size_label = f" {region_w}x{region_h}"
-                except Exception:
-                    size_label = ""
+            region_w, region_h = self._get_engine_input_size()
+            size_label = f" {region_w}x{region_h}"
             details = (
                 f"{self.tr('label_capture_bettercam')}{size_label} "
                 f"offset ({offset_x}, {offset_y})"
@@ -923,15 +940,7 @@ class GuiMixin:
     def update_capture_region(self):
         if not hasattr(self, "engine") or self.engine is None:
             return
-        override = self._parse_capture_size()
-        if override:
-            region_w, region_h = override
-        else:
-            try:
-                region_w = self.engine.get_input_shape()[3]
-                region_h = self.engine.get_input_shape()[2]
-            except Exception:
-                return
+        region_w, region_h = self._get_engine_input_size()
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
         left = int((self.screen_width - region_w) // 2 + offset_x)
@@ -1203,6 +1212,11 @@ class GuiMixin:
                                     callback=self.on_show_motion_speed_change,
                                 )
                             with dpg.group(horizontal=True):
+                                dpg.add_checkbox(
+                                    label=self.tr("label_run_log"),
+                                    default_value=self.config.get("run_log_enabled", False),
+                                    callback=self.on_run_log_change,
+                                )
                                 dpg.add_checkbox(
                                     label=self.tr("label_show_curve"),
                                     default_value=self.config["is_show_curve"],
@@ -1854,14 +1868,6 @@ class GuiMixin:
                                     label=self.tr("label_trt"),
                                     callback=self.on_is_trt_change,
                                 )
-                                self.use_sunone_processing_checkbox = dpg.add_checkbox(
-                                    label=self.tr("label_use_sunone_processing"),
-                                    tag="use_sunone_processing_checkbox",
-                                    default_value=self.config["groups"][self.group].get(
-                                        "use_sunone_processing", False
-                                    ),
-                                    callback=self.on_use_sunone_processing_change,
-                                )
                                 self.sunone_variant_combo = dpg.add_combo(
                                     label=self.tr("label_sunone_variant"),
                                     items=self.get_sunone_variant_items(),
@@ -2379,6 +2385,17 @@ class GuiMixin:
             self.attach_tooltip(
                 self.target_lock_distance_input, self.tr("help_target_lock_distance")
             )
+            self.target_lock_fallback_class_input = dpg.add_input_int(
+                label=self.tr("label_target_lock_fallback_class"),
+                min_value=-1,
+                max_value=999,
+                callback=self.on_target_lock_fallback_class_change,
+                width=self.scaled_width_normal,
+            )
+            self.attach_tooltip(
+                self.target_lock_fallback_class_input,
+                self.tr("help_target_lock_fallback_class"),
+            )
             self.target_lock_reacquire_time_input = dpg.add_input_float(
                 label=self.tr("label_target_lock_reacquire_time"),
                 min_value=0.0,
@@ -2788,33 +2805,86 @@ class GuiMixin:
             ):
                 print("TRT mode detected, checking engine file...")
                 current_model = self.config["groups"][self.group]["infer_model"]
+                if not os.path.exists(current_model):
+                    dpg.set_value("output_text", "Model file not found")
+                    if bool(self.config.get("run_log_enabled", False)):
+                        log_run_event(
+                            "Engine conversion",
+                            {
+                                "model_path": current_model,
+                                "success": False,
+                                "reason": "model_not_found",
+                            },
+                            enabled=True,
+                        )
+                    # Continue; go() will also fail and reset start button
+                
                 engine_path = os.path.splitext(current_model)[0] + ".engine"
                 if not os.path.exists(engine_path):
                     print(f"Engine file does not exist: {engine_path}")
                     print("Starting TRT engine conversion...")
-                    dpg.set_value(
-                        "output_text", "Converting TRT engine, please wait..."
-                    )
+                    dpg.set_value("output_text", "Converting TRT engine, please wait...")
+                    convert_start = time.perf_counter()
                     if current_model.endswith(".onnx"):
                         print("Converting TRT engine from ONNX file...")
                         from src.inference_engine import auto_convert_engine
 
-                        if auto_convert_engine(current_model):
+                        success = auto_convert_engine(current_model)
+                        elapsed = time.perf_counter() - convert_start
+                        if success:
                             print(f"TRT engine conversion successful: {engine_path}")
                             self.config["groups"][self.group]["infer_model"] = (
                                 engine_path
                             )
                             dpg.set_value(self.infer_model_input, engine_path)
+                            dpg.set_value(
+                                "output_text",
+                                f"TRT conversion completed in {elapsed:.1f}s",
+                            )
                         else:
                             print(
                                 "TRT engine conversion failed, will use original model"
                             )
                             self.config["groups"][self.group]["is_trt"] = False
                             dpg.set_value(self.is_trt_checkbox, False)
+                            dpg.set_value(
+                                "output_text",
+                                f"TRT conversion failed after {elapsed:.1f}s",
+                            )
+                        if bool(self.config.get("run_log_enabled", False)):
+                            log_run_event(
+                                "Engine conversion",
+                                {
+                                    "model_path": current_model,
+                                    "engine_path": engine_path,
+                                    "success": success,
+                                    "duration_sec": round(elapsed, 2),
+                                },
+                                enabled=True,
+                            )
+                    else:
+                        elapsed = time.perf_counter() - convert_start
+                        dpg.set_value(
+                            "output_text",
+                            "TRT conversion requires ONNX model",
+                        )
+                        if bool(self.config.get("run_log_enabled", False)):
+                            log_run_event(
+                                "Engine conversion",
+                                {
+                                    "model_path": current_model,
+                                    "engine_path": engine_path,
+                                    "success": False,
+                                    "duration_sec": round(elapsed, 2),
+                                    "reason": "model_not_onnx",
+                                },
+                                enabled=True,
+                            )
                 else:
                     print(f"Found existing engine file: {engine_path}")
                     self.config["groups"][self.group]["infer_model"] = engine_path
                     dpg.set_value(self.infer_model_input, engine_path)
+                    dpg.set_value("output_text", "TRT engine found, using cache")
             if self.go():
                 dpg.configure_item(sender, label=self.tr("label_stop"))
             else:
@@ -2888,6 +2958,10 @@ class GuiMixin:
     def on_print_fps_change(self, sender, app_data):
         self.config["print_fps"] = app_data
         print(f"changed to: {self.config['print_fps']}")
+
+    def on_run_log_change(self, sender, app_data):
+        self.config["run_log_enabled"] = app_data
+        print(f"changed to: {self.config['run_log_enabled']}")
 
     def on_show_motion_speed_change(self, sender, app_data):
         self.config["show_motion_speed"] = app_data
@@ -3845,6 +3919,14 @@ class GuiMixin:
             v = 100
         key_cfg["target_lock_distance"] = max(1, v)
 
+    def on_target_lock_fallback_class_change(self, sender, app_data):
+        key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+        try:
+            v = int(app_data)
+        except Exception:
+            v = -1
+        key_cfg["target_lock_fallback_class"] = v
+
     def on_target_lock_reacquire_time_change(self, sender, app_data):
         key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
         try:
@@ -4482,6 +4564,7 @@ class GuiMixin:
         basic_group.register_item("is_curve", "is_curve", bool)
         basic_group.register_item("is_curve_uniform", "is_curve_uniform", bool)
         basic_group.register_item("print_fps", "print_fps", bool)
+        basic_group.register_item("run_log_enabled", "run_log_enabled", bool)
         basic_group.register_item(
             "show_motion_speed",
             "show_motion_speed",
@@ -4778,6 +4861,9 @@ class GuiMixin:
         )
         aim_key_group.register_item(
             "target_lock_distance", "target_lock_distance", int
+        )
+        aim_key_group.register_item(
+            "target_lock_fallback_class", "target_lock_fallback_class", int
         )
         aim_key_group.register_item(
             "target_lock_reacquire_time", "target_lock_reacquire_time", float

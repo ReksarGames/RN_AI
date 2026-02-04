@@ -183,6 +183,11 @@ def sunone_decode_yolo10(
     matrix = _prepare_sunone_matrix(output, 6)
     if matrix.size == 0:
         return detections
+    try:
+        max_coord = float(np.max(matrix[:, :4]))
+    except Exception:
+        max_coord = 0.0
+    coord_scale = img_scale if max_coord <= 2.0 else 1.0
     for det in matrix:
         if det.size < 6:
             continue
@@ -194,10 +199,10 @@ def sunone_decode_yolo10(
         cy = float(det[1])
         dx = float(det[2])
         dy = float(det[3])
-        x1 = int(cx * img_scale)
-        y1 = int(cy * img_scale)
-        x2 = int(dx * img_scale)
-        y2 = int(dy * img_scale)
+        x1 = int(cx * coord_scale)
+        y1 = int(cy * coord_scale)
+        x2 = int(dx * coord_scale)
+        y2 = int(dy * coord_scale)
         detections.append(Detection((x1, y1, x2, y2), confidence, class_id))
     return detections
 
@@ -215,6 +220,11 @@ def sunone_decode_yolo11(
     matrix = _prepare_sunone_columns(output, rows_expected)
     if matrix.size == 0 or matrix.shape[0] < rows_expected:
         return detections
+    try:
+        max_coord = float(np.max(matrix[:4, :]))
+    except Exception:
+        max_coord = 0.0
+    coord_scale = img_scale if max_coord <= 2.0 else 1.0
     for i in range(matrix.shape[1]):
         classes_scores = matrix[4 : 4 + num_classes, i]
         if classes_scores.size == 0:
@@ -227,7 +237,7 @@ def sunone_decode_yolo11(
         cy = float(matrix[1, i])
         ow = float(matrix[2, i])
         oh = float(matrix[3, i])
-        box = _build_box(cx, cy, ow, oh, img_scale)
+        box = _build_box(cx, cy, ow, oh, coord_scale)
         detections.append(Detection(box, score, class_id))
     return detections
 
@@ -283,6 +293,91 @@ def sunone_postprocess(
     scores = np.array([det.confidence for det in filtered], dtype=np.float32)
     classes = np.array([det.class_id for det in filtered], dtype=np.int32).reshape(-1)
     return boxes, scores, classes
+
+
+def _collect_feature_candidates(pred: np.ndarray) -> List[int]:
+    candidates: List[int] = []
+    try:
+        arr = np.asarray(pred)
+    except Exception:
+        return candidates
+    if arr.ndim >= 1:
+        for dim in arr.shape:
+            try:
+                dim_int = int(dim)
+            except Exception:
+                continue
+            if dim_int > 0:
+                candidates.append(dim_int)
+    if arr.ndim == 1:
+        candidates.append(int(arr.size))
+    return candidates
+
+
+def guess_yolo_layout(
+    pred: np.ndarray,
+    class_num_v5: int,
+    class_num_v8: int,
+    yolo_version: str = "yolo11",
+) -> str:
+    """
+    Guess output layout: 'yolo10', 'v8', 'v5', or 'unknown'.
+    """
+    version = str(yolo_version or "").strip().lower()
+    if version and not version.startswith("yolo"):
+        version = f"yolo{version}"
+    if version == "yolo10":
+        return "yolo10"
+    candidates = set(_collect_feature_candidates(pred))
+    if 6 in candidates:
+        return "yolo10"
+    if class_num_v8 and (class_num_v8 + 4) in candidates:
+        return "v8"
+    if class_num_v5 and (class_num_v5 + 5) in candidates:
+        return "v5"
+    if 84 in candidates:
+        return "v8"
+    if 85 in candidates:
+        return "v5"
+    return "unknown"
+
+
+def build_postprocess_order(
+    pred: np.ndarray,
+    class_num_v5: int,
+    class_num_v8: int,
+    yolo_format: str = "auto",
+    yolo_version: str = "yolo11",
+    prefer_sunone: bool = False,
+) -> List[str]:
+    """
+    Build ordered list of postprocess algorithms to try.
+    Algorithms: 'sunone', 'v8', 'v5', 'standard'.
+    """
+    order: List[str] = []
+    version = str(yolo_version or "").strip().lower()
+    if version and not version.startswith("yolo"):
+        version = f"yolo{version}"
+    if version == "yolo10":
+        order.append("sunone")
+    fmt = str(yolo_format or "auto").strip().lower()
+    if fmt in {"v8", "v5", "standard"}:
+        order.append(fmt)
+    layout = guess_yolo_layout(pred, class_num_v5, class_num_v8, version)
+    if layout == "yolo10":
+        if "sunone" not in order:
+            order.append("sunone")
+    elif layout == "v8":
+        order.append("v8")
+    elif layout == "v5":
+        order.append("v5")
+    if prefer_sunone and "sunone" not in order:
+        order.insert(0, "sunone")
+    fallback = ["sunone", "v8", "v5", "standard"]
+    for algo in fallback:
+        if algo not in order:
+            order.append(algo)
+    return order
 
 
 def draw_boxes(image, boxes, scores, classes):

@@ -8,7 +8,16 @@ from threading import Thread
 from makcu import MouseButton
 from pyclick import HumanCurve
 
-from src.infer_function import nms, nms_v8, read_img, sunone_postprocess
+from src.infer_function import (
+    build_postprocess_order,
+    guess_yolo_layout,
+    nms,
+    nms_v8,
+    nms_v5,
+    read_img,
+    sunone_postprocess,
+)
+from .utils import log_run_event
 
 
 class AimingMixin:
@@ -19,6 +28,7 @@ class AimingMixin:
         self._target_lock_id = None
         self._target_lock_center = None
         self._target_lock_lost_time = None
+        self._target_lock_class = None
 
     def _get_lock_distance(self, cfg):
         dyn_cfg = cfg.get("dynamic_scope", {}) or {}
@@ -89,8 +99,14 @@ class AimingMixin:
         self._target_lock_id = lock_id
         self._target_lock_center = center
         self._target_lock_lost_time = None
+        try:
+            self._target_lock_class = int(target.get("class_id"))
+        except Exception:
+            self._target_lock_class = None
 
-    def _apply_target_lock(self, targets, lock_distance, reacquire_time):
+    def _apply_target_lock(
+        self, targets, lock_distance, reacquire_time, reference_class=None, fallback_class=None
+    ):
         if not getattr(self, "_target_lock_active", False):
             return targets, False
         now = time.time()
@@ -113,7 +129,15 @@ class AimingMixin:
             center = self._target_lock_center
             if center:
                 best_dist = float("inf")
+                locked_class = getattr(self, "_target_lock_class", None)
+                restrict_to_fallback = (
+                    fallback_class is not None
+                    and reference_class is not None
+                    and locked_class == reference_class
+                )
                 for idx, target in enumerate(targets):
+                    if restrict_to_fallback and target.get("class_id") != fallback_class:
+                        continue
                     candidate_center = self._get_box_center(target)
                     if candidate_center is None:
                         continue
@@ -227,6 +251,13 @@ class AimingMixin:
             priority_order = parsed
 
         reference_class = self.pressed_key_config.get("target_reference_class", 0)
+        fallback_class = self.pressed_key_config.get("target_lock_fallback_class", -1)
+        try:
+            fallback_class = int(fallback_class)
+        except Exception:
+            fallback_class = -1
+        if fallback_class < 0:
+            fallback_class = None
         aim_scope = self.get_dynamic_aim_scope()
         base_scope = float(self.pressed_key_config.get("aim_bot_scope", 0) or 0)
         if base_scope <= 0:
@@ -273,7 +304,7 @@ class AimingMixin:
             return min(near, key=_score)
         if lock_enabled:
             targets, lock_blocking = self._apply_target_lock(
-                targets, lock_distance, lock_reacquire_time
+                targets, lock_distance, lock_reacquire_time, reference_class, fallback_class
             )
             if lock_blocking:
                 return None
@@ -654,10 +685,47 @@ class AimingMixin:
                 is_v8_like = self.config["groups"][self.group].get("is_v8", False)
         if not isinstance(class_num, int):
             class_num = int(class_num) if class_num else 0
-        input_shape_weight = self.engine.get_input_shape()[3]
-        input_shape_height = self.engine.get_input_shape()[2]
+        def _parse_capture_size(value):
+            try:
+                text = str(value).strip().lower()
+            except Exception:
+                return None
+            if not text or text == "auto":
+                return None
+            text = text.replace(" ", "")
+            parts = text.split("x")
+            if len(parts) != 2 or not parts[0].isdigit() or not parts[1].isdigit():
+                return None
+            w = int(parts[0])
+            h = int(parts[1])
+            if w <= 0 or h <= 0:
+                return None
+            return (w, h)
+
+        override = _parse_capture_size(self.config.get("capture_size", "auto"))
+        dynamic_shape = bool(self.config.get("dynamic_shape", False))
+        if dynamic_shape:
+            if override:
+                input_shape_weight, input_shape_height = override
+            else:
+                input_shape_weight, input_shape_height = 640, 640
+        else:
+            shape = self.engine.get_input_shape()
+            try:
+                input_shape_weight = int(shape[3])
+                input_shape_height = int(shape[2])
+            except Exception:
+                if not dynamic_shape:
+                    self.config["dynamic_shape"] = True
+                    print("[Auto] Enabled capture-size fallback due to invalid input shape.")
+                input_shape_weight, input_shape_height = 640, 640
+            if override:
+                input_shape_weight, input_shape_height = override
         print("Model input size:", input_shape_weight, input_shape_height)
         frame_count = 0
+        printed_model_debug = False
+        runtime_log_emitted = False
+        fallback_logged = set()
         start_time = time.perf_counter()
         last_fps_update_time = time.perf_counter()
         fps_text = "FPS: 0.00"
@@ -665,6 +733,8 @@ class AimingMixin:
         last_latency_text = "latency: 0.00ms"
         latency_values = []
         last_latency_update_time = time.perf_counter()
+        last_perf_log_time = time.perf_counter()
+        perf_log_interval = 30.0
         display_latency_ms = 0.0
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
@@ -742,11 +812,13 @@ class AimingMixin:
                     C = self.engine.get_class_num_v8() + 4
                 else:
                     C = self.engine.get_class_num() + 5
-                if pred.size % C != 0:
-                    raise ValueError(
-                        f"Inference output length {pred.size} cannot be divided by feature count per row {C}, please check model!"
+                if C > 0 and pred.size % C == 0:
+                    pred = pred.reshape((-1), C)
+                elif infer_debug:
+                    print(
+                        "[WARN] Output is 1D and cannot be evenly reshaped; "
+                        "postprocess will attempt flexible decoding."
                     )
-                pred = pred.reshape((-1), C)
             class_aim_positions = self.pressed_key_config.get("class_aim_positions", {})
             if not isinstance(class_aim_positions, dict):
                 class_aim_positions = {}
@@ -775,61 +847,50 @@ class AimingMixin:
             t3 = time.perf_counter()
             group_config = self.config["groups"][self.group]
             use_sunone_processing = group_config.get("use_sunone_processing", False)
-            if use_sunone_processing:
-                sunone_variant = group_config.get(
-                    "yolo_version", group_config.get("sunone_model_variant", "yolo11")
+            if infer_debug and not printed_model_debug:
+                try:
+                    output_shape = getattr(pred, "shape", None)
+                except Exception:
+                    output_shape = None
+                active_filter = sorted(class_aim_positions.keys())
+                print(
+                    "[DEBUG] class_num="
+                    f"{class_num}, output_shape={output_shape}, "
+                    f"yolo_format={yolo_format}, yolo_version={yolo_version}, "
+                    f"use_sunone_processing={use_sunone_processing}, "
+                    f"active_class_filter={active_filter}"
                 )
-                boxes, scores, classes = sunone_postprocess(
-                    pred,
-                    confidence_threshold,
-                    iou_t,
-                    1.0,
-                    self.engine.get_class_num(),
-                    self.config["small_target_enhancement"]["adaptive_nms"],
-                    self.config.get("sunone_max_detections", 0),
-                    variant=sunone_variant,
-                )
-                is_v8_like = True
-                nms_algo = "v8"
-            else:
-                engine_nms_handled = False
-                if yolo_version == "yolo10":
-                    boxes, scores, classes = sunone_postprocess(
-                        pred,
-                        confidence_threshold,
-                        iou_t,
-                        1.0,
-                        self.engine.get_class_num(),
-                        self.config["small_target_enhancement"]["adaptive_nms"],
-                        self.config.get("sunone_max_detections", 0),
-                        variant="yolo10",
-                    )
-                    is_v8_like = True
-                    nms_algo = "v8"
-                    engine_nms_handled = True
-                else:
-                    nms_algo = yolo_format
-                    if nms_algo == "auto":
-                        if pred.ndim == 3 and pred.shape[1] != pred.shape[2]:
-                            nms_algo = "v8" if pred.shape[1] < pred.shape[2] else "v5"
-                        else:
-                            nms_algo = "v8" if is_v8_like else "v5"
-                    use_engine_nms = nms_algo in {"v5", "standard"}
-                    if (
-                        use_engine_nms
-                        and img_input is not None
-                        and hasattr(self.engine, "infer_with_nms")
-                    ):
-                        try:
-                            boxes, scores, classes = self.engine.infer_with_nms(
-                                img_input, confidence_threshold, iou_t, nms_algo
-                            )
-                            engine_nms_handled = True
-                        except Exception as e:
-                            print(
-                                f"[NMS] Engine NMS failed: {e}, falling back to manual NMS"
-                            )
-                    if not engine_nms_handled and nms_algo == "v8":
+                printed_model_debug = True
+            postprocess_order = build_postprocess_order(
+                pred,
+                v5_count,
+                v8_count,
+                yolo_format=yolo_format,
+                yolo_version=yolo_version,
+                prefer_sunone=use_sunone_processing,
+            )
+            boxes = scores = classes = None
+            nms_algo = "auto"
+            last_error = None
+            for algo in postprocess_order:
+                try:
+                    if algo == "sunone":
+                        sunone_variant = group_config.get(
+                            "yolo_version",
+                            group_config.get("sunone_model_variant", "yolo11"),
+                        )
+                        boxes, scores, classes = sunone_postprocess(
+                            pred,
+                            confidence_threshold,
+                            iou_t,
+                            1.0,
+                            v8_count or v5_count,
+                            self.config["small_target_enhancement"]["adaptive_nms"],
+                            self.config.get("sunone_max_detections", 0),
+                            variant=sunone_variant,
+                        )
+                        nms_algo = "v8"
+                    elif algo == "v8":
                         adaptive_nms_enabled = (
                             self.config["small_target_enhancement"]["enabled"]
                             and self.config["small_target_enhancement"]["adaptive_nms"]
@@ -837,18 +898,107 @@ class AimingMixin:
                         boxes, scores, classes = nms_v8(
                             pred, confidence_threshold, iou_t, adaptive_nms_enabled
                         )
-                        is_v8_like = True
-                    elif not engine_nms_handled:
-                        boxes, scores, classes = nms(
-                            pred, confidence_threshold, iou_t, class_num
-                        )
-                        is_v8_like = False
+                        nms_algo = "v8"
+                    elif algo in {"v5", "standard"}:
+                        used_engine = False
+                        if (
+                            img_input is not None
+                            and hasattr(self.engine, "infer_with_nms")
+                        ):
+                            try:
+                                boxes, scores, classes = self.engine.infer_with_nms(
+                                    img_input, confidence_threshold, iou_t, algo
+                                )
+                                used_engine = True
+                            except Exception as e:
+                                if infer_debug:
+                                    print(
+                                        f"[NMS] Engine NMS failed for {algo}: {e}"
+                                    )
+                        if not used_engine:
+                            v5_classes = v5_count or class_num
+                            if algo == "v5":
+                                boxes, scores, classes = nms_v5(
+                                    pred, confidence_threshold, iou_t, v5_classes
+                                )
+                            else:
+                                boxes, scores, classes = nms(
+                                    pred, confidence_threshold, iou_t, v5_classes
+                                )
+                        nms_algo = algo
+                    else:
+                        continue
+                    break
+                except Exception as e:
+                    last_error = e
+                    if run_log_enabled:
+                        key = f"{algo}:{type(e).__name__}"
+                        if key not in fallback_logged:
+                            log_run_event(
+                                "Postprocess fallback",
+                                {
+                                    "group": self.group,
+                                    "algo": algo,
+                                    "error": str(e),
+                                    "output_shape": getattr(pred, "shape", None),
+                                    "yolo_format": yolo_format,
+                                    "yolo_version_config": yolo_version,
+                                },
+                                enabled=True,
+                            )
+                            fallback_logged.add(key)
+                    boxes = scores = classes = None
+                    continue
+            if boxes is None:
+                raise ValueError(
+                    f"Postprocess failed for all algorithms {postprocess_order}: {last_error}"
+                )
+            is_v8_like = nms_algo == "v8"
             post_ms = (time.perf_counter() - t3) * 1000
             total_ms = cap_ms + pre_ms + current_infer_time_ms + post_ms
 
             # Debug profiling output every 30 frames
             if infer_debug and frame_count % 30 == 0:
                 print(f"[PROFILE] cap:{cap_ms:.2f}ms pre:{pre_ms:.2f}ms infer:{current_infer_time_ms:.2f}ms post:{post_ms:.2f}ms total:{total_ms:.2f}ms")
+
+            run_log_enabled = bool(self.config.get("run_log_enabled", False))
+            if run_log_enabled and not runtime_log_emitted:
+                detected_layout = guess_yolo_layout(
+                    pred, v5_count, v8_count, yolo_version
+                )
+                log_run_event(
+                    "Runtime",
+                    {
+                        "group": self.group,
+                        "model_path": self.config["groups"][self.group].get(
+                            "infer_model", ""
+                        ),
+                        "input_size": f"{input_shape_weight}x{input_shape_height}",
+                        "output_shape": getattr(pred, "shape", None),
+                        "nms_algo": nms_algo,
+                        "yolo_format": yolo_format,
+                        "yolo_version_config": yolo_version,
+                        "yolo_layout_detected": detected_layout,
+                        "frame_skip_ratio": frame_skip_ratio,
+                        "dynamic_shape": bool(self.config.get("dynamic_shape", False)),
+                        "capture_size_override": self.config.get(
+                            "capture_size", "auto"
+                        ),
+                    },
+                    enabled=True,
+                )
+                runtime_log_emitted = True
+            now = time.perf_counter()
+            if run_log_enabled and (now - last_perf_log_time) >= perf_log_interval:
+                log_run_event(
+                    "Perf",
+                    {
+                        "fps": round(self.fps, 2),
+                        "avg_latency_ms": round(display_latency_ms, 2),
+                    },
+                    enabled=True,
+                )
+                last_perf_log_time = now
 
             current_selected_classes = self.pressed_key_config.get("classes", [])
             selected_classes_set = (

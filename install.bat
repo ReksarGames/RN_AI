@@ -52,6 +52,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
+echo.
+choice /M "Run installer.py for system checks and optional setup"
+if errorlevel 2 goto :after_installer
+if errorlevel 1 (
+    echo Running installer.py...
+    "%PYTHON_EXE%" src\installer.py
+)
+:after_installer
+
 echo Done.
 popd
 pause

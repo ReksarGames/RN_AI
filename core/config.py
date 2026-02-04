@@ -84,6 +84,8 @@ class ConfigMixin:
             config["capture_offset_y"] = 0
         if "capture_size" not in config:
             config["capture_size"] = "auto"
+        if "dynamic_shape" not in config:
+            config["dynamic_shape"] = False
         if "aim_controller" not in config:
             config["aim_controller"] = "pid"
         if "ui_language" not in config:
@@ -96,6 +98,12 @@ class ConfigMixin:
             config["gui_dpi_scale"] = 0.0
         if "show_motion_speed" not in config:
             config["show_motion_speed"] = False
+        if "infer_debug" not in config:
+            config["infer_debug"] = False
+        if "print_fps" not in config:
+            config["print_fps"] = False
+        if "run_log_enabled" not in config:
+            config["run_log_enabled"] = False
         if "show_infer_time" not in config:
             config["show_infer_time"] = False
         if "show_fov" not in config:
@@ -530,6 +538,7 @@ class ConfigMixin:
                 "recover_duration_ms": 300,
             },
             "target_lock_distance": 100,
+            "target_lock_fallback_class": -1,
             "auto_y": False,
             "disable_headshot_removed": False,
         }
@@ -559,6 +568,7 @@ class ConfigMixin:
             "class_names": class_names,
             "class_names_file": "",
             "infer_debug": False,
+            "run_log_enabled": False,
             "print_fps": False,
             "show_motion_speed": False,
             "show_infer_time": False,
@@ -569,6 +579,7 @@ class ConfigMixin:
             "capture_offset_x": 0,
             "capture_offset_y": 0,
             "capture_size": "auto",
+            "dynamic_shape": False,
             "aim_controller": "pid",
             "ui_language": "en",
             "gui_width_scale": 1.0,
@@ -817,6 +828,8 @@ class ConfigMixin:
                         dyn_cfg["recover_duration_ms"] = 300
                 if "target_lock_distance" not in key_config:
                     key_config["target_lock_distance"] = 100
+                if "target_lock_fallback_class" not in key_config:
+                    key_config["target_lock_fallback_class"] = -1
                 if "target_lock_reacquire_time" not in key_config:
                     key_config["target_lock_reacquire_time"] = 0.3
                 if "class_aim_positions" not in key_config:

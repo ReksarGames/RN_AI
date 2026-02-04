@@ -9,7 +9,7 @@ from makcu import create_controller
 
 from src.infer_class import OnnxRuntimeDmlEngine
 
-from .utils import TENSORRT_AVAILABLE
+from .utils import TENSORRT_AVAILABLE, log_model_info
 
 try:
     from src.inference_engine import TensorRTInferenceEngine
@@ -222,6 +222,11 @@ class ModelMixin:
                     self.target_lock_distance_input,
                     int(key_cfg.get("target_lock_distance", 100)),
                 )
+            if getattr(self, "target_lock_fallback_class_input", None) is not None:
+                dpg.set_value(
+                    self.target_lock_fallback_class_input,
+                    int(key_cfg.get("target_lock_fallback_class", -1)),
+                )
             if getattr(self, "target_lock_reacquire_time_input", None) is not None:
                 dpg.set_value(
                     self.target_lock_reacquire_time_input,
@@ -238,11 +243,6 @@ class ModelMixin:
         if hasattr(self, "yolo_format_combo") and self.yolo_format_combo is not None:
             yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
             dpg.set_value(self.yolo_format_combo, self.get_yolo_format_label(yolo_format))
-        if hasattr(self, "use_sunone_processing_checkbox"):
-            dpg.set_value(
-                self.use_sunone_processing_checkbox,
-                self.config["groups"][self.group].get("use_sunone_processing", False),
-            )
         dpg.set_value(
             self.right_down_checkbox, self.config["groups"][self.group]["right_down"]
         )
@@ -617,11 +617,24 @@ class ModelMixin:
         offset_x = int(self.config.get("capture_offset_x", 0))
         offset_y = int(self.config.get("capture_offset_y", 0))
         region_shape = self.engine.get_input_shape()
-        region_w = int(region_shape[3])
-        region_h = int(region_shape[2])
         override = self._get_capture_size_override()
-        if override:
-            region_w, region_h = override
+        dynamic_shape = bool(self.config.get("dynamic_shape", False))
+        if dynamic_shape:
+            if override:
+                region_w, region_h = override
+            else:
+                region_w, region_h = 640, 640
+        else:
+            try:
+                region_w = int(region_shape[3])
+                region_h = int(region_shape[2])
+            except Exception:
+                if not dynamic_shape:
+                    self.config["dynamic_shape"] = True
+                    print("[Auto] Enabled capture-size fallback due to invalid input shape.")
+                region_w, region_h = 640, 640
+            if override:
+                region_w, region_h = override
         left = int((self.screen_width - region_w) // 2 + offset_x)
         top = int((self.screen_height - region_h) // 2 + offset_y)
         left = max(0, min(left, self.screen_width - region_w))
@@ -629,6 +642,43 @@ class ModelMixin:
         self.identify_rect_left = left
         self.identify_rect_top = top
         self.refresh_class_names()
+        try:
+            output_shape = None
+            providers = None
+            if hasattr(self.engine, "_session") and self.engine._session is not None:
+                outputs_meta = self.engine._session.get_outputs()
+                output_shape = [out.shape for out in outputs_meta]
+            elif hasattr(self.engine, "session") and self.engine.session is not None:
+                outputs_meta = self.engine.session.get_outputs()
+                output_shape = [out.shape for out in outputs_meta]
+            if hasattr(self.engine, "_providers"):
+                providers = self.engine._providers
+            engine_type = type(self.engine).__name__
+            yolo_format = self.config["groups"][self.group].get("yolo_format", "auto")
+            yolo_version = self.config["groups"][self.group].get(
+                "yolo_version",
+                self.config["groups"][self.group].get("sunone_model_variant", "yolo11"),
+            )
+            extra = {
+                "capture_size_override": self.config.get("capture_size", "auto"),
+                "dynamic_shape": bool(self.config.get("dynamic_shape", False)),
+                "screen": f"{self.screen_width}x{self.screen_height}",
+            }
+            log_model_info(
+                model_path=model_path,
+                group=self.group,
+                is_trt=is_trt,
+                yolo_format=yolo_format,
+                yolo_version=yolo_version,
+                input_shape=region_shape,
+                output_shape=output_shape,
+                providers=providers,
+                engine_type=engine_type,
+                extra=extra,
+                enabled=bool(self.config.get("run_log_enabled", False)),
+            )
+        except Exception:
+            pass
         if (
             TensorRTInferenceEngine is not None
             and isinstance(self.engine, TensorRTInferenceEngine)

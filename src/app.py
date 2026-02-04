@@ -21,7 +21,7 @@ from core.input import InputMixin
 from core.model import ModelMixin
 from core.recoil import RecoilMixin
 from core.sunone_controller import SunoneAimController
-from core.utils import TENSORRT_AVAILABLE
+from core.utils import TENSORRT_AVAILABLE, log_run_event, log_startup_info
 from src.function import *
 from src.gui_handlers import ConfigChangeHandler
 from src.infer_class import *
@@ -202,6 +202,40 @@ class Aassist(
         self.window_tag = None
         self.old_refreshed_aim_key = ""
         self.config, self.aim_keys_dist, self.aim_key, self.group = self.build_config()
+        self.run_log_enabled = bool(self.config.get("run_log_enabled", False))
+        log_startup_info(
+            enabled=self.run_log_enabled,
+            reset=True,
+            extra={
+                "run_log_enabled": self.run_log_enabled,
+                "default_group": self.group,
+            },
+        )
+        if self.run_log_enabled:
+            cfg = self.config
+            group_cfg = cfg.get("groups", {}).get(self.group, {})
+            log_run_event(
+                "Config",
+                {
+                    "group": self.group,
+                    "infer_model": group_cfg.get("infer_model", ""),
+                    "is_trt": group_cfg.get("is_trt", False),
+                    "yolo_format": group_cfg.get("yolo_format", "auto"),
+                    "yolo_version": group_cfg.get(
+                        "yolo_version", group_cfg.get("sunone_model_variant", "yolo11")
+                    ),
+                    "dynamic_shape": bool(cfg.get("dynamic_shape", False)),
+                    "capture_size": cfg.get("capture_size", "auto"),
+                    "frame_skip_ratio": cfg.get("frame_skip_ratio", 0),
+                    "enable_parallel_processing": cfg.get(
+                        "enable_parallel_processing", True
+                    ),
+                    "turbo_mode": cfg.get("turbo_mode", True),
+                    "cpu_optimization": cfg.get("cpu_optimization", True),
+                    "memory_optimization": cfg.get("memory_optimization", True),
+                },
+                enabled=True,
+            )
         self.refresh_class_names()
         if "small_target_enhancement" not in self.config:
             self.config["small_target_enhancement"] = {

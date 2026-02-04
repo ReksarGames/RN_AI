@@ -128,6 +128,7 @@ class TensorRTInferenceEngine:
             bindings.append(device_mem.data_ptr())
 
             buffer_info = {
+                'name': binding,
                 'host': host_mem,
                 'device': device_mem,
                 'shape': shape,
@@ -220,10 +221,10 @@ class TensorRTInferenceEngine:
     def _execute_inference(self):
         """Execute TensorRT inference (for CUDA Graph capture)"""
         try:
-            input_binding = self.engine[0]
-            output_binding = self.engine[1]
-            self.context.set_tensor_address(input_binding, self.inputs[0]['device'].data_ptr())
-            self.context.set_tensor_address(output_binding, self.outputs[0]['device'].data_ptr())
+            for inp in self.inputs:
+                self.context.set_tensor_address(inp['name'], inp['device'].data_ptr())
+            for out in self.outputs:
+                self.context.set_tensor_address(out['name'], out['device'].data_ptr())
             self.context.execute_async_v3(stream_handle=self.stream.cuda_stream)
         except AttributeError:
             # Fallback for older TensorRT versions
@@ -317,16 +318,22 @@ class TensorRTInferenceEngine:
 
     def get_input_shape(self):
         """Get model input shape"""
+        if self.inputs:
+            return self.inputs[0]['shape']
         binding = self.engine[0]
         return self.engine.get_tensor_shape(binding)
 
     def get_class_num(self):
         """Get model class count (YOLOv5 format)"""
+        if self.outputs:
+            return self.outputs[0]['shape'][-1] - 5
         binding = self.engine[1]
         return self.engine.get_tensor_shape(binding)[-1] - 5
 
     def get_class_num_v8(self):
         """Get YOLOv8 model class count"""
+        if self.outputs:
+            return self.outputs[0]['shape'][-1] - 4
         binding = self.engine[1]
         return self.engine.get_tensor_shape(binding)[-1] - 4
 
@@ -425,7 +432,7 @@ class TensorRTInferenceEngine:
         img_float = img_tensor.float().div_(255.0)
 
         # BGR -> RGB using flip
-        img_rgb = img_float.flip(2)
+        img_rgb = img_float[..., [2, 1, 0]]
 
         # HWC -> CHW -> NCHW
         img_chw = img_rgb.permute(2, 0, 1).unsqueeze(0)
@@ -535,7 +542,7 @@ class TensorRTInferenceEngine:
         img_float = self._preprocess_input.float().div_(255.0)
 
         # BGR -> RGB using flip (CUDA Graph compatible)
-        img_rgb = img_float.flip(2)
+        img_rgb = torch.flip(img_float, dims=[-1])
 
         # HWC -> CHW -> NCHW
         img_chw = img_rgb.permute(2, 0, 1).unsqueeze(0)

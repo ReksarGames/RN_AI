@@ -529,11 +529,21 @@ class ScreenshotManager:
             if self.engine is None:
                 return False
             override = self._parse_capture_size()
+            dynamic_shape = bool(self.config.get("dynamic_shape", False))
             if override:
                 width, height = override
+            elif dynamic_shape:
+                width, height = 640, 640
             else:
-                width = self.engine.get_input_shape()[3]
-                height = self.engine.get_input_shape()[2]
+                shape = self.engine.get_input_shape()
+                try:
+                    width = int(shape[3])
+                    height = int(shape[2])
+                except Exception:
+                    if not dynamic_shape:
+                        self.config["dynamic_shape"] = True
+                        print("[Auto] Enabled capture-size fallback due to invalid input shape.")
+                    width, height = 640, 640
             if width <= 0 or height <= 0:
                 print(f'BetterCam初始化失败: 无效的模型输入尺寸 {width}x{height}')
                 return False
@@ -662,11 +672,21 @@ class ScreenshotManager:
                 region_key = 'default'
                 if region_key not in self._region_cache:
                     override = self._parse_capture_size()
+                    dynamic_shape = bool(self.config.get("dynamic_shape", False))
                     if override:
                         input_shape_weight, input_shape_height = override
+                    elif dynamic_shape:
+                        input_shape_weight, input_shape_height = 640, 640
                     else:
-                        input_shape_weight = self.engine.get_input_shape()[3]
-                        input_shape_height = self.engine.get_input_shape()[2]
+                        shape = self.engine.get_input_shape()
+                        try:
+                            input_shape_weight = int(shape[3])
+                            input_shape_height = int(shape[2])
+                        except Exception:
+                            if not dynamic_shape:
+                                self.config["dynamic_shape"] = True
+                                print("[Auto] Enabled capture-size fallback due to invalid input shape.")
+                            input_shape_weight, input_shape_height = 640, 640
                     offset_x = int(self.config.get("capture_offset_x", 0))
                     offset_y = int(self.config.get("capture_offset_y", 0))
                     left = (self.screen_width - input_shape_weight) // 2 + offset_x
@@ -778,8 +798,13 @@ class ScreenshotManager:
                         cv2.namedWindow(window_name, cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO | cv2.WINDOW_GUI_EXPANDED)
                         cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
                         if self.engine is not None:
-                            cv2.resizeWindow(window_name, self.engine.get_input_shape()[3],
-                                             self.engine.get_input_shape()[2])
+                            try:
+                                shape = self.engine.get_input_shape()
+                                w = int(shape[3])
+                                h = int(shape[2])
+                                cv2.resizeWindow(window_name, w, h)
+                            except Exception:
+                                pass
                         window_created = True
                     except Exception as e:
                         print(f'创建OpenCV窗口失败: {e}')
@@ -867,7 +892,13 @@ class ScreenshotManager:
                 cv2.namedWindow('screenshot', cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO | cv2.WINDOW_GUI_EXPANDED)
                 cv2.setWindowProperty('screenshot', cv2.WND_PROP_TOPMOST, 1)
                 if self.engine is not None:
-                    cv2.resizeWindow('screenshot', self.engine.get_input_shape()[3], self.engine.get_input_shape()[2])
+                    try:
+                        shape = self.engine.get_input_shape()
+                        w = int(shape[3])
+                        h = int(shape[2])
+                        cv2.resizeWindow('screenshot', w, h)
+                    except Exception:
+                        pass
                 from src.infer_function import draw_boxes, draw_boxes_v8
                 if is_v8:
                     screenshot = draw_boxes_v8(screenshot, boxes, scores, classes)

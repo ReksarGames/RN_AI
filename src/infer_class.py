@@ -185,6 +185,48 @@ class OnnxRuntimeDmlEngine:
         return providers
 
     @property
+    def _resolve_onnx_input_shape(self) -> Optional[Tuple[int, int, int, int]]:
+        try:
+            import onnx
+            model_path = getattr(self, "model_path", None)
+            if not model_path or not str(model_path).lower().endswith(".onnx"):
+                return None
+            m = onnx.load(model_path)
+            if not m.graph.input:
+                return None
+            dims = m.graph.input[0].type.tensor_type.shape.dim
+            values = []
+            for d in dims:
+                if d.dim_value:
+                    values.append(int(d.dim_value))
+                else:
+                    return None
+            if len(values) >= 4:
+                return (values[0], values[1], values[2], values[3])
+        except Exception:
+            return None
+        return None
+
+    def _resolve_onnx_output_last_dim(self) -> Optional[int]:
+        try:
+            import onnx
+            model_path = getattr(self, "model_path", None)
+            if not model_path or not str(model_path).lower().endswith(".onnx"):
+                return None
+            m = onnx.load(model_path)
+            if not m.graph.output:
+                return None
+            dims = m.graph.output[0].type.tensor_type.shape.dim
+            if not dims:
+                return None
+            last = dims[-1]
+            if last.dim_value:
+                return int(last.dim_value)
+        except Exception:
+            return None
+        return None
+
+
     def nms_processor(self) -> NMSProcessor:
         """延迟初始化 NMS 处理器"""
         if self._nms_processor is None:
@@ -246,7 +288,10 @@ class OnnxRuntimeDmlEngine:
             self._initialize_session()
         outputs_meta = self._session.get_outputs()
         output_shapes = outputs_meta[0].shape
-        return output_shapes[2] - 5
+        try:
+            return int(output_shapes[2]) - 5
+        except Exception:
+            return 0
 
     def get_class_num_v8(self) -> int:
         """获取类别数量(YOLOv8格式)"""
@@ -254,7 +299,10 @@ class OnnxRuntimeDmlEngine:
             self._initialize_session()
         outputs_meta = self._session.get_outputs()
         output_shapes = outputs_meta[0].shape
-        return output_shapes[1] - 4
+        try:
+            return int(output_shapes[1]) - 4
+        except Exception:
+            return 0
 
     def get_performance_info(self) -> dict:
         """获取性能信息"""
