@@ -199,6 +199,7 @@ TRANSLATIONS = {
         "label_infer_window": "Inference Window",
         "label_print_fps": "Print FPS",
         "label_run_log": "Enable Run Log",
+        "label_trt_disable_fp16": "Disable FP16 (Experimental)",
         "label_show_motion_speed": "Show Motion Speed",
         "label_show_curve": "Show Curve",
         "label_show_infer_time": "Show Infer Time",
@@ -473,6 +474,7 @@ TRANSLATIONS = {
         "label_infer_window": "Окно инференса",
         "label_print_fps": "Показывать FPS",
         "label_run_log": "Лог запусков",
+        "label_trt_disable_fp16": "Отключить FP16 (экспер.)",
         "label_show_motion_speed": "Показывать скорость движения",
         "label_show_curve": "Показывать кривую",
         "label_show_infer_time": "Показывать время инференса",
@@ -1868,6 +1870,13 @@ class GuiMixin:
                                     label=self.tr("label_trt"),
                                     callback=self.on_is_trt_change,
                                 )
+                                self.trt_disable_fp16_checkbox = dpg.add_checkbox(
+                                    label=self.tr("label_trt_disable_fp16"),
+                                    default_value=self.config.get(
+                                        "trt_disable_fp16", False
+                                    ),
+                                    callback=self.on_trt_disable_fp16_change,
+                                )
                                 self.sunone_variant_combo = dpg.add_combo(
                                     label=self.tr("label_sunone_variant"),
                                     items=self.get_sunone_variant_items(),
@@ -2825,11 +2834,13 @@ class GuiMixin:
                     print("Starting TRT engine conversion...")
                     dpg.set_value("output_text", "Converting TRT engine, please wait...")
                     convert_start = time.perf_counter()
+                    disable_fp16 = bool(self.config.get("trt_disable_fp16", False))
                     if current_model.endswith(".onnx"):
                         print("Converting TRT engine from ONNX file...")
                         from src.inference_engine import auto_convert_engine
-
-                        success = auto_convert_engine(current_model)
+                        success = auto_convert_engine(
+                            current_model, use_fp16=not disable_fp16
+                        )
                         elapsed = time.perf_counter() - convert_start
                         if success:
                             print(f"TRT engine conversion successful: {engine_path}")
@@ -2857,6 +2868,7 @@ class GuiMixin:
                                 {
                                     "model_path": current_model,
                                     "engine_path": engine_path,
+                                    "use_fp16": not disable_fp16,
                                     "success": success,
                                     "duration_sec": round(elapsed, 2),
                                 },
@@ -2874,6 +2886,7 @@ class GuiMixin:
                                 {
                                     "model_path": current_model,
                                     "engine_path": engine_path,
+                                    "use_fp16": not disable_fp16,
                                     "success": False,
                                     "duration_sec": round(elapsed, 2),
                                     "reason": "model_not_onnx",
@@ -2962,6 +2975,10 @@ class GuiMixin:
     def on_run_log_change(self, sender, app_data):
         self.config["run_log_enabled"] = app_data
         print(f"changed to: {self.config['run_log_enabled']}")
+
+    def on_trt_disable_fp16_change(self, sender, app_data):
+        self.config["trt_disable_fp16"] = app_data
+        print(f"changed to: {self.config['trt_disable_fp16']}")
 
     def on_show_motion_speed_change(self, sender, app_data):
         self.config["show_motion_speed"] = app_data
@@ -4565,6 +4582,7 @@ class GuiMixin:
         basic_group.register_item("is_curve_uniform", "is_curve_uniform", bool)
         basic_group.register_item("print_fps", "print_fps", bool)
         basic_group.register_item("run_log_enabled", "run_log_enabled", bool)
+        basic_group.register_item("trt_disable_fp16", "trt_disable_fp16", bool)
         basic_group.register_item(
             "show_motion_speed",
             "show_motion_speed",

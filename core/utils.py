@@ -285,7 +285,7 @@ def key2str(key) -> str:
     return str(key)
 
 
-def auto_convert_engine(onnx_path):
+def auto_convert_engine(onnx_path, use_fp16: bool = True):
     """
     Enhanced auto-conversion function that checks TensorRT environment availability first
 
@@ -300,7 +300,7 @@ def auto_convert_engine(onnx_path):
         return False
     from src.inference_engine import auto_convert_engine as original_auto_convert_engine
 
-    return original_auto_convert_engine(onnx_path)
+    return original_auto_convert_engine(onnx_path, use_fp16=use_fp16)
 
 
 def global_exception_hook(exctype, value, tb):
