@@ -559,7 +559,7 @@ class TensorRTInferenceEngine:
         return img_chw.contiguous()
 
 
-def auto_convert_engine(model_path):
+def auto_convert_engine(model_path, use_fp16: bool = True):
     """
     Automatically convert ONNX model to TensorRT engine
 
@@ -624,7 +624,7 @@ def auto_convert_engine(model_path):
     success, final_path = auto_convert_engine_from_memory(
         model_bytes=onnx_bytes,
         output_engine_path=engine_path,
-        use_fp16=True
+        use_fp16=use_fp16
     )
 
     if success:

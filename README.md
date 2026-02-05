@@ -223,7 +223,7 @@ RN_AI supports multiple YOLO model formats and versions:
 - Dead-zone logic (no target jumping)
 - Multiple capture sources:
     * Screen
-    * [OBS](docs/obs/obs_en.md)
+    * OBS
     * Capture Card
 - Class filtering:
     * Enable / disable
@@ -231,7 +231,7 @@ RN_AI supports multiple YOLO model formats and versions:
     * Per-class aim positions
 
 ## 🎥 Capture 
-- Sources: Standard (screen), [OBS](docs/obs/obs_en.md), Capture Card.
+- Sources: Standard (screen), OBS, Capture Card.
 - Capture offsets can be set in the GUI.
 
 ## 🧷 Config & Classes 

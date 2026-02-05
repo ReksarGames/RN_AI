@@ -104,6 +104,8 @@ class ConfigMixin:
             config["print_fps"] = False
         if "run_log_enabled" not in config:
             config["run_log_enabled"] = False
+        if "trt_disable_fp16" not in config:
+            config["trt_disable_fp16"] = False
         if "show_infer_time" not in config:
             config["show_infer_time"] = False
         if "show_fov" not in config:
@@ -530,6 +532,7 @@ class ConfigMixin:
             "smooth_algorithm": 1.0,
             "target_switch_delay": 0,
             "target_reference_class": 0,
+            "smart_target_lock": True,
             "dynamic_scope": {
                 "enabled": False,
                 "min_ratio": 0.5,
@@ -569,6 +572,7 @@ class ConfigMixin:
             "class_names_file": "",
             "infer_debug": False,
             "run_log_enabled": False,
+            "trt_disable_fp16": False,
             "print_fps": False,
             "show_motion_speed": False,
             "show_infer_time": False,
@@ -796,6 +800,8 @@ class ConfigMixin:
                     key_config["target_switch_delay"] = 0
                 if "target_reference_class" not in key_config:
                     key_config["target_reference_class"] = 0
+                if "smart_target_lock" not in key_config:
+                    key_config["smart_target_lock"] = True
                 if "auto_y" not in key_config:
                     key_config["auto_y"] = False
                 if "overshoot_threshold" not in key_config:

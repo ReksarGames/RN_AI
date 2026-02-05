@@ -220,6 +220,7 @@ class Aassist(
                     "group": self.group,
                     "infer_model": group_cfg.get("infer_model", ""),
                     "is_trt": group_cfg.get("is_trt", False),
+                    "trt_disable_fp16": cfg.get("trt_disable_fp16", False),
                     "yolo_format": group_cfg.get("yolo_format", "auto"),
                     "yolo_version": group_cfg.get(
                         "yolo_version", group_cfg.get("sunone_model_variant", "yolo11")

@@ -136,7 +136,11 @@ class AimingMixin:
                     and locked_class == reference_class
                 )
                 for idx, target in enumerate(targets):
-                    if restrict_to_fallback and target.get("class_id") != fallback_class:
+                    target_class = target.get("class_id")
+                    if restrict_to_fallback:
+                        if target_class != fallback_class:
+                            continue
+                    elif locked_class is not None and target_class != locked_class:
                         continue
                     candidate_center = self._get_box_center(target)
                     if candidate_center is None:
@@ -147,7 +151,8 @@ class AimingMixin:
                     if dist < best_dist:
                         best_dist = dist
                         locked_idx = idx
-                if locked_idx != -1 and best_dist > lock_distance:
+                reacquire_distance = max(10.0, min(lock_distance, lock_distance * 0.35))
+                if locked_idx != -1 and best_dist > reacquire_distance:
                     locked_idx = -1
         if locked_idx != -1:
             candidate = targets[locked_idx]
@@ -235,7 +240,7 @@ class AimingMixin:
     def select_target_by_priority(self, targets):
         """Intelligent target selection: priority algorithm based on distance to center, with target count monitoring and integral reset"""
         lock_distance = self._get_lock_distance(self.pressed_key_config)
-        lock_enabled = lock_distance > 0
+        lock_enabled = bool(self.pressed_key_config.get("smart_target_lock", True)) and lock_distance > 0
         lock_reacquire_time = self._get_lock_reacquire_time(self.pressed_key_config)
         priority_order = self.pressed_key_config.get("class_priority_order", [])
         if isinstance(priority_order, str):
@@ -998,6 +1003,30 @@ class AimingMixin:
                     },
                     enabled=True,
                 )
+                try:
+                    lock_cfg = getattr(self, "pressed_key_config", {}) or {}
+                    lock_distance = self._get_lock_distance(lock_cfg)
+                    lock_reacquire = self._get_lock_reacquire_time(lock_cfg)
+                    lock_enabled = bool(
+                        lock_cfg.get("smart_target_lock", True)
+                    ) and lock_distance > 0
+                    lock_active = bool(getattr(self, "_target_lock_active", False))
+                    log_run_event(
+                        "Lock",
+                        {
+                            "enabled": lock_enabled,
+                            "active": lock_active,
+                            "distance": round(lock_distance, 2),
+                            "reacquire_time": round(lock_reacquire, 3),
+                            "last_target_count": int(
+                                getattr(self, "last_target_count", 0)
+                            ),
+                            "lock_class": getattr(self, "_target_lock_class", None),
+                        },
+                        enabled=True,
+                    )
+                except Exception:
+                    pass
                 last_perf_log_time = now
 
             current_selected_classes = self.pressed_key_config.get("classes", [])
