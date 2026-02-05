@@ -125,6 +125,8 @@ TRANSLATIONS = {
         "label_button_none": "None",
         "label_disable_headshot_status": "Disable headshot",
         "help_smart_target": "Locks current target for stability; improves tracking on moving targets.",
+        "help_dynamic_scope": "Dynamically adjusts aim scope size while tracking.",
+        "help_target_lock_enable": "Locks current target for stability; improves tracking on moving targets.",
         "help_target_lock_distance": "Max distance (px) to keep the locked target.",
         "help_target_lock_reacquire_time": "How long (s) to keep lock after target disappears; 0 = instant switch.",
         "help_target_lock_fallback_class": "Fallback class id to use when locked class disappears (-1 disables).",
@@ -262,12 +264,13 @@ TRANSLATIONS = {
         "label_clear_mapping": "Clear Mapping",
         "label_trt": "TRT",
         "label_long_press_no_lock_y": "Long Press No Lock Y",
+        "label_target_lock_enable": "Smart Target Lock",
         "label_long_press_threshold": "Long Press Threshold",
         "label_target_switch_delay": "Target Switch Delay (ms)",
         "label_target_reference_class": "Target Reference Class",
         "label_min_offset": "Min Offset",
         "label_aim_scope": "Aim Scope",
-        "label_dynamic_scope": "Smart Target Lock",
+        "label_dynamic_scope": "Dynamic Scope",
         "label_min_scope": "Min Scope",
         "label_shrink_duration": "Shrink Duration",
         "label_recover_duration": "Recover Duration",
@@ -2381,7 +2384,15 @@ class GuiMixin:
                 callback=self.on_dynamic_scope_enabled_change,
             )
             self.attach_tooltip(
-                self.dynamic_scope_enabled_input, self.tr("help_smart_target")
+                self.dynamic_scope_enabled_input, self.tr("help_dynamic_scope")
+            )
+            self.smart_target_lock_checkbox = dpg.add_checkbox(
+                label=self.tr("label_target_lock_enable"),
+                callback=self.on_target_lock_enable_change,
+            )
+            self.attach_tooltip(
+                self.smart_target_lock_checkbox,
+                self.tr("help_target_lock_enable"),
             )
         with dpg.group(horizontal=True):
             self.target_lock_distance_input = dpg.add_input_int(
@@ -3887,6 +3898,10 @@ class GuiMixin:
             key_cfg["dynamic_scope"] = {}
         key_cfg["dynamic_scope"]["enabled"] = bool(app_data)
 
+    def on_target_lock_enable_change(self, sender, app_data):
+        key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+        key_cfg["smart_target_lock"] = bool(app_data)
+
     def on_dynamic_scope_min_ratio_change(self, sender, app_data):
         key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
         if "dynamic_scope" not in key_cfg:
@@ -4876,6 +4891,9 @@ class GuiMixin:
         aim_key_group.register_item("target_switch_delay", "target_switch_delay", int)
         aim_key_group.register_item(
             "target_reference_class", "target_reference_class", int
+        )
+        aim_key_group.register_item(
+            "smart_target_lock", "smart_target_lock", bool
         )
         aim_key_group.register_item(
             "target_lock_distance", "target_lock_distance", int

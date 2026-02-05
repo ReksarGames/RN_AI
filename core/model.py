@@ -217,6 +217,11 @@ class ModelMixin:
                     self.dynamic_scope_recover_ms_input,
                     int(dyn.get("recover_duration_ms", 300)),
                 )
+            if getattr(self, "smart_target_lock_checkbox", None) is not None:
+                dpg.set_value(
+                    self.smart_target_lock_checkbox,
+                    bool(key_cfg.get("smart_target_lock", True)),
+                )
             if getattr(self, "target_lock_distance_input", None) is not None:
                 dpg.set_value(
                     self.target_lock_distance_input,

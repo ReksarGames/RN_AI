@@ -532,6 +532,7 @@ class ConfigMixin:
             "smooth_algorithm": 1.0,
             "target_switch_delay": 0,
             "target_reference_class": 0,
+            "smart_target_lock": True,
             "dynamic_scope": {
                 "enabled": False,
                 "min_ratio": 0.5,
@@ -799,6 +800,8 @@ class ConfigMixin:
                     key_config["target_switch_delay"] = 0
                 if "target_reference_class" not in key_config:
                     key_config["target_reference_class"] = 0
+                if "smart_target_lock" not in key_config:
+                    key_config["smart_target_lock"] = True
                 if "auto_y" not in key_config:
                     key_config["auto_y"] = False
                 if "overshoot_threshold" not in key_config:
