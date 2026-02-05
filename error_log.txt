@@ -103,3 +103,1775 @@ Traceback (most recent call last):
     internal_dpg.render_dearpygui_frame()
 KeyboardInterrupt
 
+[Global Exception] 2026-02-05 20:06:32
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3176, in on_group_change
+    self.update_group_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 249, in update_group_inputs
+    self.update_key_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 75, in update_key_inputs
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:42
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3940, in on_target_lock_fallback_class_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:42
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3940, in on_target_lock_fallback_class_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3940, in on_target_lock_fallback_class_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:45
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:46
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:46
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:47
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:50
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:07:51
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:19
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:20
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:20
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:20
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:20
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:20
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:21
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:21
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5280, in on_move_deadzone_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5280, in on_move_deadzone_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:25
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5280, in on_move_deadzone_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:25
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5280, in on_move_deadzone_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:25
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5280, in on_move_deadzone_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:08:25
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5280, in on_move_deadzone_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:09:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:10:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:07
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:07
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:07
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:08
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:08
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:08
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:22
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:22
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:23
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:23
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:24
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:25
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:25
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:26
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3940, in on_target_lock_fallback_class_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:26
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3940, in on_target_lock_fallback_class_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:27
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3940, in on_target_lock_fallback_class_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:27
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:38
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:39
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3877, in on_aim_bot_scope_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:54
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:55
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:56
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:57
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:58
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:11:59
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 293, in on_checkbox_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:00
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:01
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:02
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 293, in on_checkbox_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:02
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 293, in on_checkbox_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:03
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:04
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:05
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:13
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 293, in on_checkbox_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:19
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3365, in on_class_priority_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:37
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:42
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5291, in on_target_reference_class_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:43
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:12:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 5285, in on_target_switch_delay_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:01
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:02
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:04
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:05
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:06
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:07
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:08
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:14
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:15
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:55
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:56
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:13:56
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:13
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:13
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:34
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:35
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:36
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:43
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:44
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:51
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3956, in on_min_position_offset_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:52
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3885, in on_dynamic_scope_enabled_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:14:53
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 812, in on_auto_y_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["auto_y"] = (
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:11
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:12
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:13
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:13
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3214, in on_iou_t_change
+    not in self.config["groups"][self.group]["aim_keys"][self.select_key]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:16
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:16
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:17
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 293, in on_checkbox_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:17
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:19
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:20
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:21
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3413, in on_class_aim_combo_change
+    self.update_class_aim_inputs()
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3422, in update_class_aim_inputs
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:21
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\model.py", line 293, in on_checkbox_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key]["classes"] = self.selected_items
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:26
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3365, in on_class_priority_change
+    self.config["groups"][self.group]["aim_keys"][self.select_key][
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:47
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:47
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:47
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:48
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
+[Global Exception] 2026-02-05 20:15:49
+Traceback (most recent call last):
+  File "C:\Users\Kirill\Desktop\RN_AI\core\gui.py", line 3948, in on_target_lock_reacquire_time_change
+    key_cfg = self.config["groups"][self.group]["aim_keys"][self.select_key]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: ''
+
