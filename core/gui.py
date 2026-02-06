@@ -3719,7 +3719,7 @@ class GuiMixin:
                 parent=self.prediction_preview_drawlist,
             )
 
-            steps = max(1, min(int(pred_cfg.get("future_positions", 6)), 12))
+            steps = max(1, min(int(pred_cfg.get("future_positions", 6)), 60))
             preview_vx = raw_vx if mode == 0 else state["sm_vx"] * scale
             preview_vy = raw_vy if mode == 0 else state["sm_vy"] * scale
             fps = max(1.0, float(self.config.get("obs_fps", 60)))

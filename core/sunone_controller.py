@@ -509,21 +509,24 @@ class SunoneAimController:
             settings.get("kalman_measurement_noise", 0.1),
         )
         pred_x, pred_y = self._update_prediction_state(target_x, target_y, settings)
-        if int(settings["prediction"]["mode"]) == 0:
+        mode = int(settings["prediction"]["mode"])
+        interval = max(float(settings["prediction"]["interval"]), 0.0)
+        if mode == 0:
             vx, vy = self._update_standard_velocity(target_x, target_y)
-            interval = max(float(settings["prediction"]["interval"]), 0.0)
             latency_s = max(float(infer_latency_ms or 0.0), 0.0) / 1000.0
             pred_x = target_x + vx * (interval + latency_s)
             pred_y = target_y + vy * (interval + latency_s)
-        elif int(settings["prediction"]["mode"]) == 2:
-            interval = max(float(settings["prediction"]["interval"]), 0.0)
+        elif mode == 2:
             pred_x += self._last_raw_velocity_x * interval
             pred_y += self._last_raw_velocity_y * interval
 
         latency_s = max(float(infer_latency_ms or 0.0), 0.0) / 1000.0
-        if int(settings["prediction"]["mode"]) in (1, 2) and latency_s > 0.0:
-            pred_x += self.prediction_velocity_x * latency_s
-            pred_y += self.prediction_velocity_y * latency_s
+        extra_lead_s = latency_s
+        if mode == 1:
+            extra_lead_s += interval
+        if mode in (1, 2) and extra_lead_s > 0.0:
+            pred_x += self.prediction_velocity_x * extra_lead_s
+            pred_y += self.prediction_velocity_y * extra_lead_s
 
         self._set_prediction_debug(pred_x, pred_y)
         use_future_for_aim = bool(settings["prediction"].get("use_future_for_aim", False))
