@@ -75,6 +75,7 @@ TRANSLATIONS = {
         "label_sunone_prediction_q": "Prediction Kalman Q",
         "label_sunone_prediction_r": "Prediction Kalman R",
         "label_sunone_future_positions": "Future Positions",
+        "label_sunone_prediction_use_future": "Use Future For Aim (Experimental)",
         "label_sunone_draw_future": "Draw Future Positions",
         "label_sunone_debug": "Prediction Debug",
         "label_sunone_debug_pred": "Show Predicted Target",
@@ -136,6 +137,7 @@ TRANSLATIONS = {
         "help_kalman": "Kalman filter smooths noisy target positions for steadier tracking.",
         "help_prediction_lead": "Lead time (ms) adds forward prediction to aim position.",
         "help_velocity_smoothing": "Smooths target velocity to reduce jitter in prediction.",
+        "help_prediction_use_future": "Uses the farthest predicted point as aim target (can overshoot).",
         "help_long_press_no_lock_y": "Long press keeps Y axis unlocked while aiming; useful for vertical control.",
         "help_long_press_threshold": "Duration in ms to treat a press as long press.",
         "help_trigger_only": "Trigger only: no aim movement, only auto-fire for this key.",
@@ -2199,7 +2201,7 @@ class GuiMixin:
                     tag="sunone_prediction_future_positions",
                     default_value=self.config["sunone"]["prediction"]["future_positions"],
                     min_value=1,
-                    max_value=40,
+                    max_value=300,
                     callback=self.on_change,
                     width=self.scaled_width_normal,
                 )
@@ -2210,6 +2212,18 @@ class GuiMixin:
                         "draw_future_positions"
                     ],
                     callback=self.on_change,
+                )
+                dpg.add_checkbox(
+                    label=self.tr("label_sunone_prediction_use_future"),
+                    tag="sunone_prediction_use_future_for_aim",
+                    default_value=self.config["sunone"]["prediction"].get(
+                        "use_future_for_aim", False
+                    ),
+                    callback=self.on_change,
+                )
+                self.attach_tooltip(
+                    "sunone_prediction_use_future_for_aim",
+                    self.tr("help_prediction_use_future"),
                 )
             with dpg.group(parent=self.sunone_prediction_preview_group):
                 dpg.add_text(self.tr("label_prediction_preview"))

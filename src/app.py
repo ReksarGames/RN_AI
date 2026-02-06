@@ -225,6 +225,7 @@ class Aassist(
                     "yolo_version": group_cfg.get(
                         "yolo_version", group_cfg.get("sunone_model_variant", "yolo11")
                     ),
+                    "prediction_use_future": cfg.get("sunone", {}).get("prediction", {}).get("use_future_for_aim", False),
                     "dynamic_shape": bool(cfg.get("dynamic_shape", False)),
                     "capture_size": cfg.get("capture_size", "auto"),
                     "frame_skip_ratio": cfg.get("frame_skip_ratio", 0),

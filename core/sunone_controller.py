@@ -520,16 +520,25 @@ class SunoneAimController:
             pred_x += self._last_raw_velocity_x * interval
             pred_y += self._last_raw_velocity_y * interval
 
+        latency_s = max(float(infer_latency_ms or 0.0), 0.0) / 1000.0
+        if int(settings["prediction"]["mode"]) in (1, 2) and latency_s > 0.0:
+            pred_x += self.prediction_velocity_x * latency_s
+            pred_y += self.prediction_velocity_y * latency_s
+
         self._set_prediction_debug(pred_x, pred_y)
-        if bool(settings["prediction"].get("draw_future_positions", False)) or bool(
+        use_future_for_aim = bool(settings["prediction"].get("use_future_for_aim", False))
+        need_future = use_future_for_aim or bool(settings["prediction"].get("draw_future_positions", False)) or bool(
             settings.get("debug", {}).get("show_future", False)
-        ):
+        )
+        if need_future:
             future = self._predict_future_positions(
                 pred_x,
                 pred_y,
                 int(settings["prediction"]["future_positions"]),
                 fps,
             )
+            if use_future_for_aim and future:
+                pred_x, pred_y = future[-1]
             self._set_future_positions(future)
         else:
             self._set_future_positions([])

@@ -284,6 +284,8 @@ class ConfigMixin:
             prediction["future_positions"] = 6
         if "draw_future_positions" not in prediction:
             prediction["draw_future_positions"] = False
+        if "use_future_for_aim" not in prediction:
+            prediction["use_future_for_aim"] = False
         if "debug" not in sunone:
             sunone["debug"] = {}
         debug = sunone["debug"]
@@ -702,6 +704,7 @@ class ConfigMixin:
                     "kalman_measurement_noise": 0.1,
                     "future_positions": 6,
                     "draw_future_positions": False,
+                    "use_future_for_aim": False,
                 },
                 "debug": {
                     "show_prediction": False,
