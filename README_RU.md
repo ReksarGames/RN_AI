@@ -14,15 +14,15 @@
 ## 🧠 Обзор
 
 **RN_AI** — это высокопроизводительный AI помощник на основе YOLO с интуитивным интерфейсом **DearPyGui**. 
-Построен с использованием **фильтра Калмана**, **алгоритмов SunOner** и оптимизирован для конкурентного гейминга.
+Построен с использованием **фильтра Калмана**, **алгоритмов RN_AI_cpp** и оптимизирован для конкурентного гейминга.
 
 ![RN_AI Demo](docs/demo.gif)
 
 - **Точка входа:** `main.py`
 - **Основная логика:** `src/` и `core/`
-- **Вдохновлено:** [SunOner's sunone_aimbot_cpp](https://github.com/SunOner/sunone_aimbot_cpp)
+- **Вдохновлено:** [RN_AI_cpp](https://github.com/ReksarGames/RN_AI_cpp)
 
-> 💡 *Проект SunOner солидный и хорошо спроектирован, но этот Python pipeline обеспечивает еще более высокий FPS, чем C++.*
+> 💡 *Проект RN_AI_cpp солидный и хорошо спроектирован, но этот Python pipeline обеспечивает еще более высокий FPS, чем C++.*
 
 ---
 
@@ -33,7 +33,7 @@
 <table>
 <tr>
 <th align="center">Метрика</th>
-<th align="center">SunOner (C++)</th>
+<th align="center">RN_AI_cpp (C++)</th>
 <th align="center">RN_AI (Python)</th>
 </tr>
 <tr>
@@ -202,7 +202,7 @@ RN_AI поддерживает множество форматов и верси
 
 ## 📝 Лицензия и Благодарности
 
-- **Вдохновлено:** [SunOner/sunone_aimbot_cpp](https://github.com/SunOner/sunone_aimbot_cpp)
+- **Вдохновлено:** [RN_AI_cpp](https://github.com/ReksarGames/RN_AI_cpp)
 - **Фреймворк:** DearPyGui
 - **AI Модель:** YOLO Object Detection
 

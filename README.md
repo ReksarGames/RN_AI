@@ -14,15 +14,15 @@
 ## 🧠 Overview 
 
 **RN_AI** is a high-performance YOLO-based AI assistant with an intuitive **DearPyGui** interface. 
-Built with **Kalman filtering**, **SunOner algorithms**, and optimized for competitive gaming.
+Built with **Kalman filtering**, and optimized for competitive gaming.
 
 ![RN_AI Demo](docs/demo.gif)
 
 - **Entry point:** `main.py`
 - **Core logic:** `src/` and `core/`
-- **Inspired by:** [SunOner's sunone_aimbot_cpp](https://github.com/SunOner/sunone_aimbot_cpp)
+- **Inspired by:** [RN_AI_cpp](https://github.com/ReksarGames/RN_AI_cpp)
 
-> 💡 *The SunOner project is solid and well-designed, but this Python pipeline delivers even higher FPS than C++.*
+> 💡 *The RN_AI_cpp project is solid and well-designed, but this Python pipeline delivers even higher FPS than C++.*
 
 ---
 
@@ -33,7 +33,7 @@ All benchmarks performed on **NVIDIA RTX 2060** - screen capture excluded.
 <table>
 <tr>
 <th align="center">Metric</th>
-<th align="center">SunOner (C++)</th>
+<th align="center">RN_AI_cpp (C++)</th>
 <th align="center">RN_AI (Python)</th>
 </tr>
 <tr>
@@ -203,7 +203,7 @@ RN_AI supports multiple YOLO model formats and versions:
 
 ## 📝 License & Credits
 
-- **Inspired by:** [SunOner/sunone_aimbot_cpp](https://github.com/SunOner/sunone_aimbot_cpp)
+- **Inspired by:** [RN_AI_cpp](https://github.com/ReksarGames/RN_AI_cpp)
 - **Framework:** DearPyGui
 - **AI Model:** YOLO Object Detection
 
